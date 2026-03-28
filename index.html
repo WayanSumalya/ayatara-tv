@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=1280, height=720, user-scalable=no">
-    <title>Ayatara - Luxury HD Portal</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <title>Ayatara TV Portal</title>
     <style>
-        :root { --gold: #d4af37; --glass: rgba(0, 0, 0, 0.6); }
+        :root { --gold: #d4af37; --glass: rgba(0, 0, 0, 0.7); }
         body, html { 
             margin: 0; padding: 0; width: 1280px; height: 720px; 
             overflow: hidden; background: #000; font-family: sans-serif; color: #fff;
@@ -23,7 +22,7 @@
         
         .overlay { 
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(90deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 60%, rgba(0,0,0,0.7) 100%);
+            background: linear-gradient(90deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.1) 60%);
             z-index: 2;
         }
 
@@ -33,7 +32,7 @@
         .guest-info span { color: var(--gold); font-weight: 700; }
         #clock { font-size: 60px; font-weight: 700; line-height: 1; text-align: right; }
 
-        /* Navigation Dock (Fixed Icons) */
+        /* Navigation Dock */
         .nav-dock {
             position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
             display: flex; gap: 20px; padding: 15px 40px;
@@ -43,28 +42,31 @@
         .nav-item { display: flex; flex-direction: column; align-items: center; width: 100px; opacity: 0.4; transition: 0.3s; }
         .nav-item.focused { opacity: 1; transform: translateY(-10px); }
         .icon-box { width: 45px; height: 45px; background-size: contain; background-repeat: no-repeat; background-position: center; margin-bottom: 8px; }
-        .nav-item span { font-size: 12px; font-weight: 700; text-transform: uppercase; }
+        .nav-item span { font-size: 11px; font-weight: 700; text-transform: uppercase; }
         .focused span { color: var(--gold); }
 
         /* Promo Content */
         .promo-content { position: absolute; bottom: 180px; left: 60px; z-index: 10; }
-        .promo-title { font-size: 64px; font-weight: 800; margin: 0; text-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+        .promo-title { font-size: 58px; font-weight: 800; margin: 0; text-shadow: 0 5px 15px rgba(0,0,0,0.5); }
 
-        /* Icons Base64 (Anti-Pecah) */
+        /* Icons */
         .ic-netflix { background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTE4LjMgMi42SDE5LjVWMjIuNkgxOC4zTDEyLjYgMTAuNEw3LjcgMjIuNkg1LjdWMi42SDYuOUw5LjggOC44TDE4LjMgMi42WiIgZmlsbD0iI0UxMDYxMyIvPjwvc3ZnPg=='); }
         .ic-youtube { background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTIzLjQ5OCA2LjE4NmMtLjI3Mi0xLjAyMi0xLjA3NC0xLjgyNC0yLjA5Ni0yLjA5NkMxOC41NiA0IDEyIDQgMTIgNHMtNi41NiAwLTkuNDAyLjA5QzEuNTc2IDQuMzYyLjI3IDYuMTg2IDAgOC4yODMgMCAxMiAwIDE1LjcxNy4yIDguMjgzYzAgMTIuODggMCAxOC4yMDctMS4wOTYgMi4wOTYtMi4wOTYgMi44MzhMMTIgMjBzOS40MDItLjA5IDkuNDAyLS4wOUMxOS41NzcgMTUuNjc4IDE5LjE2OCAxNC4xOTggMTguOTY1IDEyLjUyNSAxOC45NjUgMTAuODQ3IDE5LjAxNSA4LjU3MSAxOC44MzEgNi4xODZaTTEwIDE0LjVWOS41TDE0LjUgMTJMMTAgMTQuNVoiIGZpbGw9IiNmZjAwMDAiLz48L3N2Zz4='); }
-        .ic-mirror { background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTIxIDNIM2MtMS4xIDAtMiAuOS0yIDJ2MTJjMCAxLjEuOSAyIDIgMmg0djJoOHYtMmg0YzEuMSAwIDItLjkgMi0yVjVjMC0xLjEtLjktMi0yLTJ6bTAgMTRIM1Y1aDE4djEyek03IDguNWw3IDMuNS03IDMuNXYtN3oiLz48L3N2Zz4='); }
-        .ic-dining { background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTExIDlIMXYyZDEwIDAgMCAxIDAgMloiLz48cGF0aCBmaWxsPSIjZmZmIiBkPSJNMTggNXYxNmgtMnYtMTZoLTJ2LTE2aDZWNXoiLz48L3N2Zz4='); }
+        .ic-tv { background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTIxIDNIM2MtMS4xIDAtMiAuOS0yIDJ2MTJjMCAxLjEuOSAyIDIgMmg0djJoOHYtMmg0YzEuMSAwIDItLjkgMi0yVjVjMC0xLjEtLjktMi0yLTJ6bTAgMTRIM1Y1aDE4djEyek04IDhsOCA0LTggNHYtOHoiLz48L3N2Zz4='); }
+        .ic-info { background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTEyIDJDNi40OCAyIDIgNi40OCAyIDEyczQuNDggMTAgMTAgMTAgMTAtNC40OCAxMC0xMFMxNy41MiAyIDExIDIgem0xIDE1aC0ydi02aDJ2NnptMC04aC0yVjdoMnYyeloiLz48L3N2Zz4='); }
     </style>
 </head>
 <body>
     <canvas id="dust-canvas"></canvas>
     <div id="bg-slider">
-        <div class="promo-slide active" data-title="OCEAN DINING">
+        <div class="promo-slide active" data-title="ROMANTIC DINING">
             <img src="assets/promo-dining.jpg" class="promo-img">
         </div>
         <div class="promo-slide" data-title="SPA LUXURY">
             <img src="assets/promo-spa.jpg" class="promo-img">
+        </div>
+         <div class="promo-slide" data-title="INFINITY POOL">
+            <img src="assets/promo-pool.jpg" class="promo-img">
         </div>
     </div>
     <div class="overlay"></div>
@@ -74,17 +76,25 @@
         <div id="clock">00:00</div>
     </header>
 
-    <div class="promo-content"><h2 class="promo-title" id="p-title">OCEAN DINING</h2></div>
+    <div class="promo-content"><h2 class="promo-title" id="p-title">ROMANTIC DINING</h2></div>
 
     <nav class="nav-dock">
-        <div class="nav-item focused" data-url="netflix://"><div class="icon-box ic-netflix"></div><span>Netflix</span></div>
-        <div class="nav-item" data-url="youtube://"><div class="icon-box ic-youtube"></div><span>YouTube</span></div>
-        <div class="nav-item" data-url="mirror://"><div class="icon-box ic-mirror"></div><span>Mirror</span></div>
-        <div class="nav-item" data-url="dining://"><div class="icon-box ic-dining"></div><span>Dining</span></div>
+        <div class="nav-item focused" data-type="app" data-action="netflix://">
+            <div class="icon-box ic-netflix"></div><span>Netflix</span>
+        </div>
+        <div class="nav-item" data-type="app" data-action="youtube://">
+            <div class="icon-box ic-youtube"></div><span>YouTube</span>
+        </div>
+        <div class="nav-item" data-type="internal" data-action="channel List">
+            <div class="icon-box ic-tv"></div><span>Channels</span>
+        </div>
+        <div class="nav-item" data-type="internal" data-action="hotel Info">
+            <div class="icon-box ic-info"></div><span>Hotel Info</span>
+        </div>
     </nav>
 
     <script>
-        // Dust Particles Engine
+        // 1. Dust Particles
         const canvas = document.getElementById('dust-canvas');
         const ctx = canvas.getContext('2d');
         canvas.width = 1280; canvas.height = 720;
@@ -97,21 +107,43 @@
         }
         draw();
 
-        // Clock
+        // 2. Clock
         setInterval(() => {
             document.getElementById('clock').innerText = new Date().toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'});
         }, 1000);
 
-        // Remote Navigation
+        // 3. Remote Navigation & Action (Deep Link)
         let items = document.querySelectorAll('.nav-item');
         let idx = 0;
+
         window.addEventListener('keydown', (e) => {
+            // Logika Navigasi
             if(e.keyCode == 37 && idx > 0) { items[idx].classList.remove('focused'); idx--; items[idx].classList.add('focused'); }
             if(e.keyCode == 39 && idx < items.length-1) { items[idx].classList.remove('focused'); idx++; items[idx].classList.add('focused'); }
-            if(e.keyCode == 13) alert("Buka: " + items[idx].dataset.url);
+            
+            // Logika OK / Enter (Pindah ke App)
+            if(e.keyCode == 13) {
+                let action = items[idx].getAttribute('data-action');
+                let type = items[idx].getAttribute('data-type');
+                
+                if(type === 'app') {
+                    window.location.href = action; // Contoh: netflix://
+                } else if(type === 'internal') {
+                    // Skema internal Pro:Centric (biasanya ditangkap oleh middleware TV)
+                    // Jika ini web app murni, kita bisa arahkan ke file lain
+                    window.location.href = action + ".html"; 
+                }
+            }
+
+            // Logika BACK (PCD Back Key biasanya 461 atau 27)
+            if(e.keyCode == 461 || e.keyCode == 27 || e.keyCode == 8) {
+                // Jika sedang di sub-page, arahkan kembali ke portal utama
+                window.location.href = "index.html";
+                e.preventDefault();
+            }
         });
 
-        // Slider
+        // 4. Slider
         let slides = document.querySelectorAll('.promo-slide');
         let sIdx = 0;
         setInterval(() => {
@@ -119,7 +151,7 @@
             sIdx = (sIdx + 1) % slides.length;
             slides[sIdx].classList.add('active');
             document.getElementById('p-title').innerText = slides[sIdx].dataset.title;
-        }, 7000);
+        }, 8000);
     </script>
 </body>
 </html>
