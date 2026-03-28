@@ -3,59 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=1280, height=720, user-scalable=no">
-    <title>Ayatara HD Portal</title>
+    <title>Ayatara - Luxury HD Portal</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <style>
-        :root { --gold: #d4af37; --glass: rgba(0,0,0,0.7); }
+        :root { --gold: #d4af37; --glass: rgba(0, 0, 0, 0.55); --f-size: 14px; }
         body, html { 
             margin: 0; padding: 0; width: 1280px; height: 720px; 
-            overflow: hidden; background: #000; font-family: sans-serif; color: #fff;
+            overflow: hidden; background: #000; font-family: 'Open Sans', 'Helvetica', Arial, sans-serif; color: #fff;
         }
 
-        /* Background & Slides */
-        #bg-slider { position: absolute; width: 100%; height: 100%; z-index: 1; }
-        .promo-slide { position: absolute; width: 100%; height: 100%; opacity: 0; visibility: hidden; background: #000; }
+        /* 1. Canvas Debu Mewah */
+        #dust-canvas { 
+            position: absolute; top: 0; left: 0; width: 1280px; height: 720px; 
+            z-index: 3; pointer-events: none; opacity: 0.5;
+        }
+
+        /* 2. Background Slider */
+        #bg-slider { position: absolute; width: 1280px; height: 720px; z-index: 1; overflow: hidden; }
+        .promo-slide { position: absolute; width: 1280px; height: 720px; opacity: 0; visibility: hidden; }
         .promo-slide.active { opacity: 1; visibility: visible; }
         .promo-img { width: 100%; height: 100%; object-fit: cover; }
+        
         .overlay { 
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-            background: linear-gradient(90deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 100%); z-index: 2; 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 15% 50%, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 60%, rgba(0,0,0,0.7) 100%);
+            z-index: 2;
         }
 
-        /* Header */
-        header { position: absolute; top: 30px; left: 50px; right: 50px; display: flex; justify-content: space-between; z-index: 10; }
-        .guest-info h1 { font-size: 32px; margin: 0; font-weight: 300; }
+        /* 3. Header */
+        header { 
+            position: absolute; top: 35px; left: 60px; right: 60px; 
+            display: flex; justify-content: space-between; align-items: flex-start; z-index: 10; 
+        }
+        .guest-info h1 { font-size: 34px; margin: 0; font-weight: 200; letter-spacing: 1px; }
         .guest-info span { color: var(--gold); font-weight: 700; }
-        #clock { font-size: 48px; font-weight: 700; line-height: 1; }
+        .room-tag { font-size: 16px; letter-spacing: 4px; opacity: 0.6; text-transform: uppercase; margin-bottom: 5px; }
 
-        /* Navigasi (DIPERBAIKI) */
+        #clock { font-size: 60px; font-weight: 700; line-height: 1; text-align: right; margin-bottom: 5px; }
+        #date { font-size: 16px; opacity: 0.8; text-align: right; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* 4. Navigasi Dock (PERBAIKAN IKON) */
         .nav-dock {
-            position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
-            display: flex; gap: 15px; padding: 10px 30px;
-            background: var(--glass); border-radius: 40px; z-index: 20;
+            position: absolute; bottom: 40px; left: 50%;
+            transform: translateX(-50%);
+            display: flex; gap: 20px; padding: 15px 40px;
+            background: var(--glass);
+            backdrop-filter: blur(15px);
             border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 50px;
+            z-index: 20;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
         }
+
         .nav-item {
-            display: flex; flex-direction: column; align-items: center; width: 90px;
-            opacity: 0.4; transition: 0.3s;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-decoration: none; color: #fff; width: 100px;
+            transition: 0.4s ease-out; opacity: 0.4;
         }
-        .nav-item.focused { opacity: 1; transform: scale(1.1); }
-        .icon-box { width: 40px; height: 40px; background-size: contain; background-repeat: no-repeat; margin-bottom: 5px; }
-        .nav-item span { font-size: 10px; font-weight: bold; text-transform: uppercase; }
-        .focused span { color: var(--gold); }
 
-        /* Promo Text */
-        .promo-content { position: absolute; bottom: 160px; left: 50px; z-index: 10; }
-        .promo-title { font-size: 48px; margin: 0; font-weight: 800; }
+        .nav-item.focused { opacity: 1; transform: translateY(-15px); }
 
-        /* Ikon High Res (Base64 agar tidak pecah & cepat load) */
+        .icon-box { 
+            width: 45px; height: 45px; /* Ukuran icon box tetap */
+            background-size: contain; background-repeat: no-repeat; background-position: center;
+            margin-bottom: 10px; 
+        }
+
+        .nav-item span { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; text-align: center; }
+        .focused span { color: var(--gold); text-shadow: 0 0 10px rgba(212,175,55,0.5); }
+
+        /* 5. Promo Content */
+        .promo-content { position: absolute; bottom: 180px; left: 60px; z-index: 10; max-width: 600px; }
+        .promo-title { font-size: 64px; font-weight: 800; margin: 0; color: #fff; text-shadow: 0 10px 30px rgba(0,0,0,0.6); }
+
+        /* IKON BASE64 - Langsung disematkan agar cepat */
         .ic-netflix { background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTE4LjMgMi42SDE5LjVWMjIuNkgxOC4zTDEyLjYgMTAuNEw3LjcgMjIuNkg1LjdWMi42SDYuOUw5LjggOC44TDE4LjMgMi42WiIgZmlsbD0iI0UxMDYxMyIvPjwvc3ZnPg=='); }
         .ic-youtube { background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTIzLjQ5OCA2LjE4NmMtLjI3Mi0xLjAyMi0xLjA3NC0xLjgyNC0yLjA5Ni0yLjA5NkMxOC41NiA0IDEyIDQgMTIgNHMtNi41NiAwLTkuNDAyLjA5QzEuNTc2IDQuMzYyLjI3IDYuMTg2IDAgOC4yODMgMCAxMiAwIDE1LjcxNy4yIDguMjgzYzAgMTIuODggMCAxOC4yMDctMS4wOTYgMi4wOTYtMi4wOTYgMi44MzhMMTIgMjBzOS40MDItLjA5IDkuNDAyLS4wOUMxOS41NzcgMTUuNjc4IDE5LjE2OCAxNC4xOTggMTguOTY1IDEyLjUyNSAxOC45NjUgMTAuODQ3IDE5LjAxNSA4LjU3MSAxOC44MzEgNi4xODZaTTEwIDE0LjVWOS41TDE0LjUgMTJMMTAgMTQuNVoiIGZpbGw9IiNmZjAwMDAiLz48L3N2Zz4='); }
-        .ic-mirror { background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTIxIDNIM2MtMS4xIDAtMiAuOS0yIDJ2MTJjMCAxLjEuOSAyIDIgMmg0djJoOHYtMmg0YzEuMSAwIDItLjkgMi0yVjVjMC0xLjEtLjktMi0yLTJ6bTAgMTRIM1Y1aDE4djEyek03IDguNWw3IDMuNS03IDMuNXYtN3oiLz48L3N2Zz4='); }
-        .ic-dining { background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTExIDlIMXYyZDEwIDAgMCAxIDAgMloiLz48cGF0aCBmaWxsPSIjZmZmIiBkPSJNMTggNXYxNmgtMnYtMTZoLTJ2LTE2aDZWNXoiLz48L3N2Zz4='); }
+        .ic-mirror { background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTE3IDNoLTh2MWgy djEySDNWMjRzMiAwIDIgMGgwdi0xaDEydjFoMHMyIDAgMiAwSDE3VjVIMTNWM2gzWiIvPjwvc3ZnPg=='); }
+        .ic-dining { background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTEyIDRoLTVWMmgyVjRoM1YySDhWNGgyVjJoMVY0SDhWMkg5VjRoMVYySDEwVjRIOFYySDlWM2gxVjJIOWVNMTEgMjRoLTJ2LThIOVoiLz48L3N2Zz4='); }
     </style>
 </head>
-<body onload="initPortal()">
+<body>
+
+    <canvas id="dust-canvas"></canvas>
+
     <div id="bg-slider">
         <div class="promo-slide active" data-title="OCEAN DINING">
             <img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=1280&q=60" class="promo-img">
@@ -63,15 +94,27 @@
         <div class="promo-slide" data-title="SPA LUXURY">
             <img src="https://images.unsplash.com/photo-1544161515-4af6b1d462c2?auto=format&fit=crop&w=1280&q=60" class="promo-img">
         </div>
+        <div class="promo-slide" data-title="BALINESE MASSAGE">
+            <img src="https://images.unsplash.com/photo-1560963661-04e4c295b922?auto=format&fit=crop&w=1280&q=60" class="promo-img">
+        </div>
     </div>
+
     <div class="overlay"></div>
 
     <header>
-        <div class="guest-info"><h1>Welcome, <span>Mr. Sumalya</span></h1></div>
-        <div id="clock">00:00</div>
+        <div class="guest-info">
+            <div class="room-tag">VILLA 302</div>
+            <h1>Welcome, <span>Mr. Sumalya</span></h1>
+        </div>
+        <div class="time-info">
+            <div id="clock">00:00</div>
+            <div id="date">Friday, 27 March 2026</div>
+        </div>
     </header>
 
-    <div class="promo-content"><h2 class="promo-title" id="p-title">OCEAN DINING</h2></div>
+    <div class="promo-content">
+        <h2 class="promo-title" id="p-title">OCEAN DINING</h2>
+    </div>
 
     <nav class="nav-dock">
         <div class="nav-item focused" data-id="0">
@@ -89,41 +132,96 @@
     </nav>
 
     <script>
-        function updateClock() {
+        /**
+         * 1. PARTIKEL DEBU MEWAH (DUST PARTICLES)
+         */
+        const canvas = document.getElementById('dust-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = 1280; canvas.height = 720;
+        let particles = [];
+        for(let i=0; i<80; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                r: Math.random() * 2,
+                d: Math.random() * 0.4 + 0.1
+            });
+        }
+        function drawParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "rgba(212, 175, 55, 0.4)"; // Gold particles
+            ctx.beginPath();
+            particles.forEach(p => {
+                ctx.moveTo(p.x, p.y);
+                ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                p.y -= p.d;
+                if(p.y < 0) p.y = canvas.height;
+            });
+            ctx.fill();
+            requestAnimationFrame(drawParticles);
+        }
+        drawParticles();
+
+        /**
+         * 2. LIVE CLOCK & DATE
+         */
+        function updateDateTime() {
             const now = new Date();
             document.getElementById('clock').innerText = now.toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'});
+            document.getElementById('date').innerText = now.toLocaleDateString('en-GB', {weekday:'long', day:'numeric', month:'short'});
         }
-        setInterval(updateClock, 1000); updateClock();
+        setInterval(updateDateTime, 1000); updateDateTime();
 
-        // Fix Navigation
+        /**
+         * 3. AUTO SLIDER ENGINE
+         */
+        let slides = document.querySelectorAll('.promo-slide');
+        let currentIdx = 0;
+        function showSlide(index) {
+            let next = index;
+            let currentS = document.querySelector('.promo-slide.active');
+            let nextS = slides[next];
+            
+            gsap.to(currentS, {opacity:0, duration:1.5});
+            currentS.classList.remove('active');
+            
+            nextS.classList.add('active');
+            gsap.to(nextS, {opacity:1, visibility:'visible', duration:1.5});
+            
+            // Perbarui Teks Promo
+            document.getElementById('p-title').innerText = nextS.dataset.title;
+            gsap.fromTo("#p-title", {y:30, opacity:0}, {y:0, opacity:1, duration:0.8, ease:"power2.out"});
+        }
+        setInterval(() => {
+            let next = (currentIdx + 1) % slides.length;
+            showSlide(next);
+            currentIdx = next;
+        }, 8000);
+        // Initial title
+        document.getElementById('p-title').innerText = slides[0].dataset.title;
+
+        /**
+         * 4. REMOTE CONTROL NAVIGATION ENGINE
+         */
         let items = document.querySelectorAll('.nav-item');
         let index = 0;
 
-        function move(dir) {
-            items[index].classList.remove('focused');
-            index = (index + dir + items.length) % items.length;
-            items[index].classList.add('focused');
-        }
-
-        // Event Listener Remote TV
         window.addEventListener('keydown', (e) => {
-            if(e.keyCode == 37) move(-1); // Left
-            if(e.keyCode == 39) move(1);  // Right
-            if(e.keyCode == 13) alert('Opening ' + items[index].innerText); // OK
+            // TV Key Codes (Left: 37, Right: 39, OK: 13)
+            if(e.keyCode == 37) { // Left
+                items[index].classList.remove('focused');
+                index = (index > 0) ? index - 1 : items.length - 1;
+                items[index].classList.add('focused');
+            } else if(e.keyCode == 39) { // Right
+                items[index].classList.remove('focused');
+                index = (index < items.length - 1) ? index + 1 : 0;
+                items[index].classList.add('focused');
+            } else if(e.keyCode == 13) { // OK / Enter
+                alert("Opening " + items[index].querySelector('span').innerText);
+                // Ganti dengan window.location = "url_aplikasi";
+            }
         });
 
-        // Auto Slider
-        let slides = document.querySelectorAll('.promo-slide');
-        let sIdx = 0;
-        setInterval(() => {
-            let next = (sIdx + 1) % slides.length;
-            gsap.to(slides[sIdx], {opacity:0, duration:1});
-            gsap.to(slides[next], {opacity:1, visibility:'visible', duration:1});
-            document.getElementById('p-title').innerText = slides[next].dataset.title;
-            sIdx = next;
-        }, 8000);
-
-        function initPortal() { window.focus(); }
     </script>
 </body>
 </html>
