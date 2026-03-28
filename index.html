@@ -3,22 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=1280, height=720, user-scalable=no">
-    <title>Ayatara TV Portal</title>
+    <title>Ayatara Luxury Portal</title>
     <style>
-        :root { --gold: #d4af37; --glass: rgba(0, 0, 0, 0.7); }
+        :root { --gold: #d4af37; --glass: rgba(0, 0, 0, 0.75); }
         body, html { 
             margin: 0; padding: 0; width: 1280px; height: 720px; 
             overflow: hidden; background: #000; font-family: sans-serif; color: #fff;
         }
 
-        /* Dust Effect Canvas */
+        /* 1. Dust Effect Canvas (Mewah) */
         #dust-canvas { position: absolute; top: 0; left: 0; z-index: 3; pointer-events: none; }
 
-        /* Background Slider */
+        /* 2. Background Slider */
         #bg-slider { position: absolute; width: 1280px; height: 720px; z-index: 1; }
         .promo-slide { position: absolute; width: 100%; height: 100%; opacity: 0; visibility: hidden; transition: opacity 1.5s ease-in-out; }
         .promo-slide.active { opacity: 1; visibility: visible; }
-        .promo-img { width: 100%; height: 100%; object-fit: cover; }
+        .promo-img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.05); transition: transform 10s linear; }
+        .active .promo-img { transform: scale(1.15); } /* Efek Zoom Pelan */
         
         .overlay { 
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -26,13 +27,13 @@
             z-index: 2;
         }
 
-        /* Header */
+        /* 3. Header */
         header { position: absolute; top: 40px; left: 60px; right: 60px; display: flex; justify-content: space-between; z-index: 10; }
-        .guest-info h1 { font-size: 36px; margin: 0; font-weight: 200; }
+        .guest-info h1 { font-size: 34px; margin: 0; font-weight: 200; }
         .guest-info span { color: var(--gold); font-weight: 700; }
-        #clock { font-size: 60px; font-weight: 700; line-height: 1; text-align: right; }
+        #clock { font-size: 60px; font-weight: 700; line-height: 1; }
 
-        /* Navigation Dock */
+        /* 4. Navigation Dock */
         .nav-dock {
             position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
             display: flex; gap: 20px; padding: 15px 40px;
@@ -40,32 +41,32 @@
             border: 1px solid rgba(255,255,255,0.1); border-radius: 50px; z-index: 20;
         }
         .nav-item { display: flex; flex-direction: column; align-items: center; width: 100px; opacity: 0.4; transition: 0.3s; }
-        .nav-item.focused { opacity: 1; transform: translateY(-10px); }
+        .nav-item.focused { opacity: 1; transform: translateY(-12px) scale(1.1); }
         .icon-box { width: 45px; height: 45px; background-size: contain; background-repeat: no-repeat; background-position: center; margin-bottom: 8px; }
-        .nav-item span { font-size: 11px; font-weight: 700; text-transform: uppercase; }
+        .nav-item span { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
         .focused span { color: var(--gold); }
 
-        /* Promo Content */
+        /* 5. Promo Content */
         .promo-content { position: absolute; bottom: 180px; left: 60px; z-index: 10; }
-        .promo-title { font-size: 58px; font-weight: 800; margin: 0; text-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+        #p-title { font-size: 64px; font-weight: 800; margin: 0; text-shadow: 0 5px 15px rgba(0,0,0,0.6); letter-spacing: 2px; }
 
-        /* Icons */
+        /* Icons SVG */
         .ic-netflix { background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTE4LjMgMi42SDE5LjVWMjIuNkgxOC4zTDEyLjYgMTAuNEw3LjcgMjIuNkg1LjdWMi42SDYuOUw5LjggOC44TDE4LjMgMi42WiIgZmlsbD0iI0UxMDYxMyIvPjwvc3ZnPg=='); }
         .ic-youtube { background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTIzLjQ5OCA2LjE4NmMtLjI3Mi0xLjAyMi0xLjA3NC0xLjgyNC0yLjA5Ni0yLjA5NkMxOC41NiA0IDEyIDQgMTIgNHMtNi41NiAwLTkuNDAyLjA5QzEuNTc2IDQuMzYyLjI3IDYuMTg2IDAgOC4yODMgMCAxMiAwIDE1LjcxNy4yIDguMjgzYzAgMTIuODggMCAxOC4yMDctMS4wOTYgMi4wOTYtMi4wOTYgMi44MzhMMTIgMjBzOS40MDItLjA5IDkuNDAyLS4wOUMxOS41NzcgMTUuNjc4IDE5LjE2OCAxNC4xOTggMTguOTY1IDEyLjUyNSAxOC45NjUgMTAuODQ3IDE5LjAxNSA4LjU3MSAxOC44MzEgNi4xODZaTTEwIDE0LjVWOS41TDE0LjUgMTJMMTAgMTQuNVoiIGZpbGw9IiNmZjAwMDAiLz48L3N2Zz4='); }
         .ic-tv { background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTIxIDNIM2MtMS4xIDAtMiAuOS0yIDJ2MTJjMCAxLjEuOSAyIDIgMmg0djJoOHYtMmg0YzEuMSAwIDItLjkgMi0yVjVjMC0xLjEtLjktMi0yLTJ6bTAgMTRIM1Y1aDE4djEyek04IDhsOCA0LTggNHYtOHoiLz48L3N2Zz4='); }
-        .ic-info { background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTEyIDJDNi40OCAyIDIgNi40OCAyIDEyczQuNDggMTAgMTAgMTAgMTAtNC40OCAxMC0xMFMxNy41MiAyIDExIDIgem0xIDE1aC0ydi02aDJ2NnptMC04aC0yVjdoMnYyeloiLz48L3N2Zz4='); }
+        .ic-info { background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTEyIDJDNi40OCAyIDIgNi40OCAyIDEyczQuNDggMTAgMTAgMTAgMTAtNC40OCAxMC0xMFMxNy41MiAyIDEyIDJ6bTEgMTV2LTJoLTJ2Mmgrem0wLTRoLTJWN2gydjR6IiBmaWxsPSIjZmZmIi8+PC9zdmc+'); }
     </style>
 </head>
 <body>
     <canvas id="dust-canvas"></canvas>
     <div id="bg-slider">
-        <div class="promo-slide active" data-title="ROMANTIC DINING">
+        <div class="promo-slide active" data-title="LUXURY DINING">
             <img src="assets/promo-dining.jpg" class="promo-img">
         </div>
         <div class="promo-slide" data-title="SPA LUXURY">
             <img src="assets/promo-spa.jpg" class="promo-img">
         </div>
-         <div class="promo-slide" data-title="INFINITY POOL">
+        <div class="promo-slide" data-title="LUXURY POOL">
             <img src="assets/promo-pool.jpg" class="promo-img">
         </div>
     </div>
@@ -76,30 +77,22 @@
         <div id="clock">00:00</div>
     </header>
 
-    <div class="promo-content"><h2 class="promo-title" id="p-title">ROMANTIC DINING</h2></div>
+    <div class="promo-content"><h2 id="p-title">LUXURY DINING</h2></div>
 
     <nav class="nav-dock">
-        <div class="nav-item focused" data-type="app" data-action="netflix://">
-            <div class="icon-box ic-netflix"></div><span>Netflix</span>
-        </div>
-        <div class="nav-item" data-type="app" data-action="youtube://">
-            <div class="icon-box ic-youtube"></div><span>YouTube</span>
-        </div>
-        <div class="nav-item" data-type="internal" data-action="channel List">
-            <div class="icon-box ic-tv"></div><span>Channels</span>
-        </div>
-        <div class="nav-item" data-type="internal" data-action="hotel Info">
-            <div class="icon-box ic-info"></div><span>Hotel Info</span>
-        </div>
+        <div class="nav-item focused" data-type="app" data-action="netflix://"><div class="icon-box ic-netflix"></div><span>Netflix</span></div>
+        <div class="nav-item" data-type="app" data-action="youtube://"><div class="icon-box ic-youtube"></div><span>YouTube</span></div>
+        <div class="nav-item" data-type="pcd" data-action="Channel List"><div class="icon-box ic-tv"></div><span>Channels</span></div>
+        <div class="nav-item" data-type="pcd" data-action="Hotel Info 1"><div class="icon-box ic-info"></div><span>Information</span></div>
     </nav>
 
     <script>
-        // 1. Dust Particles
+        // --- 1. Dust Effect Engine ---
         const canvas = document.getElementById('dust-canvas');
         const ctx = canvas.getContext('2d');
         canvas.width = 1280; canvas.height = 720;
         let particles = [];
-        for(let i=0; i<60; i++) particles.push({x:Math.random()*1280, y:Math.random()*720, r:Math.random()*1.5, d:Math.random()*0.3+0.1});
+        for(let i=0; i<70; i++) particles.push({x:Math.random()*1280, y:Math.random()*720, r:Math.random()*1.5, d:Math.random()*0.3+0.1});
         function draw() {
             ctx.clearRect(0,0,1280,720); ctx.fillStyle="rgba(212,175,55,0.3)"; ctx.beginPath();
             particles.forEach(p => { ctx.moveTo(p.x, p.y); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); p.y-=p.d; if(p.y<0) p.y=720; });
@@ -107,43 +100,28 @@
         }
         draw();
 
-        // 2. Clock
-        setInterval(() => {
-            document.getElementById('clock').innerText = new Date().toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'});
-        }, 1000);
+        // --- 2. Live Clock ---
+        setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'}); }, 1000);
 
-        // 3. Remote Navigation & Action (Deep Link)
+        // --- 3. Remote Navigation & Action ---
         let items = document.querySelectorAll('.nav-item');
         let idx = 0;
-
         window.addEventListener('keydown', (e) => {
-            // Logika Navigasi
             if(e.keyCode == 37 && idx > 0) { items[idx].classList.remove('focused'); idx--; items[idx].classList.add('focused'); }
             if(e.keyCode == 39 && idx < items.length-1) { items[idx].classList.remove('focused'); idx++; items[idx].classList.add('focused'); }
             
-            // Logika OK / Enter (Pindah ke App)
             if(e.keyCode == 13) {
-                let action = items[idx].getAttribute('data-action');
-                let type = items[idx].getAttribute('data-type');
-                
-                if(type === 'app') {
-                    window.location.href = action; // Contoh: netflix://
-                } else if(type === 'internal') {
-                    // Skema internal Pro:Centric (biasanya ditangkap oleh middleware TV)
-                    // Jika ini web app murni, kita bisa arahkan ke file lain
-                    window.location.href = action + ".html"; 
-                }
+                let type = items[idx].dataset.type;
+                let action = items[idx].dataset.action;
+                if(type === 'app') { window.location.href = action; }
+                else { window.parent.location.href = "index.html?page=" + encodeURIComponent(action); }
             }
 
-            // Logika BACK (PCD Back Key biasanya 461 atau 27)
-            if(e.keyCode == 461 || e.keyCode == 27 || e.keyCode == 8) {
-                // Jika sedang di sub-page, arahkan kembali ke portal utama
-                window.location.href = "index.html";
-                e.preventDefault();
-            }
+            // Back Button LG (461)
+            if(e.keyCode == 461 || e.keyCode == 27) { window.parent.location.href = "index.html?page=portal"; }
         });
 
-        // 4. Slider
+        // --- 4. Auto Slider ---
         let slides = document.querySelectorAll('.promo-slide');
         let sIdx = 0;
         setInterval(() => {
