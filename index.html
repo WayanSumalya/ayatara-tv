@@ -2,100 +2,87 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=1920, height=1080, user-scalable=no">
-    <title>Ayatara Resort - Ultra Deluxe Portal</title>
+    <meta name="viewport" content="width=1280, height=720, user-scalable=no">
+    <title>Ayatara Resort - HD Portal</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <style>
         :root {
             --gold: #d4af37;
             --glass: rgba(0, 0, 0, 0.6);
-            --glass-border: rgba(255, 255, 255, 0.15);
         }
 
         body, html {
             margin: 0; padding: 0;
-            width: 1920px; height: 1080px;
+            width: 1280px; height: 720px; /* Locked to HD */
             overflow: hidden; background: #000;
             font-family: 'Segoe UI', Arial, sans-serif;
             color: #fff;
         }
 
-        /* Particles Canvas (Dust Effect) */
+        /* Particles HD */
         #particle-canvas {
             position: absolute; top: 0; left: 0;
             width: 100%; height: 100%; z-index: 3;
-            pointer-events: none; opacity: 0.4;
+            pointer-events: none; opacity: 0.3;
         }
 
         /* Background Slider */
         #bg-slider { position: absolute; width: 100%; height: 100%; z-index: 1; }
         .promo-slide { position: absolute; width: 100%; height: 100%; opacity: 0; visibility: hidden; }
         .promo-slide.active { opacity: 1; visibility: visible; }
-        .promo-img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.1); }
+        .promo-img { width: 100%; height: 100%; object-fit: cover; }
         
         .overlay { 
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(to right, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.1) 60%, rgba(0,0,0,0.6) 100%);
+            background: linear-gradient(to right, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 60%);
             z-index: 2;
         }
 
-        /* Header Info */
+        /* Header Info - Ukuran Font Diperkecil untuk HD */
         header {
-            position: absolute; top: 60px; left: 100px; right: 100px;
+            position: absolute; top: 40px; left: 60px; right: 60px;
             display: flex; justify-content: space-between; z-index: 10;
         }
-        .guest-info h1 { font-size: 58px; margin: 0; font-weight: 200; letter-spacing: 1px; }
+        .guest-info h1 { font-size: 38px; margin: 0; font-weight: 200; }
         .guest-info span { color: var(--gold); font-weight: 600; }
-        .room-tag { font-size: 20px; letter-spacing: 4px; opacity: 0.6; margin-bottom: 8px; }
+        .room-tag { font-size: 16px; letter-spacing: 3px; opacity: 0.6; }
 
-        #clock { font-size: 84px; font-weight: 700; line-height: 1; text-align: right; }
-        #date { font-size: 22px; opacity: 0.7; text-align: right; margin-top: 10px; }
+        #clock { font-size: 56px; font-weight: 700; line-height: 1; text-align: right; }
+        #date { font-size: 16px; opacity: 0.7; text-align: right; }
 
-        /* Navigation Dock */
+        /* Navigation Dock - Skala HD */
         .nav-dock {
-            position: absolute; bottom: 80px; left: 50%;
+            position: absolute; bottom: 50px; left: 50%;
             transform: translateX(-50%);
-            display: flex; gap: 30px; padding: 25px 50px;
+            display: flex; gap: 20px; padding: 15px 35px;
             background: var(--glass);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 100px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 50px;
             z-index: 20;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
         }
 
         .nav-item {
             display: flex; flex-direction: column; align-items: center;
-            text-decoration: none; color: #fff; width: 120px;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            opacity: 0.5; transform: scale(0.9);
+            text-decoration: none; color: #fff; width: 90px;
+            transition: all 0.4s ease; opacity: 0.6;
         }
 
-        /* State saat tombol remote fokus */
-        .nav-item.focused {
-            opacity: 1; transform: translateY(-20px) scale(1.2);
-        }
+        .nav-item.focused { opacity: 1; transform: translateY(-10px) scale(1.1); }
 
-        .icon-box {
-            width: 70px; height: 70px;
-            background-size: contain; background-repeat: no-repeat; background-position: center;
-            margin-bottom: 12px;
-        }
+        .icon-box { width: 45px; height: 45px; background-size: contain; background-repeat: no-repeat; margin-bottom: 8px; }
 
-        .nav-item span { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; }
-        .nav-item.focused span { color: var(--gold); text-shadow: 0 0 10px rgba(212, 175, 55, 0.5); }
+        .nav-item span { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        .nav-item.focused span { color: var(--gold); }
 
-        /* Promo Text Container */
-        .promo-content { position: absolute; bottom: 280px; left: 100px; z-index: 10; max-width: 800px; }
-        .promo-title { font-size: 90px; font-weight: 800; margin: 0; color: #fff; line-height: 0.9; }
-        .promo-desc { font-size: 28px; margin-top: 20px; color: var(--gold); font-weight: 300; }
+        /* Promo Text HD */
+        .promo-content { position: absolute; bottom: 180px; left: 60px; z-index: 10; max-width: 600px; }
+        .promo-title { font-size: 54px; font-weight: 800; margin: 0; line-height: 1; }
+        .promo-desc { font-size: 20px; margin-top: 10px; color: var(--gold); }
 
-        /* Icons (SVG Base64) */
+        /* Icons */
         .ic-netflix { background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTE4LjMgMi42SDE5LjVWMjIuNkgxOC4zTDEyLjYgMTAuNEw3LjcgMjIuNkg1LjdWMi42SDYuOUw5LjggOC44TDE4LjMgMi42WiIgZmlsbD0iI0UxMDYxMyIvPjwvc3ZnPg=='); }
         .ic-youtube { background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTIzLjQ5OCA2LjE4NmMtLjI3Mi0xLjAyMi0xLjA3NC0xLjgyNC0yLjA5Ni0yLjA5NkMxOC41NiA0IDEyIDQgMTIgNHMtNi41NiAwLTkuNDAyLjA5QzEuNTc2IDQuMzYyLjI3IDYuMTg2IDAgOC4yODMgMCAxMiAwIDE1LjcxNy4yIDguMjgzYzAgMTIuODggMCAxOC4yMDctMS4wOTYgMi4wOTYtMi4wOTYgMi44MzhMMTIgMjBzOS40MDItLjA5IDkuNDAyLS4wOUMxOS41NzcgMTUuNjc4IDE5LjE2OCAxNC4xOTggMTguOTY1IDEyLjUyNSAxOC45NjUgMTAuODQ3IDE5LjAxNSA4LjU3MSAxOC44MzEgNi4xODZaTTEwIDE0LjVWOS41TDE0LjUgMTJMMTAgMTQuNVoiIGZpbGw9IiNmZjAwMDAiLz48L3N2Zz4='); }
-        .ic-mirror { background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTIxIDJINDNDMS4xIDIgMCAyLjkgMCA0djEyaGM0djJoMTR2LTJIMjRWNFYyem0tOCA0aDhoMnY4aC0ydi04em0tMiAwSDR2OGg2di04eiIgZmlsbD0iI2ZmZiIvPjwvc3ZnPg=='); }
-        .ic-info { background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTEyIDJDNi40OCAyIDIgNi40OCAyIDEyczQuNDggMTAgMTAgMTAgMTAtNC40OCAxMC0xMFMxNy41MiAyIDEyIDJ6bTEgMTV2LTJoLTJ2Mmgrem0wLTRoLTJWN2gydjR6IiBmaWxsPSIjZmZmIi8+PC9zdmc+'); }
-        .ic-tv { background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTIxIDNIM2MtMS4xIDAtMiAuOS0yIDJ2MTJjMCAxLjEuOSAyIDIgMmg0djJoOHYtMmg0YzEuMSAwIDItLjkgMi0yVjVjMC0xLjEtLjktMi0yLTJ6bTAgMTRIM1Y1aDE4djEyek04IDhsOCA0LTggNHYtOHoiIGZpbGw9IiNmZmYiLz48L3N2Zz4='); }
     </style>
 </head>
 <body>
@@ -103,20 +90,11 @@
     <canvas id="particle-canvas"></canvas>
 
     <div id="bg-slider">
-        <div class="promo-slide active" 
-             data-title="OCEAN VIEW DINING" 
-             data-desc="Eksklusif Diskon 20% untuk Seafood Platter malam ini.">
-            <img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=1920" class="promo-img">
+        <div class="promo-slide active" data-title="SUNSET DINNER" data-desc="Diskon 20% untuk Seafood Platter.">
+            <img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=1280" class="promo-img">
         </div>
-        <div class="promo-slide" 
-             data-title="BALINESE SPA" 
-             data-desc="Kembalikan energi Anda dengan terapis profesional kami.">
-            <img src="https://images.unsplash.com/photo-1544161515-4af6b1d462c2?q=80&w=1920" class="promo-img">
-        </div>
-        <div class="promo-slide" 
-             data-title="INFINITY POOL" 
-             data-desc="Nikmati cocktail gratis setiap pemesanan cabana.">
-            <img src="https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?q=80&w=1920" class="promo-img">
+        <div class="promo-slide" data-title="SPA LUXURY" data-desc="Relaksasi total dengan terapis Bali.">
+            <img src="https://images.unsplash.com/photo-1544161515-4af6b1d462c2?q=80&w=1280" class="promo-img">
         </div>
     </div>
 
@@ -124,155 +102,62 @@
 
     <header>
         <div class="guest-info">
-            <div class="room-tag" id="room-display">VILLA 302</div>
-            <h1>Welcome, <span id="guest-display">Mr. Sumalya</span></h1>
+            <div class="room-tag">VILLA 302</div>
+            <h1>Welcome, <span>Mr. Sumalya</span></h1>
         </div>
         <div class="time-info">
             <div id="clock">00:00</div>
-            <div id="date">-- --- ----</div>
+            <div id="date">Friday, 27 March 2026</div>
         </div>
     </header>
 
     <div class="promo-content">
-        <h2 class="promo-title" id="p-title">LOADING...</h2>
-        <p class="promo-desc" id="p-desc">Please wait</p>
+        <h2 class="promo-title" id="p-title">AYATARA</h2>
+        <p class="promo-desc" id="p-desc">Resort & Spa</p>
     </div>
 
     <nav class="nav-dock">
-        <div class="nav-item focused" data-url="netflix://">
-            <div class="icon-box ic-netflix"></div><span>Netflix</span>
-        </div>
-        <div class="nav-item" data-url="youtube://">
-            <div class="icon-box ic-youtube"></div><span>YouTube</span>
-        </div>
-        <div class="nav-item" data-url="mirroring://">
-            <div class="icon-box ic-mirror"></div><span>Mirroring</span>
-        </div>
-        <div class="nav-item" data-url="info://">
-            <div class="icon-box ic-info"></div><span>Hotel Info</span>
-        </div>
-        <div class="nav-item" data-url="tv://">
-            <div class="icon-box ic-tv"></div><span>TV Channels</span>
-        </div>
+        <div class="nav-item focused"><div class="icon-box ic-netflix"></div><span>Netflix</span></div>
+        <div class="nav-item"><div class="icon-box ic-youtube"></div><span>YouTube</span></div>
+        <div class="nav-item"><div class="icon-box" style="background-image:url('https://cdn-icons-png.flaticon.com/512/916/916771.png')"></div><span>Mirror</span></div>
+        <div class="nav-item"><div class="icon-box" style="background-image:url('https://cdn-icons-png.flaticon.com/512/3003/3003984.png')"></div><span>Dining</span></div>
+        <div class="nav-item"><div class="icon-box" style="background-image:url('https://cdn-icons-png.flaticon.com/512/3161/3161158.png')"></div><span>TV</span></div>
     </nav>
 
     <script>
-        /**
-         * 1. PARTICLE ENGINE (DUST EFFECT)
-         */
-        const canvas = document.getElementById('particle-canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = 1920; canvas.height = 1080;
-        let particles = [];
-        for(let i=0; i<80; i++) {
-            particles.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                r: Math.random() * 2,
-                d: Math.random() * 0.5 + 0.2
-            });
-        }
-        function animateParticles() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
-            ctx.beginPath();
-            particles.forEach(p => {
-                ctx.moveTo(p.x, p.y);
-                ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-                p.y -= p.d;
-                if(p.y < 0) p.y = canvas.height;
-            });
-            ctx.fill();
-            requestAnimationFrame(animateParticles);
-        }
-        animateParticles();
-
-        /**
-         * 2. CLOCK & DATE ENGINE
-         */
+        // Logika Slider & Clock tetap sama, hanya ukuran font yang berubah di CSS
         function updateClock() {
             const now = new Date();
             document.getElementById('clock').innerText = now.toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'});
-            document.getElementById('date').innerText = now.toLocaleDateString('en-GB', {weekday:'long', day:'numeric', month:'short', year:'numeric'});
+            document.getElementById('date').innerText = now.toLocaleDateString('en-GB', {day:'numeric', month:'short', year:'numeric'});
         }
         setInterval(updateClock, 1000); updateClock();
 
-        /**
-         * 3. PROMO SLIDER ENGINE (GSAP)
-         */
         let slides = document.querySelectorAll('.promo-slide');
-        let currentSlide = 0;
-        function showSlide(index) {
-            let next = index;
-            let current = document.querySelector('.promo-slide.active');
-            let nextS = slides[next];
-
-            // Animasi transisi teks
-            gsap.to(".promo-content", {opacity:0, x:-50, duration:0.5, onComplete: () => {
-                document.getElementById('p-title').innerText = nextS.dataset.title;
-                document.getElementById('p-desc').innerText = nextS.dataset.desc;
-                gsap.to(".promo-content", {opacity:1, x:0, duration:1, ease:"power4.out"});
-            }});
-
-            // Animasi transisi gambar
-            gsap.to(current, {opacity:0, duration:1.5});
-            current.classList.remove('active');
-            
-            nextS.classList.add('active');
-            gsap.to(nextS, {opacity:1, visibility:'visible', duration:1.5});
-            
-            // Ken Burns Effect
-            gsap.fromTo(nextS.querySelector('.promo-img'), {scale:1}, {scale:1.2, duration:10, ease:"none"});
-        }
+        let current = 0;
         setInterval(() => {
-            let next = (currentSlide + 1) % slides.length;
-            showSlide(next);
-            currentSlide = next;
+            let next = (current + 1) % slides.length;
+            gsap.to(slides[current], {opacity:0, duration:1});
+            gsap.to(slides[next], {opacity:1, visibility:'visible', duration:1});
+            document.getElementById('p-title').innerText = slides[next].dataset.title;
+            document.getElementById('p-desc').innerText = slides[next].dataset.desc;
+            current = next;
         }, 8000);
-        // Initial setup
-        document.getElementById('p-title').innerText = slides[0].dataset.title;
-        document.getElementById('p-desc').innerText = slides[0].dataset.desc;
-        gsap.to(".active .promo-img", {scale:1.2, duration:10, ease:"none"});
 
-        /**
-         * 4. REMOTE CONTROL NAVIGATION ENGINE
-         */
+        // Remote Navigation HD
         let navItems = document.querySelectorAll('.nav-item');
         let focusedIdx = 0;
-
         window.addEventListener('keydown', (e) => {
-            // LG WebOS Key Codes
-            switch(e.keyCode) {
-                case 37: // Arrow Left
-                    if(focusedIdx > 0) moveFocus(-1);
-                    break;
-                case 39: // Arrow Right
-                    if(focusedIdx < navItems.length - 1) moveFocus(1);
-                    break;
-                case 13: // Enter / OK
-                    handleAction();
-                    break;
-                case 461: // Back Button (LG)
-                    console.log("Back pressed");
-                    break;
+            if(e.keyCode == 37 && focusedIdx > 0) { // Left
+                navItems[focusedIdx].classList.remove('focused');
+                focusedIdx--;
+                navItems[focusedIdx].classList.add('focused');
+            } else if(e.keyCode == 39 && focusedIdx < navItems.length - 1) { // Right
+                navItems[focusedIdx].classList.remove('focused');
+                focusedIdx++;
+                navItems[focusedIdx].classList.add('focused');
             }
         });
-
-        function moveFocus(dir) {
-            navItems[focusedIdx].classList.remove('focused');
-            focusedIdx += dir;
-            navItems[focusedIdx].classList.add('focused');
-            
-            // Trigger feedback suara jika dibutuhkan atau haptic
-        }
-
-        function handleAction() {
-            let url = navItems[focusedIdx].dataset.url;
-            console.log("Navigating to: " + url);
-            // Injeksi aksi sesuai kebutuhan hotel (Contoh: pindah halaman atau buka app)
-            // window.location.href = url; 
-            alert("Membuka: " + navItems[focusedIdx].querySelector('span').innerText);
-        }
     </script>
 </body>
 </html>
