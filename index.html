@@ -1,94 +1,112 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=1280, height=720, user-scalable=no">
+    <title>Ayatara Luxury Portal</title>
     <style>
-        body, html { margin:0; padding:0; width:1280px; height:720px; overflow:hidden; background:#000; font-family:sans-serif; color:#fff; }
+        :root { --gold: #d4af37; --glass: rgba(0, 0, 0, 0.65); }
+        body, html { margin: 0; padding: 0; width: 1280px; height: 720px; overflow: hidden; background: #000; font-family: sans-serif; color: #fff; }
+
+        /* 1. Dust Particles Canvas (Luxury Effect) */
+        #dust-canvas { position: absolute; top: 0; left: 0; width: 1280px; height: 720px; z-index: 3; pointer-events: none; opacity: 0.6; }
+
+        /* 2. Background Slider & Ken Burns Effect */
+        #bg-slider { position: absolute; width: 1280px; height: 720px; z-index: 1; overflow: hidden; }
+        .slide { position: absolute; width: 1280px; height: 720px; opacity: 0; visibility: hidden; transition: opacity 2s ease-in-out; } /* Efek Crossfade 2 detik */
+        .slide.active { opacity: 1; visibility: visible; }
         
-        /* Motion Slide - Crossfade Murni CSS */
-        .slide { position:absolute; width:100%; height:100%; opacity:0; transition:opacity 2s; }
-        .slide.active { opacity:1; }
-        .slide img { width:100%; height:100%; object-fit:cover; }
-
-        .overlay { position:absolute; width:100%; height:100%; background:linear-gradient(90deg, rgba(0,0,0,0.8) 0%, transparent 60%); z-index:2; }
-
-        header { position:absolute; top:40px; left:60px; right:60px; display:flex; justify-content:space-between; z-index:10; }
-        .nav-dock { position:absolute; bottom:50px; left:50%; transform:translateX(-50%); display:flex; gap:30px; padding:20px; background:rgba(0,0,0,0.7); border-radius:50px; z-index:20; border:1px solid rgba(255,255,255,0.2); }
+        /* Ken Burns Effect (Zoom-in Perlahan) */
+        .slide img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.1); transition: transform 12s linear; }
+        .active img { transform: scale(1.2); } /* Efek Zoom Pelan */
         
-        /* Navigation Focus */
-        .nav-item { display:flex; flex-direction:column; align-items:center; width:100px; opacity:0.4; }
-        .nav-item.focused { opacity:1; transform:scale(1.2); }
-        .icon { width:45px; height:45px; margin-bottom:10px; }
-        .nav-item span { font-size:12px; font-weight:bold; color:#fff; text-transform:uppercase; }
-        .focused span { color:#d4af37; }
+        /* Gradient Overlay (Mewah) */
+        .overlay { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(90deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 60%);
+            z-index: 2;
+        }
 
-        .promo-content { position:absolute; bottom:180px; left:60px; z-index:10; }
+        /* 3. Header */
+        header { position: absolute; top: 35px; left: 60px; right: 60px; display: flex; justify-content: space-between; align-items: flex-start; z-index: 10; }
+        .guest-info h1 { font-size: 34px; margin: 0; font-weight: 200; letter-spacing: 1px; }
+        .guest-info span { color: var(--gold); font-weight: 700; }
+        .room-tag { font-size: 16px; letter-spacing: 4px; opacity: 0.6; text-transform: uppercase; margin-bottom: 5px; }
+
+        #clock { font-size: 60px; font-weight: 700; line-height: 1; text-align: right; margin-bottom: 5px; }
+        #date { font-size: 16px; opacity: 0.8; text-align: right; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* 4. Promo Content (Mewah) */
+        .promo-content { position: absolute; bottom: 180px; left: 60px; z-index: 10; max-width: 600px; }
+        #p-title { font-size: 64px; font-weight: 800; margin: 0; color: #fff; text-shadow: 0 10px 30px rgba(0,0,0,0.6); letter-spacing: 2px; }
+
     </style>
 </head>
-<body onload="window.focus()">
+<body onload="initPortal()">
+
+    <canvas id="dust-canvas"></canvas>
 
     <div id="bg-slider">
-        <div class="slide active"><img src="assets/promo-dining.jpg"></div>
-        <div class="slide"><img src="assets/promo-spa.jpg"></div>
-        <div class="slide"><img src="assets/promo-pool.jpg"></div>
+        <div class="slide active" data-title="LUXURY DINING">
+            <img src="assets/promo-dining.jpg">
+        </div>
+        <div class="slide" data-title="SPA LUXURY">
+            <img src="assets/promo-spa.jpg">
+        </div>
+        <div class="slide" data-title="LUXURY POOL">
+            <img src="assets/promo-pool.jpg">
+        </div>
     </div>
-    
+
     <div class="overlay"></div>
 
     <header>
-        <div>Welcome, <span style="color:#d4af37; font-weight:bold;">Mr. Sumalya</span></div>
-        <div id="clock">00:00</div>
+        <div class="guest-info">
+            <div class="room-tag">VILLA 302</div>
+            <h1>Welcome, <span>Mr. Sumalya</span></h1>
+        </div>
+        <div class="time-info">
+            <div id="clock">00:00</div>
+            <div id="date">Friday, 27 March 2026</div>
+        </div>
     </header>
 
-    <div class="promo-content"><h1 id="p-title" style="font-size:60px; margin:0;">LUXURY DINING</h1></div>
-
-    <nav class="nav-dock">
-        <div class="nav-item focused" data-url="netflix://">
-            <svg class="icon" viewBox="0 0 24 24"><path fill="#E50914" d="M18.3 2.6H19.5V22.6H18.3L12.6 10.4L7.7 22.6H5.7V2.6H6.9L9.8 8.8L18.3 2.6Z"/></svg>
-            <span>Netflix</span>
-        </div>
-        <div class="nav-item" data-url="youtube://">
-            <svg class="icon" viewBox="0 0 24 24"><path fill="#FF0000" d="M23.5 6.2c-.3-1-1.1-1.8-2.1-2.1C18.6 3.8 12 3.8 12 3.8s-6.6 0-9.4.3c-1 .3-1.8 1.1-2.1 2.1C.2 9 0 12 0 12s0 3 .2 5.8c.3 1 1.1 1.8 2.1 2.1 2.8.3 9.4.3 9.4.3s6.6 0 9.4-.3c1-.3 1.8-1.1 2.1-2.1.2-2.8.2-5.8.2-5.8s0-3-.2-5.8zM9.5 15.5V8.5l6.5 3.5-6.5 3.5z"/></svg>
-            <span>YouTube</span>
-        </div>
-        <div class="nav-item" data-url="Channel List">
-            <svg class="icon" viewBox="0 0 24 24"><path fill="#FFF" d="M21 3H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h4v2h8v-2h4c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 14H3V5h18v12zM8 8l8 4-8 4V8z"/></svg>
-            <span>Channels</span>
-        </div>
-        <div class="nav-item" data-url="Hotel Info 1">
-            <svg class="icon" viewBox="0 0 24 24"><path fill="#FFF" d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-            <span>Information</span>
-        </div>
-    </nav>
+    <div class="promo-content">
+        <h2 class="promo-title" id="p-title">LUXURY DINING</h2>
+    </div>
 
     <script>
-        // 1. Clock
-        setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'}); }, 1000);
+        // --- 1. Particles (Gold Dust Effect) ---
+        const c = document.getElementById('dust-canvas'); const ctx = c.getContext('2d');
+        c.width = 1280; c.height = 720;
+        let p = [];
+        // Variasi debu emas (Gold Particles)
+        for(let i=0; i<60; i++) p.push({x:Math.random()*c.width, y:Math.random()*c.height, r:Math.random()*1.5, s:Math.random()*0.3});
+        function draw() {
+            ctx.clearRect(0,0,1280,720); ctx.fillStyle="rgba(212,175,55,0.4)"; ctx.beginPath();
+            p.forEach(i => { ctx.moveTo(i.x, i.y); ctx.arc(i.x, i.y, i.r, 0, Math.PI*2); i.y-=i.s; if(i.y<0) i.y=720; });
+            ctx.fill(); requestAnimationFrame(draw);
+        }
+        draw();
 
-        // 2. Navigasi Remote
-        let items = document.querySelectorAll('.nav-item');
-        let idx = 0;
-        window.addEventListener('keydown', (e) => {
-            if(e.keyCode == 37 && idx > 0) { items[idx].classList.remove('focused'); idx--; items[idx].classList.add('focused'); }
-            if(e.keyCode == 39 && idx < items.length - 1) { items[idx].classList.remove('focused'); idx++; items[idx].classList.add('focused'); }
-            if(e.keyCode == 13) {
-                let url = items[idx].getAttribute('data-url');
-                if(url.includes('://')) { window.location.href = url; }
-                else { window.parent.location.href = "index.html?page=" + encodeURIComponent(url); }
-            }
-        });
+        // --- 2. Live Clock & Date ---
+        setInterval(() => {
+            const now = new Date();
+            document.getElementById('clock').innerText = now.toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'});
+            document.getElementById('date').innerText = now.toLocaleDateString('en-GB', {day:'numeric', month:'short'});
+        }, 1000);
 
-        // 3. Slider Halus Tanpa Library
+        // --- 3. Auto Slider & Motion Engine (DIPERBAIKI UNTUK HD) ---
         let slides = document.querySelectorAll('.slide');
         let titles = ["LUXURY DINING", "SPA LUXURY", "LUXURY POOL"];
         let sIdx = 0;
         setInterval(() => {
-            slides[sIdx].classList.remove('active');
+            slides[sIdx].classList.remove('active'); // Memicu crossfade ( opacity:0 )
             sIdx = (sIdx + 1) % slides.length;
-            slides[sIdx].classList.add('active');
+            slides[sIdx].classList.add('active'); // Memicu crossfade ( opacity:1 )
             document.getElementById('p-title').innerText = titles[sIdx];
-        }, 8000);
+        }, 8000); // Ganti slide setiap 8 detik
+
     </script>
 </body>
 </html>
