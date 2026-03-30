@@ -1,14 +1,108 @@
-<div id="bg-portal-wrapAperA" style="position:fixed; top:0; left:0; width:1280px; height:720px; z-index:1; background:#000; overflow:hidden;">
-    <iframe src="https://wayansumalya.github.io/ayatara-tv/" style="width:100%; height:100%; border:none;" scrolling="no"></iframe>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1280, height=720, user-scalable=no">
+    <title>Ayatara HD Visual Engine</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        :root { --gold: #d4af37; }
+        body, html { 
+            margin: 0; padding: 0; width: 1280px; height: 720px; 
+            overflow: hidden; background: #000; font-family: 'Segoe UI', Arial, sans-serif; color: #fff;
+        }
 
-<style>
-    /* Sembunyikan elemen bawaan agar tidak mengganggu visual GitHub */
-    body, .Contents, #WelcomeGreetingHandler { 
-        background-color: transparent !important;
-        margin: 0 !important; 
-        padding: 0 !important;
-    }
-    /* Pastikan widget text ini tidak menutupi tombol navigasi PCD */
-    .pcd-widget-text { pointer-events: none !important; }
-</style>
+        /* Slider Background */
+        #bg-slider { position: absolute; width: 100%; height: 100%; z-index: 1; }
+        .promo-slide { position: absolute; width: 100%; height: 100%; opacity: 0; visibility: hidden; }
+        .promo-slide.active { opacity: 1; visibility: visible; }
+        .promo-img { width: 100%; height: 100%; object-fit: cover; }
+        
+        /* Gradient Overlay for Text Readability */
+        .overlay { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            background: linear-gradient(90deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 100%); z-index: 2; 
+        }
+
+        /* Dust Particles */
+        #particles { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 3; opacity: 0.4; pointer-events: none; }
+
+        /* Header Info */
+        header { position: absolute; top: 30px; left: 50px; right: 50px; display: flex; justify-content: space-between; z-index: 10; }
+        .guest-info h1 { font-size: 36px; margin: 0; font-weight: 300; letter-spacing: 1px; }
+        .guest-info span { color: var(--gold); font-weight: 700; }
+        .room-tag { font-size: 16px; letter-spacing: 4px; opacity: 0.7; margin-bottom: 5px; }
+        #clock { font-size: 52px; font-weight: 700; line-height: 1; }
+
+        /* Promo Content */
+        .promo-content { position: absolute; top: 220px; left: 50px; z-index: 10; max-width: 600px; }
+        .promo-tag { background: var(--gold); color: #000; padding: 4px 12px; font-weight: bold; font-size: 14px; display: inline-block; margin-bottom: 15px; }
+        .promo-title { font-size: 56px; margin: 0; font-weight: 800; line-height: 1.1; }
+        .promo-desc { font-size: 20px; color: #ddd; margin-top: 15px; border-left: 3px solid var(--gold); padding-left: 15px; }
+    </style>
+</head>
+<body>
+
+    <canvas id="particles"></canvas>
+
+    <div id="bg-slider">
+        <div class="promo-slide active" data-tag="OFFER" data-title="SUNSET DINNER" data-desc="Nikmati sajian laut segar dengan pemandangan tebing.">
+            <img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=1280&q=70" class="promo-img">
+        </div>
+        <div class="promo-slide" data-tag="WELLNESS" data-title="BALINESE SPA" data-desc="Relaksasi mewah dengan terapis profesional kami.">
+            <img src="https://images.unsplash.com/photo-1544161515-4af6b1d462c2?auto=format&fit=crop&w=1280&q=70" class="promo-img">
+        </div>
+    </div>
+    
+    <div class="overlay"></div>
+
+    <header>
+        <div class="guest-info">
+            <div class="room-tag">VILLA 302</div>
+            <h1>Welcome, <span>Mr. Sumalya</span></h1>
+        </div>
+        <div id="clock">00:00</div>
+    </header>
+
+    <div class="promo-content">
+        <div class="promo-tag" id="p-tag">OFFER</div>
+        <h2 class="promo-title" id="p-title">SUNSET DINNER</h2>
+        <p class="promo-desc" id="p-desc">Nikmati sajian laut segar dengan pemandangan tebing.</p>
+    </div>
+
+    <script>
+        // 1. Clock Engine
+        setInterval(() => {
+            document.getElementById('clock').innerText = new Date().toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'});
+        }, 1000);
+
+        // 2. Particle Engine (Canvas)
+        const cvs = document.getElementById('particles'), ctx = cvs.getContext('2d');
+        cvs.width = 1280; cvs.height = 720;
+        let pts = Array.from({length: 60}, () => ({ x: Math.random()*1280, y: Math.random()*720, r: Math.random()*1.5, d: Math.random()*0.5 + 0.2 }));
+        function drawPts() {
+            ctx.clearRect(0,0,1280,720); ctx.fillStyle = "rgba(255,255,255,0.5)"; ctx.beginPath();
+            pts.forEach(p => { ctx.moveTo(p.x, p.y); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); p.y -= p.d; if(p.y < 0) p.y = 720; });
+            ctx.fill(); requestAnimationFrame(drawPts);
+        } drawPts();
+
+        // 3. Slider Engine
+        let slides = document.querySelectorAll('.promo-slide'), idx = 0;
+        gsap.to(".active .promo-img", {scale:1.15, duration:10, ease:"none"}); // Initial Ken Burns
+        setInterval(() => {
+            let next = (idx + 1) % slides.length;
+            gsap.to(".promo-content", {opacity:0, x:-30, duration:0.5, onComplete: () => {
+                document.getElementById('p-title').innerText = slides[next].dataset.title;
+                document.getElementById('p-desc').innerText = slides[next].dataset.desc;
+                document.getElementById('p-tag').innerText = slides[next].dataset.tag;
+                gsap.to(".promo-content", {opacity:1, x:0, duration:1, ease:"power3.out"});
+            }});
+            gsap.to(slides[idx], {opacity:0, duration:1.5});
+            slides[idx].classList.remove('active'); slides[next].classList.add('active');
+            gsap.to(slides[next], {opacity:1, visibility:'visible', duration:1.5});
+            gsap.fromTo(slides[next].querySelector('.promo-img'), {scale:1}, {scale:1.15, duration:10, ease:"none"});
+            idx = next;
+        }, 8000);
+    </script>
+</body>
+</html>
