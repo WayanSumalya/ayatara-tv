@@ -3,61 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=1280, height=720, user-scalable=no">
-    <title>Ayatara Luxury Portal</title>
+    <title>Ayatara HD Visual Engine</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <style>
-        :root { --gold: #d4af37; --glass: rgba(0, 0, 0, 0.65); }
-        body, html { margin: 0; padding: 0; width: 1280px; height: 720px; overflow: hidden; background: #000; font-family: sans-serif; color: #fff; }
-
-        /* 1. Dust Particles Canvas (Luxury Effect) */
-        #dust-canvas { position: absolute; top: 0; left: 0; width: 1280px; height: 720px; z-index: 3; pointer-events: none; opacity: 0.6; }
-
-        /* 2. Background Slider & Ken Burns Effect */
-        #bg-slider { position: absolute; width: 1280px; height: 720px; z-index: 1; overflow: hidden; }
-        .slide { position: absolute; width: 1280px; height: 720px; opacity: 0; visibility: hidden; transition: opacity 2s ease-in-out; } /* Efek Crossfade 2 detik */
-        .slide.active { opacity: 1; visibility: visible; }
-        
-        /* Ken Burns Effect (Zoom-in Perlahan) */
-        .slide img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.1); transition: transform 12s linear; }
-        .active img { transform: scale(1.2); } /* Efek Zoom Pelan */
-        
-        /* Gradient Overlay (Mewah) */
-        .overlay { 
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(90deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 60%);
-            z-index: 2;
+        :root { --gold: #d4af37; }
+        body, html { 
+            margin: 0; padding: 0; width: 1280px; height: 720px; 
+            overflow: hidden; background: #000; font-family: 'Segoe UI', Arial, sans-serif; color: #fff;
         }
 
-        /* 3. Header */
-        header { position: absolute; top: 35px; left: 60px; right: 60px; display: flex; justify-content: space-between; align-items: flex-start; z-index: 10; }
-        .guest-info h1 { font-size: 34px; margin: 0; font-weight: 200; letter-spacing: 1px; }
+        /* Slider Background */
+        #bg-slider { position: absolute; width: 100%; height: 100%; z-index: 1; }
+        .promo-slide { position: absolute; width: 100%; height: 100%; opacity: 0; visibility: hidden; }
+        .promo-slide.active { opacity: 1; visibility: visible; }
+        .promo-img { width: 100%; height: 100%; object-fit: cover; }
+        
+        /* Gradient Overlay for Text Readability */
+        .overlay { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            background: linear-gradient(90deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 100%); z-index: 2; 
+        }
+
+        /* Dust Particles */
+        #particles { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 3; opacity: 0.4; pointer-events: none; }
+
+        /* Header Info */
+        header { position: absolute; top: 30px; left: 50px; right: 50px; display: flex; justify-content: space-between; z-index: 10; }
+        .guest-info h1 { font-size: 36px; margin: 0; font-weight: 300; letter-spacing: 1px; }
         .guest-info span { color: var(--gold); font-weight: 700; }
-        .room-tag { font-size: 16px; letter-spacing: 4px; opacity: 0.6; text-transform: uppercase; margin-bottom: 5px; }
+        .room-tag { font-size: 16px; letter-spacing: 4px; opacity: 0.7; margin-bottom: 5px; }
+        #clock { font-size: 52px; font-weight: 700; line-height: 1; }
 
-        #clock { font-size: 60px; font-weight: 700; line-height: 1; text-align: right; margin-bottom: 5px; }
-        #date { font-size: 16px; opacity: 0.8; text-align: right; text-transform: uppercase; letter-spacing: 1px; }
-
-        /* 4. Promo Content (Mewah) */
-        .promo-content { position: absolute; bottom: 180px; left: 60px; z-index: 10; max-width: 600px; }
-        #p-title { font-size: 64px; font-weight: 800; margin: 0; color: #fff; text-shadow: 0 10px 30px rgba(0,0,0,0.6); letter-spacing: 2px; }
-
+        /* Promo Content */
+        .promo-content { position: absolute; top: 220px; left: 50px; z-index: 10; max-width: 600px; }
+        .promo-tag { background: var(--gold); color: #000; padding: 4px 12px; font-weight: bold; font-size: 14px; display: inline-block; margin-bottom: 15px; }
+        .promo-title { font-size: 56px; margin: 0; font-weight: 800; line-height: 1.1; }
+        .promo-desc { font-size: 20px; color: #ddd; margin-top: 15px; border-left: 3px solid var(--gold); padding-left: 15px; }
     </style>
 </head>
-<body onload="initPortal()">
+<body>
 
-    <canvas id="dust-canvas"></canvas>
+    <canvas id="particles"></canvas>
 
     <div id="bg-slider">
-        <div class="slide active" data-title="LUXURY DINING">
-            <img src="assets/promo-dining.jpg">
+        <div class="promo-slide active" data-tag="OFFER" data-title="SUNSET DINNER" data-desc="Nikmati sajian laut segar dengan pemandangan tebing.">
+            <img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=1280&q=70" class="promo-img">
         </div>
-        <div class="slide" data-title="SPA LUXURY">
-            <img src="assets/promo-spa.jpg">
-        </div>
-        <div class="slide" data-title="LUXURY POOL">
-            <img src="assets/promo-pool.jpg">
+        <div class="promo-slide" data-tag="WELLNESS" data-title="BALINESE SPA" data-desc="Relaksasi mewah dengan terapis profesional kami.">
+            <img src="https://images.unsplash.com/photo-1544161515-4af6b1d462c2?auto=format&fit=crop&w=1280&q=70" class="promo-img">
         </div>
     </div>
-
+    
     <div class="overlay"></div>
 
     <header>
@@ -65,48 +61,48 @@
             <div class="room-tag">VILLA 302</div>
             <h1>Welcome, <span>Mr. Sumalya</span></h1>
         </div>
-        <div class="time-info">
-            <div id="clock">00:00</div>
-            <div id="date">Friday, 27 March 2026</div>
-        </div>
+        <div id="clock">00:00</div>
     </header>
 
     <div class="promo-content">
-        <h2 class="promo-title" id="p-title">LUXURY DINING</h2>
+        <div class="promo-tag" id="p-tag">OFFER</div>
+        <h2 class="promo-title" id="p-title">SUNSET DINNER</h2>
+        <p class="promo-desc" id="p-desc">Nikmati sajian laut segar dengan pemandangan tebing.</p>
     </div>
 
     <script>
-        // --- 1. Particles (Gold Dust Effect) ---
-        const c = document.getElementById('dust-canvas'); const ctx = c.getContext('2d');
-        c.width = 1280; c.height = 720;
-        let p = [];
-        // Variasi debu emas (Gold Particles)
-        for(let i=0; i<60; i++) p.push({x:Math.random()*c.width, y:Math.random()*c.height, r:Math.random()*1.5, s:Math.random()*0.3});
-        function draw() {
-            ctx.clearRect(0,0,1280,720); ctx.fillStyle="rgba(212,175,55,0.4)"; ctx.beginPath();
-            p.forEach(i => { ctx.moveTo(i.x, i.y); ctx.arc(i.x, i.y, i.r, 0, Math.PI*2); i.y-=i.s; if(i.y<0) i.y=720; });
-            ctx.fill(); requestAnimationFrame(draw);
-        }
-        draw();
-
-        // --- 2. Live Clock & Date ---
+        // 1. Clock Engine
         setInterval(() => {
-            const now = new Date();
-            document.getElementById('clock').innerText = now.toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'});
-            document.getElementById('date').innerText = now.toLocaleDateString('en-GB', {day:'numeric', month:'short'});
+            document.getElementById('clock').innerText = new Date().toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'});
         }, 1000);
 
-        // --- 3. Auto Slider & Motion Engine (DIPERBAIKI UNTUK HD) ---
-        let slides = document.querySelectorAll('.slide');
-        let titles = ["LUXURY DINING", "SPA LUXURY", "LUXURY POOL"];
-        let sIdx = 0;
-        setInterval(() => {
-            slides[sIdx].classList.remove('active'); // Memicu crossfade ( opacity:0 )
-            sIdx = (sIdx + 1) % slides.length;
-            slides[sIdx].classList.add('active'); // Memicu crossfade ( opacity:1 )
-            document.getElementById('p-title').innerText = titles[sIdx];
-        }, 8000); // Ganti slide setiap 8 detik
+        // 2. Particle Engine (Canvas)
+        const cvs = document.getElementById('particles'), ctx = cvs.getContext('2d');
+        cvs.width = 1280; cvs.height = 720;
+        let pts = Array.from({length: 60}, () => ({ x: Math.random()*1280, y: Math.random()*720, r: Math.random()*1.5, d: Math.random()*0.5 + 0.2 }));
+        function drawPts() {
+            ctx.clearRect(0,0,1280,720); ctx.fillStyle = "rgba(255,255,255,0.5)"; ctx.beginPath();
+            pts.forEach(p => { ctx.moveTo(p.x, p.y); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); p.y -= p.d; if(p.y < 0) p.y = 720; });
+            ctx.fill(); requestAnimationFrame(drawPts);
+        } drawPts();
 
+        // 3. Slider Engine
+        let slides = document.querySelectorAll('.promo-slide'), idx = 0;
+        gsap.to(".active .promo-img", {scale:1.15, duration:10, ease:"none"}); // Initial Ken Burns
+        setInterval(() => {
+            let next = (idx + 1) % slides.length;
+            gsap.to(".promo-content", {opacity:0, x:-30, duration:0.5, onComplete: () => {
+                document.getElementById('p-title').innerText = slides[next].dataset.title;
+                document.getElementById('p-desc').innerText = slides[next].dataset.desc;
+                document.getElementById('p-tag').innerText = slides[next].dataset.tag;
+                gsap.to(".promo-content", {opacity:1, x:0, duration:1, ease:"power3.out"});
+            }});
+            gsap.to(slides[idx], {opacity:0, duration:1.5});
+            slides[idx].classList.remove('active'); slides[next].classList.add('active');
+            gsap.to(slides[next], {opacity:1, visibility:'visible', duration:1.5});
+            gsap.fromTo(slides[next].querySelector('.promo-img'), {scale:1}, {scale:1.15, duration:10, ease:"none"});
+            idx = next;
+        }, 8000);
     </script>
 </body>
 </html>
