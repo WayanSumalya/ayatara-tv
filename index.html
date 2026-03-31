@@ -2,107 +2,195 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=1280, height=720, user-scalable=no">
-    <title>Ayatara HD Visual Engine</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <meta name="viewport" content="width=1920, height=1080, initial-scale=1.0">
+    <title>Ayatara Resort IPTV Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --gold: #d4af37; }
-        body, html { 
-            margin: 0; padding: 0; width: 1280px; height: 720px; 
-            overflow: hidden; background: #000; font-family: 'Segoe UI', Arial, sans-serif; color: #fff;
+        :root {
+            --gold: #c5a059;
+            --dark-overlay: rgba(0, 0, 0, 0.6);
+            --focus-scale: 1.1;
         }
 
-        /* Slider Background */
-        #bg-slider { position: absolute; width: 100%; height: 100%; z-index: 1; }
-        .promo-slide { position: absolute; width: 100%; height: 100%; opacity: 0; visibility: hidden; }
-        .promo-slide.active { opacity: 1; visibility: visible; }
-        .promo-img { width: 100%; height: 100%; object-fit: cover; }
-        
-        /* Gradient Overlay for Text Readability */
-        .overlay { 
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-            background: linear-gradient(90deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 100%); z-index: 2; 
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #000;
+            font-family: 'Poppins', sans-serif;
+            color: #fff;
         }
 
-        /* Dust Particles */
-        #particles { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 3; opacity: 0.4; pointer-events: none; }
+        /* Background dengan efek debu emas (Particle Overlay) */
+        .bg-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: url('https://ayatararesort.com/wp-content/uploads/2024/01/hero-bg.jpg') no-repeat center center;
+            background-size: cover;
+            z-index: -1;
+        }
 
-        /* Header Info */
-        header { position: absolute; top: 30px; left: 50px; right: 50px; display: flex; justify-content: space-between; z-index: 10; }
-        .guest-info h1 { font-size: 36px; margin: 0; font-weight: 300; letter-spacing: 1px; }
-        .guest-info span { color: var(--gold); font-weight: 700; }
-        .room-tag { font-size: 16px; letter-spacing: 4px; opacity: 0.7; margin-bottom: 5px; }
-        #clock { font-size: 52px; font-weight: 700; line-height: 1; }
+        .overlay {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.2) 100%);
+        }
 
-        /* Promo Content */
-        .promo-content { position: absolute; top: 220px; left: 50px; z-index: 10; max-width: 600px; }
-        .promo-tag { background: var(--gold); color: #000; padding: 4px 12px; font-weight: bold; font-size: 14px; display: inline-block; margin-bottom: 15px; }
-        .promo-title { font-size: 56px; margin: 0; font-weight: 800; line-height: 1.1; }
-        .promo-desc { font-size: 20px; color: #ddd; margin-top: 15px; border-left: 3px solid var(--gold); padding-left: 15px; }
+        .content {
+            padding: 80px 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            height: 80%;
+        }
+
+        .logo {
+            width: 250px;
+            margin-bottom: 20px;
+        }
+
+        .welcome-text h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 64px;
+            margin: 0;
+            color: var(--gold);
+        }
+
+        .welcome-text p {
+            font-size: 24px;
+            margin-bottom: 50px;
+            opacity: 0.8;
+        }
+
+        /* Navigation Grid */
+        .menu-container {
+            display: flex;
+            gap: 25px;
+        }
+
+        .menu-item {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 2px solid transparent;
+            width: 200px;
+            height: 150px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: white;
+        }
+
+        .menu-item i {
+            font-size: 40px;
+            margin-bottom: 15px;
+            color: var(--gold);
+        }
+
+        .menu-item span {
+            font-size: 18px;
+            font-weight: 400;
+        }
+
+        /* State saat Remote Fokus */
+        .menu-item:focus {
+            outline: none;
+            border-color: var(--gold);
+            background: rgba(197, 160, 89, 0.2);
+            transform: scale(var(--focus-scale));
+            box-shadow: 0 0 30px rgba(197, 160, 89, 0.5);
+        }
+
+        /* Animasi Debu Emas Sederhana */
+        @keyframes dustMove {
+            0% { transform: translateY(0); opacity: 0.3; }
+            50% { opacity: 0.6; }
+            100% { transform: translateY(-20px); opacity: 0.3; }
+        }
+
+        .particles {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: url('https://www.transparenttextures.com/patterns/stardust.png');
+            animation: dustMove 5s infinite alternate;
+            pointer-events: none;
+        }
     </style>
 </head>
 <body>
 
-    <canvas id="particles"></canvas>
-
-    <div id="bg-slider">
-        <div class="promo-slide active" data-tag="OFFER" data-title="SUNSET DINNER" data-desc="Nikmati sajian laut segar dengan pemandangan tebing.">
-            <img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=1280&q=70" class="promo-img">
-        </div>
-        <div class="promo-slide" data-tag="WELLNESS" data-title="BALINESE SPA" data-desc="Relaksasi mewah dengan terapis profesional kami.">
-            <img src="https://images.unsplash.com/photo-1544161515-4af6b1d462c2?auto=format&fit=crop&w=1280&q=70" class="promo-img">
-        </div>
+    <div class="bg-container">
+        <div class="overlay"></div>
+        <div class="particles"></div>
     </div>
-    
-    <div class="overlay"></div>
 
-    <header>
-        <div class="guest-info">
-            <div class="room-tag">VILLA 302</div>
-            <h1>Welcome, <span>Mr. Sumalya</span></h1>
+    <div class="content">
+        <div class="welcome-text">
+            <h1>Welcome to Ayatara</h1>
+            <p>Experience the soul of luxury in every detail.</p>
         </div>
-        <div id="clock">00:00</div>
-    </header>
 
-    <div class="promo-content">
-        <div class="promo-tag" id="p-tag">OFFER</div>
-        <h2 class="promo-title" id="p-title">SUNSET DINNER</h2>
-        <p class="promo-desc" id="p-desc">Nikmati sajian laut segar dengan pemandangan tebing.</p>
+        <nav class="menu-container">
+            <a href="hotel-info.html" class="menu-item" tabindex="1">
+                <i class="fas fa-hotel"></i>
+                <span>Hotel Info</span>
+            </a>
+            <a href="rooms.html" class="menu-item" tabindex="2">
+                <i class="fas fa-bed"></i>
+                <span>Rooms</span>
+            </a>
+            <a href="dining.html" class="menu-item" tabindex="3">
+                <i class="fas fa-utensils"></i>
+                <span>Dining</span>
+            </a>
+            <a href="livetv.html" class="menu-item" tabindex="4">
+                <i class="fas fa-tv"></i>
+                <span>Live TV</span>
+            </a>
+            <a href="https://www.youtube.com" class="menu-item" tabindex="5">
+                <i class="fab fa-youtube"></i>
+                <span>YouTube</span>
+            </a>
+            <a href="https://www.netflix.com" class="menu-item" tabindex="6">
+                <i class="fas fa-film"></i>
+                <span>Netflix</span>
+            </a>
+        </nav>
     </div>
 
     <script>
-        // 1. Clock Engine
-        setInterval(() => {
-            document.getElementById('clock').innerText = new Date().toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'});
-        }, 1000);
+        // Logika Remote Control (LG Magic Remote / Standard Remote)
+        document.addEventListener('keydown', function(e) {
+            const current = document.activeElement;
+            const items = document.querySelectorAll('.menu-item');
+            let index = Array.from(items).indexOf(current);
 
-        // 2. Particle Engine (Canvas)
-        const cvs = document.getElementById('particles'), ctx = cvs.getContext('2d');
-        cvs.width = 1280; cvs.height = 720;
-        let pts = Array.from({length: 60}, () => ({ x: Math.random()*1280, y: Math.random()*720, r: Math.random()*1.5, d: Math.random()*0.5 + 0.2 }));
-        function drawPts() {
-            ctx.clearRect(0,0,1280,720); ctx.fillStyle = "rgba(255,255,255,0.5)"; ctx.beginPath();
-            pts.forEach(p => { ctx.moveTo(p.x, p.y); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); p.y -= p.d; if(p.y < 0) p.y = 720; });
-            ctx.fill(); requestAnimationFrame(drawPts);
-        } drawPts();
+            switch(e.keyCode) {
+                case 37: // Left
+                    if (index > 0) items[index - 1].focus();
+                    break;
+                case 39: // Right
+                    if (index < items.length - 1) items[index + 1].focus();
+                    break;
+                case 13: // OK / Enter
+                    current.click();
+                    break;
+            }
+        });
 
-        // 3. Slider Engine
-        let slides = document.querySelectorAll('.promo-slide'), idx = 0;
-        gsap.to(".active .promo-img", {scale:1.15, duration:10, ease:"none"}); // Initial Ken Burns
-        setInterval(() => {
-            let next = (idx + 1) % slides.length;
-            gsap.to(".promo-content", {opacity:0, x:-30, duration:0.5, onComplete: () => {
-                document.getElementById('p-title').innerText = slides[next].dataset.title;
-                document.getElementById('p-desc').innerText = slides[next].dataset.desc;
-                document.getElementById('p-tag').innerText = slides[next].dataset.tag;
-                gsap.to(".promo-content", {opacity:1, x:0, duration:1, ease:"power3.out"});
-            }});
-            gsap.to(slides[idx], {opacity:0, duration:1.5});
-            slides[idx].classList.remove('active'); slides[next].classList.add('active');
-            gsap.to(slides[next], {opacity:1, visibility:'visible', duration:1.5});
-            gsap.fromTo(slides[next].querySelector('.promo-img'), {scale:1}, {scale:1.15, duration:10, ease:"none"});
-            idx = next;
-        }, 8000);
+        // Set fokus awal ke menu pertama saat halaman dimuat
+        window.onload = () => {
+            document.querySelector('.menu-item').focus();
+        };
     </script>
 </body>
 </html>
