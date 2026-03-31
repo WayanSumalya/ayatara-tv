@@ -169,7 +169,7 @@
         // 1. DATA MENU
         const menuItems = [
             { id: "yt", name: "YouTube", icon: "fa-brands fa-youtube", type: "app", appId: "youtube.leanback.v4", preview: "assets/previews/youtube.mp4" },
-            { id: "nf", name: "Netflix", icon: "fa-solid fa-n", type: "app", appId: "netflix", preview: "assets/previews/netflix.mp4" },
+    { id: "nf", name: "Netflix", icon: "fa-solid fa-n", type: "app", appId: "netflix", preview: "assets/previews/netflix.mp4" },
             { id: "dining", name: "Dining", icon: "fa-solid fa-utensils", type: "link", url: "https://ayatararesort.com/dining-experience/", preview: "assets/promo-dining.jpg" },
             { id: "hotel_info", name: "Hotel Info", icon: "fa-solid fa-circle-info", type: "link", url: "hotel.html", preview: "assets/previews/hotel.mp4" },
             { id: "room_info", name: "Room Service", icon: "fa-solid fa-bed", type: "link", url: "https://ayatararesort.com/accommodations/", preview: "assets/promo-pool.jpg" },
@@ -262,10 +262,14 @@
             const type = el.dataset.type;
             
             if(type === "app") {
-                console.log("Memanggil API TV untuk buka App: " + el.dataset.appId);
-                // Jika di test di browser biasa, beri alert.
-                // Jika di TV WebOS, gunakan: window.PalmSystem.launchApp(el.dataset.appId);
-                alert("Membuka aplikasi: " + el.dataset.name);
+                // Cek apakah kode ini dijalankan di dalam TV LG WebOS
+                if (window.PalmSystem && window.PalmSystem.launchApp) {
+                    console.log("Membuka aplikasi WebOS: " + el.dataset.appId);
+                    window.PalmSystem.launchApp(el.dataset.appId);
+                } else {
+                    // Jika di-test di laptop/browser biasa
+                    alert("Sistem mendeteksi ini bukan TV LG.\nJika di TV, ini akan membuka: " + el.dataset.name);
+                }
             } else if(type === "link") {
                 document.getElementById("mainContainer").style.opacity = "0";
                 setTimeout(() => window.location.href = el.dataset.url, 500);
