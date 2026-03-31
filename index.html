@@ -1,329 +1,108 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=1280, height=720, initial-scale=1.0">
-    <title>Ayatara Resort - Premium IPTV</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <meta name="viewport" content="width=1280, height=720, user-scalable=no">
+    <title>Ayatara HD Visual Engine</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <style>
-        /* =========================================
-           CSS: STYLING & ANIMATION
-           ========================================= */
-        :root {
-            --gold: #C6A46C;
-            --gold-bright: #e9d1a1;
-            --dark-bg: rgba(10, 10, 10, 0.85);
-            --transition-smooth: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        :root { --gold: #d4af37; }
+        body, html { 
+            margin: 0; padding: 0; width: 1280px; height: 720px; 
+            overflow: hidden; background: #000; font-family: 'Segoe UI', Arial, sans-serif; color: #fff;
         }
 
-        body {
-            margin: 0; padding: 0;
-            width: 1280px; height: 720px;
-            overflow: hidden; background: #000;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            color: #fff;
+        /* Slider Background */
+        #bg-slider { position: absolute; width: 100%; height: 100%; z-index: 1; }
+        .promo-slide { position: absolute; width: 100%; height: 100%; opacity: 0; visibility: hidden; }
+        .promo-slide.active { opacity: 1; visibility: visible; }
+        .promo-img { width: 100%; height: 100%; object-fit: cover; }
+        
+        /* Gradient Overlay for Text Readability */
+        .overlay { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            background: linear-gradient(90deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 100%); z-index: 2; 
         }
 
-        /* BACKGROUND VIDEO & OVERLAY */
-        .bg-video {
-            position: absolute; top: 0; left: 0;
-            width: 100%; height: 100%;
-            object-fit: cover; z-index: -3;
-        }
+        /* Dust Particles */
+        #particles { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 3; opacity: 0.4; pointer-events: none; }
 
-        .bg-overlay {
-            position: absolute; top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: radial-gradient(circle at 30% 50%, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.9) 100%);
-            z-index: -1;
-        }
+        /* Header Info */
+        header { position: absolute; top: 30px; left: 50px; right: 50px; display: flex; justify-content: space-between; z-index: 10; }
+        .guest-info h1 { font-size: 36px; margin: 0; font-weight: 300; letter-spacing: 1px; }
+        .guest-info span { color: var(--gold); font-weight: 700; }
+        .room-tag { font-size: 16px; letter-spacing: 4px; opacity: 0.7; margin-bottom: 5px; }
+        #clock { font-size: 52px; font-weight: 700; line-height: 1; }
 
-        /* EFEK DEBU EMAS (PARTICLES) */
-        .gold-particles {
-            position: absolute; top: 0; left: 0;
-            width: 100%; height: 100%;
-            background-image: url('https://www.transparenttextures.com/patterns/stardust.png');
-            opacity: 0.35;
-            z-index: -2;
-            animation: moveParticles 60s linear infinite;
-        }
-
-        @keyframes moveParticles {
-            from { background-position: 0 0; }
-            to { background-position: 1000px 1000px; }
-        }
-
-        /* LAYOUT UTAMA */
-        .container {
-            width: 100%; height: 100%;
-            padding: 60px; box-sizing: border-box;
-            display: flex; flex-direction: column;
-            transition: opacity 0.5s ease;
-        }
-
-        .header { margin-bottom: 40px; }
-        .brand-title {
-            font-size: 48px; font-weight: 300;
-            letter-spacing: 15px; color: var(--gold);
-            margin: 0; text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
-        }
-        .brand-subtitle {
-            font-size: 18px; letter-spacing: 8px;
-            margin: 5px 0 0 0; color: #aaa;
-        }
-
-        .content-wrapper { 
-            display: flex; justify-content: space-between; 
-            align-items: flex-end; height: 100%; 
-        }
-
-        /* GRID MENU */
-        .grid { 
-            display: grid; 
-            grid-template-columns: repeat(2, 260px); 
-            gap: 20px; 
-            margin-bottom: 20px;
-        }
-
-        .card {
-            height: 120px;
-            background: var(--dark-bg);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            transition: var(--transition-smooth);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-        }
-
-        .card i { 
-            font-size: 36px; color: #fff; 
-            margin-bottom: 12px; transition: var(--transition-smooth); 
-        }
-        .card span { font-size: 18px; font-weight: 400; letter-spacing: 1px; }
-
-        /* FOCUS STATE (EFEK HOVER/REMOTE) */
-        .card.focus {
-            transform: scale(1.1);
-            border-color: var(--gold);
-            background: rgba(198, 164, 108, 0.15);
-            box-shadow: 0 0 30px rgba(198, 164, 108, 0.5);
-            z-index: 10;
-        }
-        .card.focus i { color: var(--gold); transform: translateY(-3px); }
-        .card.focus span { color: var(--gold-bright); font-weight: 600; }
-
-        /* MINI PLAYER KANAN BAWAH */
-        .preview-side { margin-bottom: 20px; }
-        .mini-player-container {
-            width: 480px; height: 270px;
-            border-radius: 16px; overflow: hidden;
-            border: 2px solid var(--gold);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
-            position: relative; background: #000;
-        }
-        #miniPlayer { width: 100%; height: 100%; object-fit: cover; }
-        .mini-player-overlay {
-            position: absolute; bottom: 0; width: 100%;
-            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
-            padding: 20px 15px 10px 15px; box-sizing: border-box;
-            text-align: center; color: var(--gold); font-size: 18px; font-weight: 500;
-        }
+        /* Promo Content */
+        .promo-content { position: absolute; top: 220px; left: 50px; z-index: 10; max-width: 600px; }
+        .promo-tag { background: var(--gold); color: #000; padding: 4px 12px; font-weight: bold; font-size: 14px; display: inline-block; margin-bottom: 15px; }
+        .promo-title { font-size: 56px; margin: 0; font-weight: 800; line-height: 1.1; }
+        .promo-desc { font-size: 20px; color: #ddd; margin-top: 15px; border-left: 3px solid var(--gold); padding-left: 15px; }
     </style>
 </head>
 <body>
 
-    <video autoplay muted loop class="bg-video">
-        <source src="assets/bg_resort.mp4" type="video/mp4">
-    </video>
-    <div class="gold-particles"></div>
-    <div class="bg-overlay"></div>
+    <canvas id="particles"></canvas>
 
-    <div class="container" id="mainContainer">
-        <div class="header">
-            <h1 class="brand-title">AYATARA</h1>
-            <p class="brand-subtitle">RESORT</p>
+    <div id="bg-slider">
+        <div class="promo-slide active" data-tag="OFFER" data-title="SUNSET DINNER" data-desc="Nikmati sajian laut segar dengan pemandangan tebing.">
+            <img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=1280&q=70" class="promo-img">
         </div>
-
-        <div class="content-wrapper">
-            <div class="grid" id="grid">
-                </div>
-
-            <div class="preview-side">
-                <div class="mini-player-container">
-                    <video id="miniPlayer" muted loop autoplay></video>
-                    <div class="mini-player-overlay">
-                        <span id="miniPlayerTitle">Welcome to Ayatara</span>
-                    </div>
-                </div>
-            </div>
+        <div class="promo-slide" data-tag="WELLNESS" data-title="BALINESE SPA" data-desc="Relaksasi mewah dengan terapis profesional kami.">
+            <img src="https://images.unsplash.com/photo-1544161515-4af6b1d462c2?auto=format&fit=crop&w=1280&q=70" class="promo-img">
         </div>
+    </div>
+    
+    <div class="overlay"></div>
+
+    <header>
+        <div class="guest-info">
+            <div class="room-tag">VILLA 302</div>
+            <h1>Welcome, <span>Mr. Sumalya</span></h1>
+        </div>
+        <div id="clock">00:00</div>
+    </header>
+
+    <div class="promo-content">
+        <div class="promo-tag" id="p-tag">OFFER</div>
+        <h2 class="promo-title" id="p-title">SUNSET DINNER</h2>
+        <p class="promo-desc" id="p-desc">Nikmati sajian laut segar dengan pemandangan tebing.</p>
     </div>
 
     <script>
-        /* =========================================
-           JAVASCRIPT: DATA & LOGIC
-           ========================================= */
-        
-        // 1. DATA MENU
-        const menuItems = [
-            { id: "yt", name: "YouTube", icon: "fa-brands fa-youtube", type: "app", appId: "youtube.leanback.v4", preview: "assets/previews/youtube.mp4" },
-    { id: "nf", name: "Netflix", icon: "fa-solid fa-n", type: "app", appId: "netflix", preview: "assets/previews/netflix.mp4" },
-            { id: "dining", name: "Dining", icon: "fa-solid fa-utensils", type: "link", url: "https://ayatararesort.com/dining-experience/", preview: "assets/promo-dining.jpg" },
-            { id: "hotel_info", name: "Hotel Info", icon: "fa-solid fa-circle-info", type: "link", url: "hotel.html", preview: "assets/previews/hotel.mp4" },
-            { id: "room_info", name: "Room Service", icon: "fa-solid fa-bed", type: "link", url: "https://ayatararesort.com/accommodations/", preview: "assets/promo-pool.jpg" },
-            { id: "tv", name: "Live TV", icon: "fa-solid fa-tv", type: "link", url: "tv.html", preview: "assets/previews/tv_promo.mp4" }
-        ];
+        // 1. Clock Engine
+        setInterval(() => {
+            document.getElementById('clock').innerText = new Date().toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'});
+        }, 1000);
 
-        let elements = [];
-        let current;
-        let previewTimeout;
+        // 2. Particle Engine (Canvas)
+        const cvs = document.getElementById('particles'), ctx = cvs.getContext('2d');
+        cvs.width = 1280; cvs.height = 720;
+        let pts = Array.from({length: 60}, () => ({ x: Math.random()*1280, y: Math.random()*720, r: Math.random()*1.5, d: Math.random()*0.5 + 0.2 }));
+        function drawPts() {
+            ctx.clearRect(0,0,1280,720); ctx.fillStyle = "rgba(255,255,255,0.5)"; ctx.beginPath();
+            pts.forEach(p => { ctx.moveTo(p.x, p.y); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); p.y -= p.d; if(p.y < 0) p.y = 720; });
+            ctx.fill(); requestAnimationFrame(drawPts);
+        } drawPts();
 
-        // 2. BUILD UI
-        function buildGrid() {
-            const grid = document.getElementById("grid");
-            menuItems.forEach(item => {
-                let div = document.createElement("div");
-                div.className = "card";
-                div.setAttribute("data-nav", "");
-                div.innerHTML = `<i class="${item.icon}"></i><span>${item.name}</span>`;
-                
-                // Simpan data untuk navigasi
-                div.dataset.preview = item.preview;
-                div.dataset.type = item.type;
-                div.dataset.name = item.name;
-                if(item.appId) div.dataset.appId = item.appId;
-                if(item.url) div.dataset.url = item.url;
-
-                grid.appendChild(div);
-            });
-        }
-
-        // 3. SMART SPATIAL NAVIGATION
-        function initNav() {
-            elements = Array.from(document.querySelectorAll("[data-nav]"));
-            if(elements.length > 0) {
-                setFocus(elements[0]);
-            }
-        }
-
-        function setFocus(el) {
-            if(current) current.classList.remove("focus");
-            el.classList.add("focus");
-            current = el;
-
-            // Update Mini Player dengan Delay (Mencegah lag)
-            clearTimeout(previewTimeout);
-            const miniPlayer = document.getElementById("miniPlayer");
-            const miniPlayerTitle = document.getElementById("miniPlayerTitle");
-
-            if(current.dataset.preview) {
-                previewTimeout = setTimeout(() => {
-                    miniPlayer.src = current.dataset.preview;
-                    miniPlayer.play().catch(e => console.log("Menunggu interaksi user..."));
-                    miniPlayerTitle.innerText = "Preview: " + current.dataset.name;
-                }, 300);
-            }
-        }
-
-        function getCenter(el) {
-            const r = el.getBoundingClientRect();
-            return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
-        }
-
-        function findNext(dir) {
-            const currentPos = getCenter(current);
-            let candidates = elements.filter(el => {
-                if(el === current) return false;
-                const pos = getCenter(el);
-                if (dir === "right") return pos.x > currentPos.x + 10;
-                if (dir === "left") return pos.x < currentPos.x - 10;
-                if (dir === "down") return pos.y > currentPos.y + 10;
-                if (dir === "up") return pos.y < currentPos.y - 10;
-                return false;
-            });
-
-            if (candidates.length === 0) return;
-
-            let nearest = candidates.reduce((prev, el) => {
-                const p1 = getCenter(prev);
-                const p2 = getCenter(el);
-                const d1 = Math.hypot(p1.x - currentPos.x, p1.y - currentPos.y);
-                const d2 = Math.hypot(p2.x - currentPos.x, p2.y - currentPos.y);
-                return d2 < d1 ? el : prev;
-            });
-
-            setFocus(nearest);
-        }
-
-        // 4. EKSEKUSI MENU (ENTER)
-        function executeAction(el) {
-            const type = el.dataset.type;
-            
-            if(type === "app") {
-                // Cek apakah kode ini dijalankan di dalam TV LG WebOS
-                if (window.PalmSystem && window.PalmSystem.launchApp) {
-                    console.log("Membuka aplikasi WebOS: " + el.dataset.appId);
-                    window.PalmSystem.launchApp(el.dataset.appId);
-                } else {
-                    // Jika di-test di laptop/browser biasa
-                    alert("Sistem mendeteksi ini bukan TV LG.\nJika di TV, ini akan membuka: " + el.dataset.name);
-                }
-            } else if(type === "link") {
-                document.getElementById("mainContainer").style.opacity = "0";
-                setTimeout(() => window.location.href = el.dataset.url, 500);
-            }
-        }
-
-        // 5. EVENT LISTENER REMOTE TV (Dukungan WebOS + PC)
-        document.addEventListener("keydown", e => {
-            // Ambil kode tombol dalam format angka (WebOS) atau teks (PC)
-            const keyCode = e.keyCode;
-            const key = e.key;
-
-            // Kanan (39)
-            if (key === "ArrowRight" || keyCode === 39) {
-                findNext("right");
-            } 
-            // Kiri (37)
-            else if (key === "ArrowLeft" || keyCode === 37) {
-                findNext("left");
-            } 
-            // Bawah (40)
-            else if (key === "ArrowDown" || keyCode === 40) {
-                findNext("down");
-            } 
-            // Atas (38)
-            else if (key === "ArrowUp" || keyCode === 38) {
-                findNext("up");
-            } 
-            // Enter / OK (13)
-            else if (key === "Enter" || keyCode === 13) {
-                executeAction(current);
-            }
-        });
-
-        // Pastikan kursor TV tidak mengganggu navigasi custom kita
-        document.addEventListener("mousemove", e => {
-            e.preventDefault();
-        });
-
-        // 6. MULAI SISTEM
-        window.onload = () => {
-            buildGrid();
-            initNav();
-            
-            // Paksa TV untuk langsung fokus ke halaman web ini agar remote langsung aktif
-            window.focus();
-            document.body.focus();
-        };
-
-        // 6. MULAI SISTEM
-        window.onload = () => {
-            buildGrid();
-            initNav();
-        };
+        // 3. Slider Engine
+        let slides = document.querySelectorAll('.promo-slide'), idx = 0;
+        gsap.to(".active .promo-img", {scale:1.15, duration:10, ease:"none"}); // Initial Ken Burns
+        setInterval(() => {
+            let next = (idx + 1) % slides.length;
+            gsap.to(".promo-content", {opacity:0, x:-30, duration:0.5, onComplete: () => {
+                document.getElementById('p-title').innerText = slides[next].dataset.title;
+                document.getElementById('p-desc').innerText = slides[next].dataset.desc;
+                document.getElementById('p-tag').innerText = slides[next].dataset.tag;
+                gsap.to(".promo-content", {opacity:1, x:0, duration:1, ease:"power3.out"});
+            }});
+            gsap.to(slides[idx], {opacity:0, duration:1.5});
+            slides[idx].classList.remove('active'); slides[next].classList.add('active');
+            gsap.to(slides[next], {opacity:1, visibility:'visible', duration:1.5});
+            gsap.fromTo(slides[next].querySelector('.promo-img'), {scale:1}, {scale:1.15, duration:10, ease:"none"});
+            idx = next;
+        }, 8000);
     </script>
 </body>
 </html>
