@@ -2,206 +2,119 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>LG Pro:Centric Remote Test</title>
+<title>Ayatara TV Remote Test</title>
+
 <style>
-    body {
-        margin: 0;
-        background: #111;
-        color: #fff;
-        font-family: Arial, sans-serif;
-        overflow: hidden;
-    }
+body {
+    margin: 0;
+    background: #000;
+    color: #fff;
+    font-family: Arial;
+    overflow: hidden;
+}
 
-    .container {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 20px;
-        padding: 50px;
-    }
+.container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    padding: 40px;
+}
 
-    .btn {
-        background: #333;
-        padding: 40px;
-        text-align: center;
-        border-radius: 10px;
-        font-size: 20px;
-        transition: 0.2s;
-    }
+.btn {
+    background: #222;
+    padding: 50px;
+    text-align: center;
+    border-radius: 12px;
+    font-size: 22px;
+    transition: 0.2s;
+}
 
-    .btn.active {
-        background: #00c853;
-        transform: scale(1.1);
-    }
+.btn.active {
+    background: #00c853;
+    transform: scale(1.1);
+}
 
-    .debug {
-        position: fixed;
-        bottom: 10px;
-        left: 10px;
-        font-size: 18px;
-        color: #0f0;
-    }
+.debug {
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    color: lime;
+}
 </style>
 </head>
 
 <body tabindex="0">
 
-<div class="container" id="grid">
-    <div class="btn active">Button 1</div>
-    <div class="btn">Button 2</div>
-    <div class="btn">Button 3</div>
-    <div class="btn">Button 4</div>
-    <div class="btn">Button 5</div>
-    <div class="btn">Button 6</div>
-    <div class="btn">Button 7</div>
-    <div class="btn">Button 8</div>
+<div class="container">
+    <div class="btn active">Home</div>
+    <div class="btn">TV Channel</div>
+    <div class="btn">Movies</div>
+    <div class="btn">Room Service</div>
+    <div class="btn">Tour</div>
+    <div class="btn">Info</div>
+    <div class="btn">Settings</div>
+    <div class="btn">Exit</div>
 </div>
 
 <div class="debug" id="debug">Key: -</div>
 
 <script>
 let buttons = document.querySelectorAll('.btn');
-let currentIndex = 0;
+let index = 0;
 
-document.body.focus();
+// 🔥 FORCE FOCUS (WAJIB untuk Pro:Centric)
+function forceFocus() {
+    document.body.focus();
+    window.focus();
+}
+setInterval(forceFocus, 1000);
+window.onload = forceFocus;
 
-// Update active button
-function updateFocus() {
-    buttons.forEach(btn => btn.classList.remove('active'));
-    buttons[currentIndex].classList.add('active');
+// Update UI focus
+function update() {
+    buttons.forEach(b => b.classList.remove('active'));
+    buttons[index].classList.add('active');
 }
 
-// Handle remote key
-document.addEventListener('keydown', function(e) {
+// 🔥 REMOTE HANDLER (STABIL LG)
+document.onkeydown = function(e) {
 
-    document.getElementById("debug").innerText = "Key: " + e.keyCode;
+    let key = e.keyCode;
+    document.getElementById("debug").innerText = "Key: " + key;
 
-    switch (e.keyCode) {
+    switch(key) {
 
         case 37: // LEFT
-            if (currentIndex % 4 !== 0) currentIndex--;
+            if(index % 4 !== 0) index--;
             break;
 
         case 38: // UP
-            if (currentIndex - 4 >= 0) currentIndex -= 4;
+            if(index - 4 >= 0) index -= 4;
             break;
 
         case 39: // RIGHT
-            if (currentIndex % 4 !== 3) currentIndex++;
+            if(index % 4 !== 3) index++;
             break;
 
         case 40: // DOWN
-            if (currentIndex + 4 < buttons.length) currentIndex += 4;
+            if(index + 4 < buttons.length) index += 4;
             break;
 
         case 13: // OK
-            alert("Klik: " + buttons[currentIndex].innerText);
+            alert("SELECT: " + buttons[index].innerText);
             break;
 
-        case 461: // BACK (LG)
-            alert("BACK pressed");
+        case 461: // BACK
+            alert("BACK PRESSED");
             break;
-
-        default:
-            console.log("Key:", e.keyCode);
     }
 
-    updateFocus();
-});
+    update();
+};
 
-// Initial focus
-updateFocus();
+// Init
+update();
 </script>
 
-</body>
-</html><body>
-
-    <div class="main-bg"></div>
-
-    <div class="container">
-        <h1 class="logo-text">AYATARA</h1>
-        <div class="subtitle">RESORT & SPA</div>
-
-        <div class="menu-grid">
-            <div class="nav-box" data-url="hotel-info.html">
-                <i class="fas fa-info-circle"></i>
-                <span>Hotel Info</span>
-            </div>
-            <div class="nav-box" data-url="rooms.html">
-                <i class="fas fa-bed"></i>
-                <span>Rooms</span>
-            </div>
-            <div class="nav-box" data-url="dining.html">
-                <i class="fas fa-utensils"></i>
-                <span>Dining</span>
-            </div>
-            <div class="nav-box" data-url="livetv.html">
-                <i class="fas fa-tv"></i>
-                <span>Live TV</span>
-            </div>
-            <div class="nav-box" data-url="https://www.youtube.com/tv">
-                <i class="fab fa-youtube"></i>
-                <span>YouTube</span>
-            </div>
-            <div class="nav-box" data-url="https://www.netflix.com">
-                <i class="fas fa-film"></i>
-                <span>Netflix</span>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // Logika Remote Control Khusus TV
-        const items = document.querySelectorAll('.nav-box');
-        let currentIndex = 0;
-        const columns = 3; // Karena kita pakai 3 kolom
-
-        function updateFocus(newIndex) {
-            // Hapus efek dari menu sebelumnya
-            items[currentIndex].classList.remove('active');
-            
-            // Pindah ke menu baru
-            currentIndex = newIndex;
-            
-            // Berikan efek ke menu baru
-            items[currentIndex].classList.add('active');
-        }
-
-        document.addEventListener('keydown', function(e) {
-            switch(e.keyCode) {
-                case 37: // Panah KIRI
-                    if (currentIndex % columns !== 0) {
-                        updateFocus(currentIndex - 1);
-                    }
-                    break;
-                case 39: // Panah KANAN
-                    if ((currentIndex + 1) % columns !== 0 && currentIndex < items.length - 1) {
-                        updateFocus(currentIndex + 1);
-                    }
-                    break;
-                case 38: // Panah ATAS
-                    if (currentIndex >= columns) {
-                        updateFocus(currentIndex - columns);
-                    }
-                    break;
-                case 40: // Panah BAWAH
-                    if (currentIndex + columns < items.length) {
-                        updateFocus(currentIndex + columns);
-                    }
-                    break;
-                case 13: // Tombol OK / ENTER
-                    const targetUrl = items[currentIndex].getAttribute('data-url');
-                    // Jika URL valid, alihkan halaman
-                    if(targetUrl) {
-                        window.location.href = targetUrl;
-                    }
-                    break;
-            }
-        });
-
-        // Pastikan menu pertama langsung terpilih (fokus) saat halaman selesai dimuat
-        window.onload = function() {
-            items[0].classList.add('active');
-        };
-    </script>
 </body>
 </html>
