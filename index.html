@@ -276,16 +276,48 @@
             }
         }
 
-        // 5. EVENT LISTENER REMOTE TV
+        // 5. EVENT LISTENER REMOTE TV (Dukungan WebOS + PC)
         document.addEventListener("keydown", e => {
-            switch (e.key) {
-                case "ArrowRight": findNext("right"); break;
-                case "ArrowLeft": findNext("left"); break;
-                case "ArrowDown": findNext("down"); break;
-                case "ArrowUp": findNext("up"); break;
-                case "Enter": executeAction(current); break;
+            // Ambil kode tombol dalam format angka (WebOS) atau teks (PC)
+            const keyCode = e.keyCode;
+            const key = e.key;
+
+            // Kanan (39)
+            if (key === "ArrowRight" || keyCode === 39) {
+                findNext("right");
+            } 
+            // Kiri (37)
+            else if (key === "ArrowLeft" || keyCode === 37) {
+                findNext("left");
+            } 
+            // Bawah (40)
+            else if (key === "ArrowDown" || keyCode === 40) {
+                findNext("down");
+            } 
+            // Atas (38)
+            else if (key === "ArrowUp" || keyCode === 38) {
+                findNext("up");
+            } 
+            // Enter / OK (13)
+            else if (key === "Enter" || keyCode === 13) {
+                executeAction(current);
             }
         });
+
+        // Pastikan kursor TV tidak mengganggu navigasi custom kita
+        document.addEventListener("mousemove", e => {
+            e.preventDefault();
+        });
+
+        // 6. MULAI SISTEM
+        window.onload = () => {
+            buildGrid();
+            initNav();
+            
+            // Paksa TV untuk langsung fokus ke halaman web ini agar remote langsung aktif
+            window.focus();
+            document.body.focus();
+        };
 
         // 6. MULAI SISTEM
         window.onload = () => {
