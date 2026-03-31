@@ -1,195 +1,200 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=1920, height=1080, initial-scale=1.0">
-    <title>Ayatara Resort IPTV Portal</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
+    <title>Ayatara Resort IPTV</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
             --gold: #c5a059;
-            --dark-overlay: rgba(0, 0, 0, 0.6);
-            --focus-scale: 1.1;
+            --glass: rgba(0, 0, 0, 0.75);
         }
 
         body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
+            margin: 0; padding: 0;
+            width: 100vw; height: 100vh;
             overflow: hidden;
             background-color: #000;
-            font-family: 'Poppins', sans-serif;
-            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: white;
         }
 
-        /* Background dengan efek debu emas (Particle Overlay) */
-        .bg-container {
+        .main-bg {
             position: absolute;
-            width: 100%;
-            height: 100%;
-            background: url('https://ayatararesort.com/wp-content/uploads/2024/01/hero-bg.jpg') no-repeat center center;
+            width: 100%; height: 100%;
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), 
+                        url('https://ayatararesort.com/wp-content/uploads/2024/01/hero-bg.jpg');
             background-size: cover;
+            background-position: center;
             z-index: -1;
         }
 
-        .overlay {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.2) 100%);
-        }
-
-        .content {
-            padding: 80px 100px;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            height: 80%;
-        }
-
-        .logo {
-            width: 250px;
-            margin-bottom: 20px;
-        }
-
-        .welcome-text h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 64px;
-            margin: 0;
-            color: var(--gold);
-        }
-
-        .welcome-text p {
-            font-size: 24px;
-            margin-bottom: 50px;
-            opacity: 0.8;
-        }
-
-        /* Navigation Grid */
-        .menu-container {
-            display: flex;
-            gap: 25px;
-        }
-
-        .menu-item {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 2px solid transparent;
-            width: 200px;
-            height: 150px;
+        .container {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            border-radius: 15px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            text-decoration: none;
-            color: white;
+            height: 100%;
+            padding-top: 50px;
         }
 
-        .menu-item i {
-            font-size: 40px;
+        .logo-text {
+            font-size: 70px;
+            letter-spacing: 15px;
+            color: var(--gold);
+            margin: 0;
+            font-weight: 300;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            font-size: 20px;
+            letter-spacing: 5px;
+            margin-bottom: 50px;
+            opacity: 0.8;
+        }
+
+        /* Layout Grid 3 Kolom untuk Menu */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            padding: 20px;
+        }
+
+        .nav-box {
+            background: var(--glass);
+            border: 2px solid rgba(197, 160, 89, 0.3);
+            width: 200px;
+            height: 160px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease-in-out;
+            box-sizing: border-box;
+        }
+
+        .nav-box i {
+            font-size: 50px;
             margin-bottom: 15px;
             color: var(--gold);
+            transition: color 0.2s;
         }
 
-        .menu-item span {
+        .nav-box span {
             font-size: 18px;
-            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: bold;
+            color: white;
+            transition: color 0.2s;
         }
 
-        /* State saat Remote Fokus */
-        .menu-item:focus {
-            outline: none;
-            border-color: var(--gold);
-            background: rgba(197, 160, 89, 0.2);
-            transform: scale(var(--focus-scale));
-            box-shadow: 0 0 30px rgba(197, 160, 89, 0.5);
+        /* EFEK KETIKA REMOTE MEMILIH MENU (Class .active) */
+        .nav-box.active {
+            background: var(--gold);
+            transform: scale(1.15);
+            border-color: #fff;
+            box-shadow: 0 0 35px rgba(197, 160, 89, 0.8);
+            z-index: 10;
         }
 
-        /* Animasi Debu Emas Sederhana */
-        @keyframes dustMove {
-            0% { transform: translateY(0); opacity: 0.3; }
-            50% { opacity: 0.6; }
-            100% { transform: translateY(-20px); opacity: 0.3; }
-        }
-
-        .particles {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: url('https://www.transparenttextures.com/patterns/stardust.png');
-            animation: dustMove 5s infinite alternate;
-            pointer-events: none;
+        .nav-box.active i, .nav-box.active span {
+            color: #000;
         }
     </style>
 </head>
 <body>
 
-    <div class="bg-container">
-        <div class="overlay"></div>
-        <div class="particles"></div>
-    </div>
+    <div class="main-bg"></div>
 
-    <div class="content">
-        <div class="welcome-text">
-            <h1>Welcome to Ayatara</h1>
-            <p>Experience the soul of luxury in every detail.</p>
-        </div>
+    <div class="container">
+        <h1 class="logo-text">AYATARA</h1>
+        <div class="subtitle">RESORT & SPA</div>
 
-        <nav class="menu-container">
-            <a href="hotel-info.html" class="menu-item" tabindex="1">
-                <i class="fas fa-hotel"></i>
+        <div class="menu-grid">
+            <div class="nav-box" data-url="hotel-info.html">
+                <i class="fas fa-info-circle"></i>
                 <span>Hotel Info</span>
-            </a>
-            <a href="rooms.html" class="menu-item" tabindex="2">
+            </div>
+            <div class="nav-box" data-url="rooms.html">
                 <i class="fas fa-bed"></i>
                 <span>Rooms</span>
-            </a>
-            <a href="dining.html" class="menu-item" tabindex="3">
+            </div>
+            <div class="nav-box" data-url="dining.html">
                 <i class="fas fa-utensils"></i>
                 <span>Dining</span>
-            </a>
-            <a href="livetv.html" class="menu-item" tabindex="4">
+            </div>
+            <div class="nav-box" data-url="livetv.html">
                 <i class="fas fa-tv"></i>
                 <span>Live TV</span>
-            </a>
-            <a href="https://www.youtube.com" class="menu-item" tabindex="5">
+            </div>
+            <div class="nav-box" data-url="https://www.youtube.com/tv">
                 <i class="fab fa-youtube"></i>
                 <span>YouTube</span>
-            </a>
-            <a href="https://www.netflix.com" class="menu-item" tabindex="6">
+            </div>
+            <div class="nav-box" data-url="https://www.netflix.com">
                 <i class="fas fa-film"></i>
                 <span>Netflix</span>
-            </a>
-        </nav>
+            </div>
+        </div>
     </div>
 
     <script>
-        // Logika Remote Control (LG Magic Remote / Standard Remote)
-        document.addEventListener('keydown', function(e) {
-            const current = document.activeElement;
-            const items = document.querySelectorAll('.menu-item');
-            let index = Array.from(items).indexOf(current);
+        // Logika Remote Control Khusus TV
+        const items = document.querySelectorAll('.nav-box');
+        let currentIndex = 0;
+        const columns = 3; // Karena kita pakai 3 kolom
 
+        function updateFocus(newIndex) {
+            // Hapus efek dari menu sebelumnya
+            items[currentIndex].classList.remove('active');
+            
+            // Pindah ke menu baru
+            currentIndex = newIndex;
+            
+            // Berikan efek ke menu baru
+            items[currentIndex].classList.add('active');
+        }
+
+        document.addEventListener('keydown', function(e) {
             switch(e.keyCode) {
-                case 37: // Left
-                    if (index > 0) items[index - 1].focus();
+                case 37: // Panah KIRI
+                    if (currentIndex % columns !== 0) {
+                        updateFocus(currentIndex - 1);
+                    }
                     break;
-                case 39: // Right
-                    if (index < items.length - 1) items[index + 1].focus();
+                case 39: // Panah KANAN
+                    if ((currentIndex + 1) % columns !== 0 && currentIndex < items.length - 1) {
+                        updateFocus(currentIndex + 1);
+                    }
                     break;
-                case 13: // OK / Enter
-                    current.click();
+                case 38: // Panah ATAS
+                    if (currentIndex >= columns) {
+                        updateFocus(currentIndex - columns);
+                    }
+                    break;
+                case 40: // Panah BAWAH
+                    if (currentIndex + columns < items.length) {
+                        updateFocus(currentIndex + columns);
+                    }
+                    break;
+                case 13: // Tombol OK / ENTER
+                    const targetUrl = items[currentIndex].getAttribute('data-url');
+                    // Jika URL valid, alihkan halaman
+                    if(targetUrl) {
+                        window.location.href = targetUrl;
+                    }
                     break;
             }
         });
 
-        // Set fokus awal ke menu pertama saat halaman dimuat
-        window.onload = () => {
-            document.querySelector('.menu-item').focus();
+        // Pastikan menu pertama langsung terpilih (fokus) saat halaman selesai dimuat
+        window.onload = function() {
+            items[0].classList.add('active');
         };
     </script>
 </body>
