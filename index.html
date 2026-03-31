@@ -1,113 +1,119 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=1920, height=1080, initial-scale=1.0">
-    <title>Ayatara Resort IPTV</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        :root {
-            --gold: #c5a059;
-            --glass: rgba(0, 0, 0, 0.75);
-        }
+<meta charset="UTF-8">
+<title>LG Pro:Centric Remote Test</title>
+<style>
+    body {
+        margin: 0;
+        background: #111;
+        color: #fff;
+        font-family: Arial, sans-serif;
+        overflow: hidden;
+    }
 
-        body, html {
-            margin: 0; padding: 0;
-            width: 100vw; height: 100vh;
-            overflow: hidden;
-            background-color: #000;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: white;
-        }
+    .container {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+        padding: 50px;
+    }
 
-        .main-bg {
-            position: absolute;
-            width: 100%; height: 100%;
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), 
-                        url('https://ayatararesort.com/wp-content/uploads/2024/01/hero-bg.jpg');
-            background-size: cover;
-            background-position: center;
-            z-index: -1;
-        }
+    .btn {
+        background: #333;
+        padding: 40px;
+        text-align: center;
+        border-radius: 10px;
+        font-size: 20px;
+        transition: 0.2s;
+    }
 
-        .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            padding-top: 50px;
-        }
+    .btn.active {
+        background: #00c853;
+        transform: scale(1.1);
+    }
 
-        .logo-text {
-            font-size: 70px;
-            letter-spacing: 15px;
-            color: var(--gold);
-            margin: 0;
-            font-weight: 300;
-            text-transform: uppercase;
-        }
-
-        .subtitle {
-            font-size: 20px;
-            letter-spacing: 5px;
-            margin-bottom: 50px;
-            opacity: 0.8;
-        }
-
-        /* Layout Grid 3 Kolom untuk Menu */
-        .menu-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 25px;
-            padding: 20px;
-        }
-
-        .nav-box {
-            background: var(--glass);
-            border: 2px solid rgba(197, 160, 89, 0.3);
-            width: 200px;
-            height: 160px;
-            border-radius: 12px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s ease-in-out;
-            box-sizing: border-box;
-        }
-
-        .nav-box i {
-            font-size: 50px;
-            margin-bottom: 15px;
-            color: var(--gold);
-            transition: color 0.2s;
-        }
-
-        .nav-box span {
-            font-size: 18px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: bold;
-            color: white;
-            transition: color 0.2s;
-        }
-
-        /* EFEK KETIKA REMOTE MEMILIH MENU (Class .active) */
-        .nav-box.active {
-            background: var(--gold);
-            transform: scale(1.15);
-            border-color: #fff;
-            box-shadow: 0 0 35px rgba(197, 160, 89, 0.8);
-            z-index: 10;
-        }
-
-        .nav-box.active i, .nav-box.active span {
-            color: #000;
-        }
-    </style>
+    .debug {
+        position: fixed;
+        bottom: 10px;
+        left: 10px;
+        font-size: 18px;
+        color: #0f0;
+    }
+</style>
 </head>
-<body>
+
+<body tabindex="0">
+
+<div class="container" id="grid">
+    <div class="btn active">Button 1</div>
+    <div class="btn">Button 2</div>
+    <div class="btn">Button 3</div>
+    <div class="btn">Button 4</div>
+    <div class="btn">Button 5</div>
+    <div class="btn">Button 6</div>
+    <div class="btn">Button 7</div>
+    <div class="btn">Button 8</div>
+</div>
+
+<div class="debug" id="debug">Key: -</div>
+
+<script>
+let buttons = document.querySelectorAll('.btn');
+let currentIndex = 0;
+
+document.body.focus();
+
+// Update active button
+function updateFocus() {
+    buttons.forEach(btn => btn.classList.remove('active'));
+    buttons[currentIndex].classList.add('active');
+}
+
+// Handle remote key
+document.addEventListener('keydown', function(e) {
+
+    document.getElementById("debug").innerText = "Key: " + e.keyCode;
+
+    switch (e.keyCode) {
+
+        case 37: // LEFT
+            if (currentIndex % 4 !== 0) currentIndex--;
+            break;
+
+        case 38: // UP
+            if (currentIndex - 4 >= 0) currentIndex -= 4;
+            break;
+
+        case 39: // RIGHT
+            if (currentIndex % 4 !== 3) currentIndex++;
+            break;
+
+        case 40: // DOWN
+            if (currentIndex + 4 < buttons.length) currentIndex += 4;
+            break;
+
+        case 13: // OK
+            alert("Klik: " + buttons[currentIndex].innerText);
+            break;
+
+        case 461: // BACK (LG)
+            alert("BACK pressed");
+            break;
+
+        default:
+            console.log("Key:", e.keyCode);
+    }
+
+    updateFocus();
+});
+
+// Initial focus
+updateFocus();
+</script>
+
+</body>
+</html><body>
 
     <div class="main-bg"></div>
 
