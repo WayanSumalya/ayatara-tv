@@ -2,118 +2,1680 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Ayatara TV Remote Test</title>
-
+<meta name="viewport" content="width=1920, initial-scale=1.0">
+<title>Ayatara Resort — In-Room Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Cinzel:wght@400;500;600&family=Lato:wght@300;400&display=swap" rel="stylesheet">
 <style>
-body {
-    margin: 0;
-    background: #000;
-    color: #fff;
-    font-family: Arial;
-    overflow: hidden;
-}
+  :root {
+    --bg-deep:       #080f0d;
+    --bg-mid:        #0e1c18;
+    --bg-card:       #132219;
+    --bg-card-hover: #1c3028;
+    --gold:          #c9a96e;
+    --gold-light:    #e8cfa0;
+    --gold-dark:     #8a6d3b;
+    --cream:         #f2ece0;
+    --cream-muted:   #b8a98a;
+    --green-accent:  #3d6b57;
+    --red-accent:    #c0392b;
+    --border:        rgba(201,169,110,0.25);
+    --border-focus:  #c9a96e;
+    --shadow:        0 8px 40px rgba(0,0,0,0.6);
+  }
 
-.container {
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    width: 1920px;
+    height: 1080px;
+    overflow: hidden;
+    background: var(--bg-deep);
+    font-family: 'Lato', sans-serif;
+    color: var(--cream);
+    cursor: none;
+  }
+
+  /* ── Scrollable page wrapper ── */
+  .page {
+    display: none;
+    position: absolute;
+    inset: 0;
+    animation: fadeIn .45s ease both;
+  }
+  .page.active { display: flex; flex-direction: column; }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:none; } }
+
+  /* ══════════════════════════════
+     SHARED HEADER
+  ══════════════════════════════ */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 26px 64px 20px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+    background: linear-gradient(180deg, rgba(8,15,13,.98) 0%, rgba(8,15,13,.7) 100%);
+    position: relative;
+    z-index: 10;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    bottom: -1px; left: 64px; right: 64px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+
+  .logo-wrap { display: flex; flex-direction: column; }
+  .logo-name {
+    font-family: 'Cinzel', serif;
+    font-size: 26px;
+    font-weight: 500;
+    letter-spacing: 6px;
+    color: var(--gold-light);
+    line-height: 1;
+  }
+  .logo-sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--cream-muted);
+    letter-spacing: 3px;
+    margin-top: 4px;
+  }
+
+  .header-center {
+    position: absolute;
+    left: 50%; transform: translateX(-50%);
+    text-align: center;
+  }
+  .header-date {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 15px;
+    color: var(--cream-muted);
+    letter-spacing: 2px;
+  }
+  .header-time {
+    font-family: 'Cinzel', serif;
+    font-size: 36px;
+    color: var(--gold-light);
+    letter-spacing: 3px;
+    line-height: 1;
+    margin-top: 2px;
+  }
+
+  .header-right { text-align: right; }
+  .room-label {
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--cream-muted);
+    text-transform: uppercase;
+  }
+  .room-number {
+    font-family: 'Cinzel', serif;
+    font-size: 24px;
+    color: var(--gold-light);
+    letter-spacing: 4px;
+  }
+  .weather-line {
+    font-size: 12px;
+    color: var(--cream-muted);
+    letter-spacing: 1px;
+    margin-top: 3px;
+  }
+
+  /* ── Back button ── */
+  .btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Cinzel', serif;
+    font-size: 13px;
+    letter-spacing: 3px;
+    color: var(--cream-muted);
+    background: none;
+    border: 1px solid var(--border);
+    padding: 9px 22px;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all .25s;
+    outline: none;
+  }
+  .btn-back:focus, .btn-back:hover {
+    color: var(--gold);
+    border-color: var(--gold);
+    background: rgba(201,169,110,.08);
+    transform: translateX(-4px);
+  }
+  .btn-back svg { width: 14px; height: 14px; stroke: currentColor; fill: none; }
+
+  /* ══════════════════════════════
+     HOME PAGE
+  ══════════════════════════════ */
+  #page-home { background: var(--bg-deep); }
+
+  .home-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 70% 60% at 50% 110%, rgba(61,107,87,.18) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 30% at 15% 50%, rgba(201,169,110,.04) 0%, transparent 60%);
+  }
+  .home-bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(circle 1px at 30% 25%, rgba(201,169,110,.3) 0%, transparent 60%),
+      radial-gradient(circle 1px at 70% 60%, rgba(201,169,110,.2) 0%, transparent 60%),
+      radial-gradient(circle 1px at 55% 40%, rgba(201,169,110,.15) 0%, transparent 60%);
+  }
+
+  .home-welcome {
+    text-align: center;
+    padding: 28px 0 22px;
+    position: relative;
+    z-index: 2;
+  }
+  .home-greeting {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 20px;
+    color: var(--cream-muted);
+    letter-spacing: 4px;
+  }
+  .home-headline {
+    font-family: 'Cinzel', serif;
+    font-size: 15px;
+    letter-spacing: 8px;
+    color: var(--gold);
+    margin-top: 6px;
+    text-transform: uppercase;
+  }
+  .gold-divider {
+    display: flex; align-items: center; justify-content: center;
+    gap: 14px; margin: 10px auto 0;
+  }
+  .gold-divider::before, .gold-divider::after {
+    content: ''; flex: 1; max-width: 120px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold-dark));
+  }
+  .gold-divider::after { background: linear-gradient(90deg, var(--gold-dark), transparent); }
+  .gold-divider-diamond {
+    width: 7px; height: 7px;
+    background: var(--gold);
+    transform: rotate(45deg);
+    flex-shrink: 0;
+  }
+
+  /* Main menu grid */
+  .menu-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 18px;
+    padding: 20px 56px 16px;
+    flex: 1;
+    position: relative;
+    z-index: 2;
+  }
+
+  .menu-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: linear-gradient(160deg, var(--bg-card) 0%, rgba(8,15,13,.9) 100%);
+    padding: 0 20px;
+    cursor: pointer;
+    outline: none;
+    transition: all .3s cubic-bezier(.25,.46,.45,.94);
+    position: relative;
+    overflow: hidden;
+    min-height: 220px;
+  }
+  .menu-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(201,169,110,.07) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity .3s;
+  }
+  .menu-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    transform: scaleX(0);
+    transition: transform .35s ease;
+  }
+  .menu-card:focus, .menu-card:hover {
+    border-color: var(--gold);
+    background: linear-gradient(160deg, var(--bg-card-hover) 0%, rgba(8,15,13,.95) 100%);
+    transform: translateY(-6px);
+    box-shadow: 0 20px 60px rgba(0,0,0,.6), 0 0 30px rgba(201,169,110,.12);
+  }
+  .menu-card:focus::before, .menu-card:hover::before { opacity: 1; }
+  .menu-card:focus::after, .menu-card:hover::after { transform: scaleX(1); }
+
+  /* Special cards */
+  .menu-card.yt-card:focus, .menu-card.yt-card:hover {
+    border-color: #ff0000;
+    box-shadow: 0 20px 60px rgba(0,0,0,.6), 0 0 30px rgba(255,0,0,.15);
+  }
+  .menu-card.yt-card:focus::after, .menu-card.yt-card:hover::after {
+    background: linear-gradient(90deg, transparent, #ff0000, transparent);
+  }
+  .menu-card.nf-card:focus, .menu-card.nf-card:hover {
+    border-color: #e50914;
+    box-shadow: 0 20px 60px rgba(0,0,0,.6), 0 0 30px rgba(229,9,20,.15);
+  }
+  .menu-card.nf-card:focus::after, .menu-card.nf-card:hover::after {
+    background: linear-gradient(90deg, transparent, #e50914, transparent);
+  }
+  .menu-card.tv-card:focus, .menu-card.tv-card:hover {
+    border-color: #4a9fd4;
+    box-shadow: 0 20px 60px rgba(0,0,0,.6), 0 0 30px rgba(74,159,212,.15);
+  }
+  .menu-card.tv-card:focus::after, .menu-card.tv-card:hover::after {
+    background: linear-gradient(90deg, transparent, #4a9fd4, transparent);
+  }
+
+  .card-icon {
+    width: 64px; height: 64px;
+    margin-bottom: 22px;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+    transition: transform .3s ease;
+  }
+  .menu-card:focus .card-icon, .menu-card:hover .card-icon { transform: scale(1.1); }
+
+  .card-icon-ring {
+    position: absolute; inset: 0;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    transition: border-color .3s;
+  }
+  .menu-card:focus .card-icon-ring { border-color: var(--gold); }
+
+  .card-icon svg { width: 30px; height: 30px; }
+
+  .card-label {
+    font-family: 'Cinzel', serif;
+    font-size: 12px;
+    letter-spacing: 3px;
+    color: var(--cream);
+    text-align: center;
+    line-height: 1.5;
+    transition: color .3s;
+    text-transform: uppercase;
+  }
+  .menu-card:focus .card-label { color: var(--gold-light); }
+
+  .card-sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 12px;
+    color: var(--cream-muted);
+    text-align: center;
+    margin-top: 6px;
+    line-height: 1.4;
+  }
+
+  /* Home footer */
+  .home-footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    padding: 14px 64px;
+    border-top: 1px solid var(--border);
+    flex-shrink: 0;
+    position: relative; z-index: 2;
+  }
+  .home-footer::before {
+    content: '';
+    position: absolute;
+    top: -1px; left: 64px; right: 64px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold-dark), transparent);
+  }
+  .footer-item {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 12px;
+    color: var(--cream-muted);
+    letter-spacing: 1.5px;
+  }
+  .footer-item svg { width: 16px; height: 16px; stroke: var(--gold-dark); fill: none; }
+  .footer-hint {
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--gold-dark);
+    text-align: center;
+    flex: 1;
+  }
+
+  /* ══════════════════════════════
+     SUBPAGE LAYOUT
+  ══════════════════════════════ */
+  .sub-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 64px 14px;
+    flex-shrink: 0;
+  }
+  .sub-title-wrap {}
+  .sub-eyebrow {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--gold);
+    letter-spacing: 3px;
+  }
+  .sub-title {
+    font-family: 'Cinzel', serif;
+    font-size: 28px;
+    letter-spacing: 6px;
+    color: var(--cream);
+    line-height: 1;
+    margin-top: 4px;
+  }
+  .sub-divider {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--border), transparent);
+    margin: 0 40px;
+  }
+
+  .sub-content { flex: 1; overflow: hidden; padding: 0 64px 30px; }
+
+  /* ══════════════════════════════
+     HOTEL INFO PAGE
+  ══════════════════════════════ */
+  #page-info { background: var(--bg-deep); }
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 20px;
+    height: 100%;
+  }
+
+  .info-card {
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: var(--bg-card);
+    padding: 32px 36px;
+    outline: none;
+    transition: all .3s;
+    cursor: pointer;
+  }
+  .info-card:focus, .info-card:hover {
+    border-color: var(--gold);
+    background: var(--bg-card-hover);
+    box-shadow: 0 0 30px rgba(201,169,110,.08);
+  }
+  .info-card-title {
+    font-family: 'Cinzel', serif;
+    font-size: 14px;
+    letter-spacing: 4px;
+    color: var(--gold);
+    margin-bottom: 16px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .info-card-title svg { width: 18px; height: 18px; stroke: var(--gold); fill: none; }
+  .info-card p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    color: var(--cream);
+    line-height: 1.7;
+    font-weight: 300;
+  }
+  .info-highlight {
+    display: inline-block;
+    background: rgba(201,169,110,.12);
+    border: 1px solid rgba(201,169,110,.2);
+    border-radius: 2px;
+    padding: 4px 14px;
+    font-family: 'Cinzel', serif;
+    font-size: 12px;
+    color: var(--gold-light);
+    letter-spacing: 2px;
+    margin: 6px 6px 0 0;
+  }
+
+  /* ══════════════════════════════
+     DINING PAGE
+  ══════════════════════════════ */
+  #page-dining { background: var(--bg-deep); }
+
+  .dining-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    height: 100%;
+  }
+  .dining-card {
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: var(--bg-card);
+    padding: 30px 30px 26px;
+    outline: none;
+    cursor: pointer;
+    transition: all .3s;
+    display: flex; flex-direction: column;
+  }
+  .dining-card:focus, .dining-card:hover {
+    border-color: var(--gold);
+    background: var(--bg-card-hover);
+    transform: translateY(-4px);
+    box-shadow: 0 16px 50px rgba(0,0,0,.5);
+  }
+  .dining-icon { font-size: 36px; margin-bottom: 14px; }
+  .dining-name {
+    font-family: 'Cinzel', serif;
+    font-size: 16px;
+    letter-spacing: 3px;
+    color: var(--gold-light);
+    margin-bottom: 6px;
+  }
+  .dining-type {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--gold);
+    letter-spacing: 2px;
+    margin-bottom: 14px;
+  }
+  .dining-desc {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 17px;
+    color: var(--cream);
+    line-height: 1.65;
+    flex: 1;
+  }
+  .dining-hours {
+    margin-top: 16px;
+    display: flex; align-items: center; gap: 8px;
+    font-size: 12px;
+    color: var(--cream-muted);
+    letter-spacing: 1px;
+    border-top: 1px solid var(--border);
+    padding-top: 14px;
+  }
+  .dining-hours svg { width: 13px; height: 13px; stroke: var(--gold-dark); fill: none; }
+
+  /* ══════════════════════════════
+     WELLNESS PAGE
+  ══════════════════════════════ */
+  #page-wellness { background: var(--bg-deep); }
+
+  .wellness-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
-    padding: 40px;
-}
+    grid-template-rows: 1fr 1fr;
+    gap: 18px;
+    height: 100%;
+  }
+  .wellness-card {
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: var(--bg-card);
+    padding: 28px 26px;
+    outline: none; cursor: pointer;
+    transition: all .3s;
+    display: flex; flex-direction: column; align-items: flex-start;
+  }
+  .wellness-card:focus, .wellness-card:hover {
+    border-color: var(--gold);
+    background: var(--bg-card-hover);
+    transform: translateY(-4px);
+    box-shadow: 0 16px 50px rgba(0,0,0,.4);
+  }
+  .wellness-card.feature {
+    grid-column: span 2;
+    background: linear-gradient(135deg, #0e2a20 0%, #132219 100%);
+  }
+  .wellness-icon { font-size: 32px; margin-bottom: 14px; }
+  .wellness-name {
+    font-family: 'Cinzel', serif;
+    font-size: 13px;
+    letter-spacing: 3px;
+    color: var(--gold-light);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+  .wellness-desc {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    color: var(--cream);
+    line-height: 1.6;
+    flex: 1;
+  }
+  .wellness-tag {
+    margin-top: 12px;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--green-accent);
+    border: 1px solid rgba(61,107,87,.4);
+    padding: 3px 10px;
+    border-radius: 2px;
+    text-transform: uppercase;
+  }
 
-.btn {
-    background: #222;
-    padding: 50px;
-    text-align: center;
-    border-radius: 12px;
+  /* ══════════════════════════════
+     FACILITIES PAGE
+  ══════════════════════════════ */
+  #page-facilities { background: var(--bg-deep); }
+
+  .fac-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: 1fr 1fr;
+    gap: 18px;
+    height: 100%;
+  }
+  .fac-card {
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: var(--bg-card);
+    padding: 28px 26px;
+    outline: none; cursor: pointer;
+    transition: all .3s;
+    display: flex; flex-direction: column;
+  }
+  .fac-card:focus, .fac-card:hover {
+    border-color: var(--gold);
+    background: var(--bg-card-hover);
+    transform: translateY(-4px);
+    box-shadow: 0 16px 50px rgba(0,0,0,.5);
+  }
+  .fac-icon { font-size: 32px; margin-bottom: 14px; }
+  .fac-name {
+    font-family: 'Cinzel', serif;
+    font-size: 13px;
+    letter-spacing: 3px;
+    color: var(--gold-light);
+    margin-bottom: 10px;
+  }
+  .fac-desc {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    color: var(--cream);
+    line-height: 1.6;
+    flex: 1;
+  }
+  .fac-status {
+    margin-top: 12px;
+    font-size: 11px;
+    letter-spacing: 2px;
+    padding: 3px 10px;
+    border-radius: 2px;
+    display: inline-block;
+    text-transform: uppercase;
+  }
+  .fac-status.open { color: #5aba8a; border: 1px solid rgba(90,186,138,.3); }
+  .fac-status.hour { color: var(--gold); border: 1px solid var(--border); }
+
+  /* ══════════════════════════════
+     LIVE TV PAGE
+  ══════════════════════════════ */
+  #page-livetv { background: var(--bg-deep); }
+
+  .tv-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 16px;
+    height: 100%;
+  }
+  .tv-channel {
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: var(--bg-card);
+    padding: 20px 22px;
+    outline: none; cursor: pointer;
+    transition: all .3s;
+    display: flex; align-items: center; gap: 18px;
+  }
+  .tv-channel:focus, .tv-channel:hover {
+    border-color: #4a9fd4;
+    background: rgba(74,159,212,.06);
+    transform: translateX(4px);
+    box-shadow: 0 8px 30px rgba(0,0,0,.4);
+  }
+  .ch-num {
+    font-family: 'Cinzel', serif;
     font-size: 22px;
-    transition: 0.2s;
-}
+    color: var(--gold-dark);
+    min-width: 42px;
+    text-align: center;
+  }
+  .ch-info { flex: 1; }
+  .ch-name {
+    font-family: 'Cinzel', serif;
+    font-size: 13px;
+    letter-spacing: 2px;
+    color: var(--cream);
+  }
+  .ch-now {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--cream-muted);
+    margin-top: 4px;
+  }
+  .ch-badge {
+    font-size: 10px;
+    letter-spacing: 1px;
+    padding: 2px 8px;
+    border-radius: 2px;
+    text-transform: uppercase;
+    flex-shrink: 0;
+  }
+  .ch-badge.hd { background: rgba(74,159,212,.2); color: #4a9fd4; border: 1px solid rgba(74,159,212,.3); }
+  .ch-badge.live { background: rgba(192,57,43,.2); color: #e74c3c; border: 1px solid rgba(192,57,43,.3); animation: livePulse 2s infinite; }
+  @keyframes livePulse { 0%,100%{opacity:1} 50%{opacity:.5} }
 
-.btn.active {
-    background: #00c853;
-    transform: scale(1.1);
-}
+  /* ══════════════════════════════
+     STREAMING MODAL (YouTube/Netflix)
+  ══════════════════════════════ */
+  .stream-modal {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,.88);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn .3s ease;
+  }
+  .stream-modal.active { display: flex; }
 
-.debug {
-    position: fixed;
-    bottom: 10px;
-    left: 10px;
-    color: lime;
-}
+  .stream-box {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 56px 72px;
+    text-align: center;
+    max-width: 640px;
+  }
+  .stream-logo { font-size: 72px; margin-bottom: 28px; }
+  .stream-title {
+    font-family: 'Cinzel', serif;
+    font-size: 22px;
+    letter-spacing: 5px;
+    color: var(--gold-light);
+    margin-bottom: 10px;
+  }
+  .stream-msg {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 19px;
+    color: var(--cream-muted);
+    line-height: 1.65;
+    margin-bottom: 36px;
+  }
+  .stream-btns { display: flex; gap: 16px; justify-content: center; }
+  .stream-btn {
+    font-family: 'Cinzel', serif;
+    font-size: 12px;
+    letter-spacing: 3px;
+    padding: 14px 32px;
+    border-radius: 2px;
+    border: 1px solid;
+    cursor: pointer;
+    outline: none;
+    transition: all .25s;
+  }
+  .stream-btn.primary {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: #080f0d;
+  }
+  .stream-btn.primary:focus, .stream-btn.primary:hover {
+    background: var(--gold-light);
+    border-color: var(--gold-light);
+    transform: scale(1.04);
+  }
+  .stream-btn.secondary {
+    background: transparent;
+    border-color: var(--border);
+    color: var(--cream-muted);
+  }
+  .stream-btn.secondary:focus, .stream-btn.secondary:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  /* ══════════════════════════════
+     DECORATIVE ELEMENTS
+  ══════════════════════════════ */
+  .leaf-deco {
+    position: absolute;
+    pointer-events: none;
+    opacity: .04;
+    font-size: 200px;
+  }
+  .leaf-tl { top: 80px; left: 40px; transform: rotate(-20deg); }
+  .leaf-br { bottom: 60px; right: 40px; transform: rotate(160deg); }
+
+  /* ══════════════════════════════
+     FOCUS INDICATOR
+  ══════════════════════════════ */
+  *:focus { outline: none; }
+
+  /* Scrollbar hide */
+  ::-webkit-scrollbar { display: none; }
+
+  /* ══════════════════════════════
+     LOADING SCREEN
+  ══════════════════════════════ */
+  #loading {
+    position: fixed; inset: 0;
+    background: var(--bg-deep);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    z-index: 200;
+    transition: opacity .8s ease;
+  }
+  #loading.hide { opacity: 0; pointer-events: none; }
+  .load-logo {
+    font-family: 'Cinzel', serif;
+    font-size: 48px;
+    letter-spacing: 12px;
+    color: var(--gold);
+    margin-bottom: 8px;
+    animation: loadGlow 2s ease-in-out infinite alternate;
+  }
+  @keyframes loadGlow {
+    from { text-shadow: 0 0 20px rgba(201,169,110,.3); }
+    to   { text-shadow: 0 0 60px rgba(201,169,110,.7); }
+  }
+  .load-sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 16px;
+    color: var(--cream-muted);
+    letter-spacing: 5px;
+    margin-bottom: 50px;
+  }
+  .load-bar {
+    width: 200px; height: 1px;
+    background: var(--border);
+    position: relative; overflow: hidden;
+  }
+  .load-bar::after {
+    content: '';
+    position: absolute; top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    animation: loadSweep 1.8s ease infinite;
+  }
+  @keyframes loadSweep { to { left: 200%; } }
 </style>
 </head>
+<body>
 
-<body tabindex="0">
-
-<div class="container">
-    <div class="btn active">Home</div>
-    <div class="btn">TV Channel</div>
-    <div class="btn">Movies</div>
-    <div class="btn">Room Service</div>
-    <div class="btn">Tour</div>
-    <div class="btn">Info</div>
-    <div class="btn">Settings</div>
-    <div class="btn">Exit</div>
+<!-- ── LOADING SCREEN ── -->
+<div id="loading">
+  <div class="load-logo">AYATARA</div>
+  <div class="load-sub">Resort &amp; Spa</div>
+  <div class="load-bar"></div>
 </div>
 
-<div class="debug" id="debug">Key: -</div>
+<!-- ════════════════════════════════════════
+     HOME PAGE
+════════════════════════════════════════ -->
+<div id="page-home" class="page active">
+  <div class="home-bg"></div>
+  <span class="leaf-deco leaf-tl">🌿</span>
+  <span class="leaf-deco leaf-br">🌿</span>
 
+  <!-- Header -->
+  <header class="header">
+    <div class="logo-wrap">
+      <div class="logo-name">AYATARA</div>
+      <div class="logo-sub">Resort &amp; Spa</div>
+    </div>
+    <div class="header-center">
+      <div class="header-date" id="hDate"></div>
+      <div class="header-time" id="hTime">--:--</div>
+    </div>
+    <div class="header-right">
+      <div class="room-label">Your Suite</div>
+      <div class="room-number">612</div>
+      <div class="weather-line">☀ 31°C · Chiang Mai</div>
+    </div>
+  </header>
+
+  <!-- Welcome strip -->
+  <div class="home-welcome">
+    <div class="home-greeting">Welcome to Ayatara</div>
+    <div class="home-headline">How may we serve you today?</div>
+    <div class="gold-divider"><div class="gold-divider-diamond"></div></div>
+  </div>
+
+  <!-- Main Menu -->
+  <div class="menu-grid" id="mainGrid">
+
+    <!-- Hotel Info -->
+    <div class="menu-card" tabindex="1" onclick="showPage('info')" data-page="info">
+      <div class="card-icon">
+        <div class="card-icon-ring"></div>
+        <svg viewBox="0 0 24 24" stroke="var(--gold)" stroke-width="1.5">
+          <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+      </div>
+      <div class="card-label">Hotel<br>Information</div>
+      <div class="card-sub">Contacts &amp; Services</div>
+    </div>
+
+    <!-- Dining -->
+    <div class="menu-card" tabindex="2" onclick="showPage('dining')" data-page="dining">
+      <div class="card-icon">
+        <div class="card-icon-ring"></div>
+        <svg viewBox="0 0 24 24" stroke="var(--gold)" stroke-width="1.5">
+          <path d="M18 8h1a4 4 0 010 8h-1"/>
+          <path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/>
+          <line x1="6" y1="1" x2="6" y2="4"/>
+          <line x1="10" y1="1" x2="10" y2="4"/>
+          <line x1="14" y1="1" x2="14" y2="4"/>
+        </svg>
+      </div>
+      <div class="card-label">Dining</div>
+      <div class="card-sub">Restaurants &amp; Bars</div>
+    </div>
+
+    <!-- Wellness -->
+    <div class="menu-card" tabindex="3" onclick="showPage('wellness')" data-page="wellness">
+      <div class="card-icon">
+        <div class="card-icon-ring"></div>
+        <svg viewBox="0 0 24 24" stroke="var(--gold)" stroke-width="1.5">
+          <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
+        </svg>
+      </div>
+      <div class="card-label">Wellness<br>&amp; Spa</div>
+      <div class="card-sub">Treatments &amp; Yoga</div>
+    </div>
+
+    <!-- Facilities -->
+    <div class="menu-card" tabindex="4" onclick="showPage('facilities')" data-page="facilities">
+      <div class="card-icon">
+        <div class="card-icon-ring"></div>
+        <svg viewBox="0 0 24 24" stroke="var(--gold)" stroke-width="1.5">
+          <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+          <line x1="8" y1="21" x2="16" y2="21"/>
+          <line x1="12" y1="17" x2="12" y2="21"/>
+        </svg>
+      </div>
+      <div class="card-label">Facilities</div>
+      <div class="card-sub">Pool &amp; Amenities</div>
+    </div>
+
+    <!-- YouTube -->
+    <div class="menu-card yt-card" tabindex="5" onclick="openStream('youtube')">
+      <div class="card-icon">
+        <div class="card-icon-ring"></div>
+        <svg viewBox="0 0 24 24" fill="#ff0000" stroke="none">
+          <path d="M22.54 6.42a2.78 2.78 0 00-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 001.46 6.42 29 29 0 001 12a29 29 0 00.46 5.58 2.78 2.78 0 001.95 1.95C5.12 20 12 20 12 20s6.88 0 8.59-.47a2.78 2.78 0 001.95-1.95A29 29 0 0023 12a29 29 0 00-.46-5.58z"/>
+          <polygon fill="#fff" points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/>
+        </svg>
+      </div>
+      <div class="card-label">YouTube</div>
+      <div class="card-sub">Watch &amp; Explore</div>
+    </div>
+
+    <!-- Netflix -->
+    <div class="menu-card nf-card" tabindex="6" onclick="openStream('netflix')">
+      <div class="card-icon">
+        <div class="card-icon-ring"></div>
+        <svg viewBox="0 0 24 24" width="34" height="34">
+          <text x="0" y="22" font-family="Arial Black" font-size="22" font-weight="900" fill="#e50914">N</text>
+        </svg>
+      </div>
+      <div class="card-label">Netflix</div>
+      <div class="card-sub">Movies &amp; Series</div>
+    </div>
+
+    <!-- Live TV -->
+    <div class="menu-card tv-card" tabindex="7" onclick="showPage('livetv')">
+      <div class="card-icon">
+        <div class="card-icon-ring"></div>
+        <svg viewBox="0 0 24 24" stroke="#4a9fd4" stroke-width="1.5" fill="none">
+          <rect x="2" y="7" width="20" height="15" rx="2" ry="2"/>
+          <polyline points="17 2 12 7 7 2"/>
+          <circle cx="12" cy="13" r="3" fill="rgba(74,159,212,.25)" stroke="#4a9fd4" stroke-width="1.5"/>
+          <circle cx="12" cy="13" r="1" fill="#4a9fd4" stroke="none"/>
+        </svg>
+      </div>
+      <div class="card-label">Live TV</div>
+      <div class="card-sub">Channels &amp; News</div>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <div class="home-footer">
+    <div class="footer-item">
+      <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8 19.79 19.79 0 01.7 2.18 2 2 0 012.68 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91"/></svg>
+      Front Desk: Ext. 0
+    </div>
+    <div class="footer-item">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      Room Service: 24 Hours
+    </div>
+    <div class="footer-hint">USE ← → ↑ ↓ KEYS TO NAVIGATE · ENTER TO SELECT · BACK TO RETURN</div>
+    <div class="footer-item">
+      <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      Chiang Mai, Thailand
+    </div>
+    <div class="footer-item">
+      <svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+      In-Room Dining: Ext. 5
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     HOTEL INFO PAGE
+════════════════════════════════════════ -->
+<div id="page-info" class="page">
+  <header class="header">
+    <div class="logo-wrap">
+      <div class="logo-name">AYATARA</div>
+      <div class="logo-sub">Resort &amp; Spa</div>
+    </div>
+    <div class="header-center">
+      <div class="header-date" id="hDate2"></div>
+      <div class="header-time" id="hTime2">--:--</div>
+    </div>
+    <div class="header-right">
+      <button class="btn-back" onclick="showPage('home')">
+        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        BACK
+      </button>
+    </div>
+  </header>
+
+  <div class="sub-header">
+    <div class="sub-title-wrap">
+      <div class="sub-eyebrow">Discover</div>
+      <div class="sub-title">HOTEL INFORMATION</div>
+    </div>
+    <div class="sub-divider"></div>
+  </div>
+
+  <div class="sub-content">
+    <div class="info-grid">
+
+      <div class="info-card" tabindex="10">
+        <div class="info-card-title">
+          <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8 19.79 19.79 0 01.7 2.18 2 2 0 012.68 0h3a2 2 0 012 1.72"/></svg>
+          HOTEL CONTACTS
+        </div>
+        <p>
+          Front Desk &nbsp;·&nbsp; Ext. <b>0</b><br>
+          Room Service &nbsp;·&nbsp; Ext. <b>5</b><br>
+          Spa &amp; Wellness &nbsp;·&nbsp; Ext. <b>3</b><br>
+          Concierge &nbsp;·&nbsp; Ext. <b>4</b><br>
+          Housekeeping &nbsp;·&nbsp; Ext. <b>6</b>
+        </p>
+      </div>
+
+      <div class="info-card" tabindex="11">
+        <div class="info-card-title">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          CHECK-IN &amp; CHECK-OUT
+        </div>
+        <p>
+          Check-in from &nbsp;<b>14:00</b><br>
+          Check-out until &nbsp;<b>12:00</b><br>
+          Late check-out available upon request<br><br>
+          Early check-in &nbsp;·&nbsp; Subject to availability
+        </p>
+        <span class="info-highlight">Late Check-out: Call Ext. 0</span>
+      </div>
+
+      <div class="info-card" tabindex="12">
+        <div class="info-card-title">
+          <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+          ROOM FEATURES
+        </div>
+        <p>High-Speed Wi-Fi is complimentary throughout the resort.</p>
+        <br>
+        <span class="info-highlight">Wi-Fi: AYATARA_GUEST</span>
+        <span class="info-highlight">Password: Welcome2025</span><br><br>
+        <p>Minibar restocked daily · Laundry: same-day before 9AM</p>
+      </div>
+
+      <div class="info-card" tabindex="13">
+        <div class="info-card-title">
+          <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          RESORT LOCATION
+        </div>
+        <p>
+          Situated along the serene Mae Ping River, Ayatara Resort is 20 minutes from Chiang Mai International Airport and a short tuk-tuk ride from the ancient Old City.
+        </p>
+        <br>
+        <span class="info-highlight">Airport Transfer: Ext. 4</span>
+        <span class="info-highlight">Tuk-Tuk Service: Ext. 4</span>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     DINING PAGE
+════════════════════════════════════════ -->
+<div id="page-dining" class="page">
+  <header class="header">
+    <div class="logo-wrap">
+      <div class="logo-name">AYATARA</div>
+      <div class="logo-sub">Resort &amp; Spa</div>
+    </div>
+    <div class="header-center">
+      <div class="header-date" id="hDate3"></div>
+      <div class="header-time" id="hTime3">--:--</div>
+    </div>
+    <div class="header-right">
+      <button class="btn-back" onclick="showPage('home')">
+        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        BACK
+      </button>
+    </div>
+  </header>
+
+  <div class="sub-header">
+    <div class="sub-title-wrap">
+      <div class="sub-eyebrow">Culinary Journeys</div>
+      <div class="sub-title">DINING &amp; BAR</div>
+    </div>
+    <div class="sub-divider"></div>
+  </div>
+
+  <div class="sub-content">
+    <div class="dining-grid">
+
+      <div class="dining-card" tabindex="20">
+        <div class="dining-icon">🍜</div>
+        <div class="dining-name">SALA BAAN</div>
+        <div class="dining-type">Signature Thai Restaurant</div>
+        <div class="dining-desc">Authentic Northern Thai cuisine crafted with heirloom recipes and locally sourced ingredients. Experience the flavours of Lanna in an open-air riverside pavilion.</div>
+        <div class="dining-hours">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Breakfast 06:30–10:30 · Dinner 18:00–22:30
+        </div>
+      </div>
+
+      <div class="dining-card" tabindex="21">
+        <div class="dining-icon">🥩</div>
+        <div class="dining-name">THE VERANDA</div>
+        <div class="dining-type">International &amp; Grill</div>
+        <div class="dining-desc">An elegant all-day dining destination offering Western classics, premium grills, and seasonal menus overlooking the tropical garden and infinity pool.</div>
+        <div class="dining-hours">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          All Day 11:00–22:00 · Sunday Brunch 11:00–15:00
+        </div>
+      </div>
+
+      <div class="dining-card" tabindex="22">
+        <div class="dining-icon">🍸</div>
+        <div class="dining-name">LOTUS BAR</div>
+        <div class="dining-type">Cocktail Lounge &amp; Pool Bar</div>
+        <div class="dining-desc">Sip handcrafted cocktails infused with Thai botanicals while listening to live acoustic music. Our poolside bar is the perfect sunset gathering spot.</div>
+        <div class="dining-hours">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Daily 10:00–00:00 · Happy Hour 17:00–19:00
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     WELLNESS PAGE
+════════════════════════════════════════ -->
+<div id="page-wellness" class="page">
+  <header class="header">
+    <div class="logo-wrap">
+      <div class="logo-name">AYATARA</div>
+      <div class="logo-sub">Resort &amp; Spa</div>
+    </div>
+    <div class="header-center">
+      <div class="header-date" id="hDate4"></div>
+      <div class="header-time" id="hTime4">--:--</div>
+    </div>
+    <div class="header-right">
+      <button class="btn-back" onclick="showPage('home')">
+        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        BACK
+      </button>
+    </div>
+  </header>
+
+  <div class="sub-header">
+    <div class="sub-title-wrap">
+      <div class="sub-eyebrow">Restore · Rejuvenate · Renew</div>
+      <div class="sub-title">WELLNESS &amp; SPA</div>
+    </div>
+    <div class="sub-divider"></div>
+  </div>
+
+  <div class="sub-content">
+    <div class="wellness-grid">
+
+      <div class="wellness-card feature" tabindex="30">
+        <div class="wellness-icon">🌸</div>
+        <div class="wellness-name">Ayatara Signature Spa</div>
+        <div class="wellness-desc">Surrender to ancient healing traditions reimagined for the modern soul. Our signature 4-hand Thai massage uses warm herbal compresses and aromatic oils for a deeply restorative experience. Book via Ext. 3.</div>
+        <div class="wellness-tag">Reservations: Ext. 3</div>
+      </div>
+
+      <div class="wellness-card" tabindex="31">
+        <div class="wellness-icon">🧘</div>
+        <div class="wellness-name">Morning Yoga</div>
+        <div class="wellness-desc">Sunrise yoga on the garden terrace overlooking the lotus pond. Open to all levels.</div>
+        <div class="wellness-tag">Daily 07:00</div>
+      </div>
+
+      <div class="wellness-card" tabindex="32">
+        <div class="wellness-icon">💆</div>
+        <div class="wellness-name">Thai Massage</div>
+        <div class="wellness-desc">Traditional Thai bodywork techniques to release tension and restore balance.</div>
+        <div class="wellness-tag">60 · 90 · 120 min</div>
+      </div>
+
+      <div class="wellness-card feature" tabindex="33">
+        <div class="wellness-icon">🌊</div>
+        <div class="wellness-name">Hydrotherapy Pool</div>
+        <div class="wellness-desc">Warm mineral pools with therapeutic jets, cold plunge, and steam room — a complete hydrotherapy circuit designed to stimulate circulation and deep relaxation.</div>
+        <div class="wellness-tag">Daily 08:00–20:00</div>
+      </div>
+
+      <div class="wellness-card" tabindex="34">
+        <div class="wellness-icon">🌿</div>
+        <div class="wellness-name">Herbal Steam</div>
+        <div class="wellness-desc">Traditional Thai herbal steam room with lemongrass, kaffir lime, and galangal.</div>
+        <div class="wellness-tag">Daily 08:00–20:00</div>
+      </div>
+
+      <div class="wellness-card" tabindex="35">
+        <div class="wellness-icon">✨</div>
+        <div class="wellness-name">Facial Ritual</div>
+        <div class="wellness-desc">Luxury skin treatments using organic Thai botanicals and gold-infused serums.</div>
+        <div class="wellness-tag">By Appointment</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     FACILITIES PAGE
+════════════════════════════════════════ -->
+<div id="page-facilities" class="page">
+  <header class="header">
+    <div class="logo-wrap">
+      <div class="logo-name">AYATARA</div>
+      <div class="logo-sub">Resort &amp; Spa</div>
+    </div>
+    <div class="header-center">
+      <div class="header-date" id="hDate5"></div>
+      <div class="header-time" id="hTime5">--:--</div>
+    </div>
+    <div class="header-right">
+      <button class="btn-back" onclick="showPage('home')">
+        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        BACK
+      </button>
+    </div>
+  </header>
+
+  <div class="sub-header">
+    <div class="sub-title-wrap">
+      <div class="sub-eyebrow">World-Class Amenities</div>
+      <div class="sub-title">RESORT FACILITIES</div>
+    </div>
+    <div class="sub-divider"></div>
+  </div>
+
+  <div class="sub-content">
+    <div class="fac-grid">
+
+      <div class="fac-card" tabindex="40">
+        <div class="fac-icon">🏊</div>
+        <div class="fac-name">INFINITY POOL</div>
+        <div class="fac-desc">Horizon-edge infinity pool overlooking the Mae Ping River with private cabanas and dedicated pool butler service.</div>
+        <div class="fac-status open">Open 06:00–22:00</div>
+      </div>
+
+      <div class="fac-card" tabindex="41">
+        <div class="fac-icon">🏋️</div>
+        <div class="fac-name">FITNESS CENTRE</div>
+        <div class="fac-desc">State-of-the-art Technogym equipment, free weights, TRX and personal training available on request.</div>
+        <div class="fac-status open">Open 24 Hours</div>
+      </div>
+
+      <div class="fac-card" tabindex="42">
+        <div class="fac-icon">🚴</div>
+        <div class="fac-name">CYCLING</div>
+        <div class="fac-desc">Complimentary bicycles available for exploring the old city temples, night markets, and riverside trail.</div>
+        <div class="fac-status hour">08:00–18:00</div>
+      </div>
+
+      <div class="fac-card" tabindex="43">
+        <div class="fac-icon">🎾</div>
+        <div class="fac-name">TENNIS COURT</div>
+        <div class="fac-desc">Floodlit court available for resident guests. Equipment rental and professional lessons available.</div>
+        <div class="fac-status hour">Book via Ext. 4</div>
+      </div>
+
+      <div class="fac-card" tabindex="44">
+        <div class="fac-icon">🛶</div>
+        <div class="fac-name">RIVER CRUISE</div>
+        <div class="fac-desc">Private longtail boat excursions along the Mae Ping River at sunset. Champagne and canapés included.</div>
+        <div class="fac-status hour">Daily 17:30</div>
+      </div>
+
+      <div class="fac-card" tabindex="45">
+        <div class="fac-icon">🍳</div>
+        <div class="fac-name">COOKING CLASS</div>
+        <div class="fac-desc">Learn the art of Northern Thai cuisine with our head chef at our open-air Lanna kitchen garden.</div>
+        <div class="fac-status hour">Tue, Thu, Sat 10:00</div>
+      </div>
+
+      <div class="fac-card" tabindex="46">
+        <div class="fac-icon">🧸</div>
+        <div class="fac-name">KIDS CLUB</div>
+        <div class="fac-desc">Supervised activities including Thai craft workshops, cooking for kids, and garden treasure hunts.</div>
+        <div class="fac-status open">Open 09:00–17:00</div>
+      </div>
+
+      <div class="fac-card" tabindex="47">
+        <div class="fac-icon">🚁</div>
+        <div class="fac-name">CONCIERGE</div>
+        <div class="fac-desc">Your dedicated concierge arranges temple tours, elephant sanctuaries, airport transfers and local experiences.</div>
+        <div class="fac-status open">24 Hours · Ext. 4</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     LIVE TV PAGE
+════════════════════════════════════════ -->
+<div id="page-livetv" class="page">
+  <header class="header">
+    <div class="logo-wrap">
+      <div class="logo-name">AYATARA</div>
+      <div class="logo-sub">Resort &amp; Spa</div>
+    </div>
+    <div class="header-center">
+      <div class="header-date" id="hDate6"></div>
+      <div class="header-time" id="hTime6">--:--</div>
+    </div>
+    <div class="header-right">
+      <button class="btn-back" onclick="showPage('home')">
+        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        BACK
+      </button>
+    </div>
+  </header>
+
+  <div class="sub-header">
+    <div class="sub-title-wrap">
+      <div class="sub-eyebrow">Entertainment</div>
+      <div class="sub-title">LIVE TELEVISION</div>
+    </div>
+    <div class="sub-divider"></div>
+  </div>
+
+  <div class="sub-content">
+    <div class="tv-grid">
+
+      <div class="tv-channel" tabindex="50" onclick="launchChannel(1)">
+        <div class="ch-num">01</div>
+        <div class="ch-info">
+          <div class="ch-name">BBC World News</div>
+          <div class="ch-now">Global Headlines</div>
+        </div>
+        <div class="ch-badge hd">HD</div>
+      </div>
+
+      <div class="tv-channel" tabindex="51" onclick="launchChannel(2)">
+        <div class="ch-num">02</div>
+        <div class="ch-info">
+          <div class="ch-name">CNN International</div>
+          <div class="ch-now">World Report</div>
+        </div>
+        <div class="ch-badge live">LIVE</div>
+      </div>
+
+      <div class="tv-channel" tabindex="52" onclick="launchChannel(3)">
+        <div class="ch-num">03</div>
+        <div class="ch-info">
+          <div class="ch-name">NHK World Japan</div>
+          <div class="ch-now">Asia Tonight</div>
+        </div>
+        <div class="ch-badge hd">HD</div>
+      </div>
+
+      <div class="tv-channel" tabindex="53" onclick="launchChannel(4)">
+        <div class="ch-num">04</div>
+        <div class="ch-info">
+          <div class="ch-name">CGTN English</div>
+          <div class="ch-now">Business Asia</div>
+        </div>
+        <div class="ch-badge hd">HD</div>
+      </div>
+
+      <div class="tv-channel" tabindex="54" onclick="launchChannel(5)">
+        <div class="ch-num">05</div>
+        <div class="ch-info">
+          <div class="ch-name">Bloomberg TV</div>
+          <div class="ch-now">Markets Open</div>
+        </div>
+        <div class="ch-badge live">LIVE</div>
+      </div>
+
+      <div class="tv-channel" tabindex="55" onclick="launchChannel(6)">
+        <div class="ch-num">06</div>
+        <div class="ch-info">
+          <div class="ch-name">National Geographic</div>
+          <div class="ch-now">Wild Thailand</div>
+        </div>
+        <div class="ch-badge hd">HD</div>
+      </div>
+
+      <div class="tv-channel" tabindex="56" onclick="launchChannel(7)">
+        <div class="ch-num">07</div>
+        <div class="ch-info">
+          <div class="ch-name">Discovery Channel</div>
+          <div class="ch-now">MythBusters</div>
+        </div>
+        <div class="ch-badge hd">HD</div>
+      </div>
+
+      <div class="tv-channel" tabindex="57" onclick="launchChannel(8)">
+        <div class="ch-num">08</div>
+        <div class="ch-info">
+          <div class="ch-name">Thai PBS</div>
+          <div class="ch-now">สุดสัปดาห์</div>
+        </div>
+        <div class="ch-badge hd">HD</div>
+      </div>
+
+      <div class="tv-channel" tabindex="58" onclick="launchChannel(9)">
+        <div class="ch-num">09</div>
+        <div class="ch-info">
+          <div class="ch-name">Channel 3 Thailand</div>
+          <div class="ch-now">Evening Drama</div>
+        </div>
+        <div class="ch-badge live">LIVE</div>
+      </div>
+
+      <div class="tv-channel" tabindex="59" onclick="launchChannel(10)">
+        <div class="ch-num">10</div>
+        <div class="ch-info">
+          <div class="ch-name">True Vision Sports</div>
+          <div class="ch-now">Premier League</div>
+        </div>
+        <div class="ch-badge live">LIVE</div>
+      </div>
+
+      <div class="tv-channel" tabindex="60" onclick="launchChannel(11)">
+        <div class="ch-num">11</div>
+        <div class="ch-info">
+          <div class="ch-name">ESPN</div>
+          <div class="ch-now">SportsCenter Asia</div>
+        </div>
+        <div class="ch-badge hd">HD</div>
+      </div>
+
+      <div class="tv-channel" tabindex="61" onclick="launchChannel(12)">
+        <div class="ch-num">12</div>
+        <div class="ch-info">
+          <div class="ch-name">MTV Asia</div>
+          <div class="ch-now">Top 20 Countdown</div>
+        </div>
+        <div class="ch-badge hd">HD</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     STREAMING MODAL
+════════════════════════════════════════ -->
+<div id="streamModal" class="stream-modal">
+  <div class="stream-box">
+    <div class="stream-logo" id="streamLogo">▶</div>
+    <div class="stream-title" id="streamTitle">LAUNCHING APP</div>
+    <div class="stream-msg" id="streamMsg">Opening application on your TV…</div>
+    <div class="stream-btns">
+      <button class="stream-btn primary" tabindex="90" id="streamConfirm" onclick="confirmStream()">
+        OPEN APP
+      </button>
+      <button class="stream-btn secondary" tabindex="91" onclick="closeStream()">
+        CANCEL
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════ -->
 <script>
-let buttons = document.querySelectorAll('.btn');
-let index = 0;
+  // ── Clock ──────────────────────────────
+  const days   = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
-// 🔥 FORCE FOCUS (WAJIB untuk Pro:Centric)
-function forceFocus() {
-    document.body.focus();
-    window.focus();
-}
-setInterval(forceFocus, 1000);
-window.onload = forceFocus;
+  function updateClock() {
+    const now = new Date();
+    const hh = String(now.getHours()).padStart(2,'0');
+    const mm = String(now.getMinutes()).padStart(2,'0');
+    const timeStr = `${hh}:${mm}`;
+    const dateStr = `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
 
-// Update UI focus
-function update() {
-    buttons.forEach(b => b.classList.remove('active'));
-    buttons[index].classList.add('active');
-}
+    document.querySelectorAll('[id^="hTime"]').forEach(el => el.textContent = timeStr);
+    document.querySelectorAll('[id^="hDate"]').forEach(el => el.textContent = dateStr);
+  }
+  updateClock();
+  setInterval(updateClock, 10000);
 
-// 🔥 REMOTE HANDLER (STABIL LG)
-document.onkeydown = function(e) {
+  // ── Loading Screen ─────────────────────
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      document.getElementById('loading').classList.add('hide');
+    }, 2200);
+  });
 
-    let key = e.keyCode;
-    document.getElementById("debug").innerText = "Key: " + key;
+  // ── Page Navigation ────────────────────
+  let currentPage = 'home';
+  let currentStream = null;
 
-    switch(key) {
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => {
+      p.classList.remove('active');
+    });
+    const target = document.getElementById('page-' + id);
+    if (target) {
+      target.classList.add('active');
+      currentPage = id;
+      // Focus first focusable element
+      setTimeout(() => {
+        const first = target.querySelector('[tabindex]');
+        if (first) first.focus();
+      }, 100);
+    }
+  }
 
-        case 37: // LEFT
-            if(index % 4 !== 0) index--;
-            break;
+  // ── Streaming Modal ────────────────────
+  function openStream(service) {
+    currentStream = service;
+    const modal = document.getElementById('streamModal');
+    const logo  = document.getElementById('streamLogo');
+    const title = document.getElementById('streamTitle');
+    const msg   = document.getElementById('streamMsg');
 
-        case 38: // UP
-            if(index - 4 >= 0) index -= 4;
-            break;
-
-        case 39: // RIGHT
-            if(index % 4 !== 3) index++;
-            break;
-
-        case 40: // DOWN
-            if(index + 4 < buttons.length) index += 4;
-            break;
-
-        case 13: // OK
-            alert("SELECT: " + buttons[index].innerText);
-            break;
-
-        case 461: // BACK
-            alert("BACK PRESSED");
-            break;
+    if (service === 'youtube') {
+      logo.textContent  = '▶';
+      logo.style.color  = '#ff0000';
+      title.textContent = 'YOUTUBE';
+      msg.textContent   = 'YouTube will launch on your TV screen.\nPress OK on your remote to open the app.';
+    } else if (service === 'netflix') {
+      logo.textContent  = 'N';
+      logo.style.color  = '#e50914';
+      logo.style.fontFamily = "'Cinzel', serif";
+      logo.style.fontWeight = '900';
+      title.textContent = 'NETFLIX';
+      msg.textContent   = 'Netflix will launch on your TV screen.\nPress OK on your remote to open the app.';
     }
 
-    update();
-};
+    modal.classList.add('active');
+    setTimeout(() => document.getElementById('streamConfirm').focus(), 100);
+  }
 
-// Init
-update();
+  function closeStream() {
+    document.getElementById('streamModal').classList.remove('active');
+    currentStream = null;
+  }
+
+  function confirmStream() {
+    closeStream();
+    if (currentStream === 'youtube') {
+      // LG webOS: launch YouTube app
+      try {
+        if (typeof webOS !== 'undefined') {
+          webOS.service.request("luna://com.webos.service.applicationManager", {
+            method: "launch",
+            parameters: { id: "youtube.leanback.v4" },
+            onSuccess: function() {},
+            onFailure: function() { window.location.href = "sssp://youtube"; }
+          });
+        } else {
+          window.location.href = "sssp://youtube";
+        }
+      } catch(e) {
+        window.location.href = "sssp://youtube";
+      }
+    } else if (currentStream === 'netflix') {
+      // LG webOS: launch Netflix app
+      try {
+        if (typeof webOS !== 'undefined') {
+          webOS.service.request("luna://com.webos.service.applicationManager", {
+            method: "launch",
+            parameters: { id: "netflix" },
+            onSuccess: function() {},
+            onFailure: function() { window.location.href = "sssp://netflix"; }
+          });
+        } else {
+          window.location.href = "sssp://netflix";
+        }
+      } catch(e) {
+        window.location.href = "sssp://netflix";
+      }
+    }
+  }
+
+  // ── Live TV channel launch ─────────────
+  function launchChannel(ch) {
+    // For Procentric: use internal channel URI or procentric channel switch
+    // This triggers the TV tuner to switch to the specified channel number
+    try {
+      if (typeof webOS !== 'undefined') {
+        webOS.service.request("luna://com.webos.service.tv.systemproperty", {
+          method: "getSystemProperty",
+          parameters: { keys: ["modelName"] },
+          onSuccess: function() {}
+        });
+        // Switch to channel
+        webOS.service.request("luna://com.webos.service.tv.channel", {
+          method: "setChannel",
+          parameters: { channelNumber: String(ch) },
+          onSuccess: function() {},
+          onFailure: function() {}
+        });
+      }
+    } catch(e) {}
+  }
+
+  // ── Keyboard / D-pad Navigation ────────
+  document.addEventListener('keydown', function(e) {
+    const focused = document.activeElement;
+
+    switch(e.keyCode) {
+      case 8:   // Backspace
+      case 461: // LG Back key
+        e.preventDefault();
+        if (document.getElementById('streamModal').classList.contains('active')) {
+          closeStream();
+        } else if (currentPage !== 'home') {
+          showPage('home');
+        }
+        break;
+
+      case 13:  // Enter / OK
+        if (focused && focused !== document.body) {
+          focused.click();
+        }
+        break;
+
+      case 37: // Left
+      case 38: // Up
+      case 39: // Right
+      case 40: // Down
+        e.preventDefault();
+        navigateFocus(e.keyCode);
+        break;
+    }
+  });
+
+  function navigateFocus(key) {
+    const activePage = document.querySelector('.page.active');
+    if (!activePage) return;
+
+    const focusables = Array.from(activePage.querySelectorAll('[tabindex]'))
+      .filter(el => !el.closest('.stream-modal') || document.getElementById('streamModal').classList.contains('active'));
+
+    const modal = document.getElementById('streamModal');
+    const modalFocusables = Array.from(modal.querySelectorAll('[tabindex]'));
+    const isModalOpen = modal.classList.contains('active');
+
+    const pool = isModalOpen ? modalFocusables : focusables;
+    const idx = pool.indexOf(document.activeElement);
+
+    if (idx === -1) {
+      if (pool.length) pool[0].focus();
+      return;
+    }
+
+    let next = idx;
+    if (key === 37 || key === 38) next = Math.max(0, idx - 1);
+    if (key === 39 || key === 40) next = Math.min(pool.length - 1, idx + 1);
+
+    pool[next].focus();
+  }
+
+  // Initial focus
+  setTimeout(() => {
+    const first = document.querySelector('#page-home [tabindex]');
+    if (first) first.focus();
+  }, 2400);
 </script>
 
 </body>
