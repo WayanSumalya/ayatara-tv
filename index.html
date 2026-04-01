@@ -1676,6 +1676,38 @@
     const first = document.querySelector('#page-home [tabindex]');
     if (first) first.focus();
   }, 2400);
+
+  window.onload = function() {
+    // 1. Paksa fokus ke elemen pertama saat halaman muncul
+    setTimeout(function() {
+        const firstButton = document.querySelector('.nav-item');
+        if (firstButton) {
+            firstButton.focus();
+            console.log("Portal Ayatara: Focus set to first item");
+        }
+    }, 500);
+
+    // 2. Tambahkan pendengar tombol panah (Arrow Keys)
+    document.addEventListener('keydown', function(e) {
+        const active = document.activeElement;
+        
+        switch(e.keyCode) {
+            case 37: // Panah Kiri
+                if (active.previousElementSibling) active.previousElementSibling.focus();
+                break;
+            case 39: // Panah Kanan
+                if (active.nextElementSibling) active.nextElementSibling.focus();
+                break;
+            case 13: // Tombol OK/Enter
+                active.click();
+                break;
+            case 461: // Tombol BACK pada remote LG
+                // Jika ingin kembali ke menu utama TV
+                window.history.back();
+                break;
+        }
+    });
+};
 </script>
 
 </body>
