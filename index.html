@@ -19,12 +19,7 @@
   --border:     rgba(201,169,110,0.2);
 }
 *{margin:0;padding:0;box-sizing:border-box;}
-html,body{
-  width:1920px;height:1080px;overflow:hidden;
-  background:var(--bg-deep);
-  font-family:'Lato',sans-serif;color:var(--cream);
-  user-select:none;-webkit-user-select:none;
-}
+html,body{ width:1280px;height:720px;overflow:hidden; background:var(--bg-deep); font-family:'Lato',sans-serif;color:var(--cream); user-select:none; }
 
 /* ══ PAGE SYSTEM ══ */
 .page{display:none;position:absolute;inset:0;flex-direction:column;animation:pgIn .4s ease both;}
@@ -32,12 +27,12 @@ html,body{
 @keyframes pgIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 
 /* ══ NAVIGATION FOCUS ══ */
-.nav-item{transition:all .22s ease; outline:none;}
-.nav-item.tv-focus {
+.nav-item{ transition: all .22s ease; outline:none; border: 1px solid transparent; }
+.nav-item.tv-focus{
   border-color:var(--gold)!important;
   transform: scale(1.02)!important;
   background:var(--bg-hover)!important;
-  box-shadow:0 10px 30px rgba(0,0,0,0.5), 0 0 15px rgba(201,169,110,0.2)!important;
+  box-shadow:0 15px 40px rgba(0,0,0,0.7), 0 0 20px rgba(201,169,110,0.2)!important;
 }
 
 /* ══ HEADER ══ */
@@ -49,130 +44,107 @@ html,body{
 .logo-name{font-family:'Cinzel',serif;font-size:26px;letter-spacing:7px;color:var(--gold-light);}
 .hdr-time{font-family:'Cinzel',serif;font-size:38px;color:var(--gold-light);}
 
-/* ══ GRID & CARDS ══ */
-.menu-grid{
-  display:grid;grid-template-columns:repeat(7,1fr);gap:18px;
-  padding:20px 52px; flex:1;
-}
+/* ══ HOME GRID ══ */
+.menu-grid{ display:grid; grid-template-columns:repeat(7,1fr); gap:18px; padding:20px 52px; flex:1; }
 .menu-card{
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   border:1px solid var(--border);border-radius:4px;
   background:var(--bg-card); min-height:216px;
 }
-.card-label{font-family:'Cinzel',serif;font-size:11.5px;letter-spacing:2px;text-align:center;text-transform:uppercase;margin-top:15px;}
+.card-icon{ width:66px; height:66px; margin-bottom:20px; position:relative; display:flex; align-items:center; justify-content:center; }
+.card-icon-ring{ position:absolute; inset:0; border-radius:50%; border:1px solid var(--border); }
+.card-label{font-family:'Cinzel',serif;font-size:11.5px;letter-spacing:2.5px;text-align:center;text-transform:uppercase;}
 
-/* ══ LIVE TV SPECIFIC ══ */
+/* ══ LIVE TV GRID (45 Channels) ══ */
 .tv-grid {
   display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
-  overflow-y: auto; padding: 10px 0; height: 100%;
+  overflow-y: auto; padding: 10px 64px; height: 100%;
 }
 .ch-card {
   border: 1px solid var(--border); background: var(--bg-card);
-  padding: 18px; display: flex; align-items: center; gap: 15px; border-radius: 4px;
+  padding: 15px 20px; display: flex; align-items: center; gap: 20px; border-radius: 4px;
 }
-.ch-num { font-family: 'Cinzel', serif; font-size: 22px; color: var(--gold-dark); min-width: 45px; }
-.ch-name { font-family: 'Cinzel', serif; font-size: 14px; color: var(--cream); }
-.badge { font-size: 10px; padding: 2px 6px; border-radius: 2px; text-transform: uppercase; border: 1px solid rgba(255,255,255,0.2);}
-.badge.hd { color: #4a9fd4; border-color: #4a9fd4; }
+.ch-num { font-family: 'Cinzel', serif; font-size: 20px; color: var(--gold-dark); min-width: 40px; }
+.ch-logo-wrap { width: 60px; height: 40px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); border-radius: 4px; padding: 5px; }
+.ch-logo-wrap img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.ch-name { font-family: 'Cinzel', serif; font-size: 13px; color: var(--cream); letter-spacing: 1px; }
 
 /* ══ MODAL ══ */
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:200;align-items:center;justify-content:center;}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:200;align-items:center;justify-content:center;}
 .modal.active{display:flex;}
-.modal-box{background:var(--bg-card); border:1px solid var(--gold); padding:50px; text-align:center; width:600px; border-radius:10px;}
-.m-btns{display:flex; gap:15px; justify-content:center; margin-top:30px;}
-.stream-btn{padding:12px 30px; border:1px solid var(--gold); color:white; font-family:'Cinzel'; cursor:pointer;}
+.modal-box{background:var(--bg-card); border:1px solid var(--gold); padding:50px; text-align:center; width:640px; border-radius:8px;}
+.m-btns{display:flex; gap:16px; justify-content:center; margin-top:30px;}
+.stream-btn{ font-family:'Cinzel',serif; padding:14px 34px; border:1px solid var(--gold); background:none; color:white; cursor:pointer; }
+.stream-btn.tv-focus { background: var(--gold); color: #000; font-weight: bold; }
 
 /* ══ LOADING ══ */
-#loading{position:fixed;inset:0;z-index:300;background:var(--bg-deep);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .9s;}
-#loading.gone{opacity:0;pointer-events:none;}
+#loading{ position:fixed; inset:0; z-index:300; background:var(--bg-deep); display:flex; flex-direction:column; align-items:center; justify-content:center; }
+#loading.gone{ opacity:0; pointer-events:none; transition: opacity .9s; }
 
-.sub-body{flex:1;overflow:hidden;padding:0 64px 20px;}
-.btn-back{border:1px solid var(--border); padding:8px 20px; font-family:'Cinzel'; cursor:pointer;}
+.sub-body{ flex:1; overflow:hidden; padding:0 0 26px 0; }
+.btn-back{ border:1px solid var(--border); padding:10px 24px; font-family:'Cinzel'; cursor:pointer; margin-right: 64px; }
+::-webkit-scrollbar{display:none;}
 </style>
 </head>
 <body>
 
-<div id="loading"><div style="font-family:'Cinzel'; font-size:50px; color:var(--gold);">AYATARA</div></div>
+<div id="loading"><div style="font-family:'Cinzel'; font-size:52px; color:var(--gold); letter-spacing:14px;">AYATARA</div></div>
 
 <div id="page-home" class="page active">
   <header class="header">
-    <div><div class="logo-name">AYATARA</div><div style="font-size:12px; color:var(--muted);">Resort & Spa</div></div>
+    <div><div class="logo-name">AYATARA</div><div style="font-family:'Cormorant Garamond'; italic; font-size:13px; color:var(--muted);">Resort &amp; Spa</div></div>
     <div id="T0" class="hdr-time">--:--</div>
-    <div style="text-align:right;"><div style="font-size:24px; color:var(--gold-light); font-family:'Cinzel';">612</div></div>
+    <div style="text-align:right;"><div style="font-family:'Cinzel'; font-size:24px; color:var(--gold-light);">612</div></div>
   </header>
   <div class="menu-grid">
-    <div class="menu-card nav-item" id="c-info" data-act="page:info"><div class="card-label">Hotel Info</div></div>
-    <div class="menu-card nav-item" id="c-dining" data-act="page:dining"><div class="card-label">Dining</div></div>
-    <div class="menu-card nav-item" id="c-wellness" data-act="page:wellness"><div class="card-label">Wellness</div></div>
-    <div class="menu-card nav-item" id="c-fac" data-act="page:facilities"><div class="card-label">Facilities</div></div>
-    <div class="menu-card nav-item" id="c-yt" data-act="stream:youtube" style="border-color:#ff0000;"><div class="card-label" style="color:#ff0000;">YouTube</div></div>
-    <div class="menu-card nav-item" id="c-nf" data-act="stream:netflix" style="border-color:#e50914;"><div class="card-label" style="color:#e50914;">Netflix</div></div>
-    <div class="menu-card nav-item" id="c-tv" data-act="page:livetv"><div class="card-label">Live TV</div></div>
+    <div class="menu-card nav-item" id="c-info" data-act="page:info">
+        <div class="card-icon"><div class="card-icon-ring"></div><svg viewBox="0 0 24 24" stroke="var(--gold)" stroke-width="1.5" fill="none"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+        <div class="card-label">Hotel Info</div>
+    </div>
+    <div class="menu-card nav-item" id="c-dining" data-act="page:dining">
+        <div class="card-icon"><div class="card-icon-ring"></div><svg viewBox="0 0 24 24" stroke="var(--gold)" stroke-width="1.5" fill="none"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/></svg></div>
+        <div class="card-label">Dining</div>
+    </div>
+    <div class="menu-card nav-item" id="c-wellness" data-act="page:wellness">
+        <div class="card-icon"><div class="card-icon-ring"></div><svg viewBox="0 0 24 24" stroke="var(--gold)" stroke-width="1.5" fill="none"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23"/></svg></div>
+        <div class="card-label">Wellness</div>
+    </div>
+    <div class="menu-card nav-item" id="c-fac" data-act="page:facilities">
+        <div class="card-icon"><div class="card-icon-ring"></div><svg viewBox="0 0 24 24" stroke="var(--gold)" stroke-width="1.5" fill="none"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/></svg></div>
+        <div class="card-label">Facilities</div>
+    </div>
+    <div class="menu-card nav-item" id="c-yt" data-act="stream:youtube">
+        <div class="card-icon"><div class="card-icon-ring"></div><svg viewBox="0 0 24 24" width="34" height="34"><path fill="#ff0000" d="M22.54 6.42a2.78 2.78 0 00-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 001.46 6.42 29 29 0 001 12a29 29 0 00.46 5.58z"/><polygon fill="#fff" points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg></div>
+        <div class="card-label" style="color:#ff0000;">YouTube</div>
+    </div>
+    <div class="menu-card nav-item" id="c-nf" data-act="stream:netflix">
+        <div class="card-icon"><div class="card-icon-ring"></div><svg viewBox="0 0 28 36" width="36" height="36"><path fill="#e50914" d="M0 0h10v36H0z"/><path fill="#e50914" d="M18 0h10v36H18z"/><path fill="#111" d="M10 0l14 36h-6L4 0z"/></svg></div>
+        <div class="card-label" style="color:#e50914;">Netflix</div>
+    </div>
+    <div class="menu-card nav-item" id="c-tv" data-act="page:livetv">
+        <div class="card-icon"><div class="card-icon-ring"></div><svg viewBox="0 0 24 24" stroke="#4a9fd4" stroke-width="1.5" fill="none"><rect x="2" y="7" width="20" height="14" rx="2"/><circle cx="12" cy="14" r="3" stroke="#4a9fd4"/></svg></div>
+        <div class="card-label">Live TV</div>
+    </div>
   </div>
 </div>
 
 <div id="page-livetv" class="page">
   <header class="header">
-    <div class="logo-name">AYATARA</div>
-    <div class="btn-back nav-item" id="bk-tv" data-act="page:home">BACK TO HOME</div>
+    <div class="logo-name">AYATARA LIVE TV</div>
+    <div class="btn-back nav-item" id="bk-tv" data-act="page:home">BACK</div>
   </header>
   <div class="sub-body">
-    <div class="tv-grid" id="tvScroll">
-      <div class="ch-card nav-item" id="ch1" data-act="ch:1"><div class="ch-num">01</div><div class="ch-name">CCM</div><div class="badge hd">HD</div></div>
-      <div class="ch-card nav-item" id="ch2" data-act="ch:2"><div class="ch-num">02</div><div class="ch-name">Celestial Movies</div><div class="badge hd">HD</div></div>
-      <div class="ch-card nav-item" id="ch3" data-act="ch:3"><div class="ch-num">03</div><div class="ch-name">KIX</div><div class="badge hd">HD</div></div>
-      <div class="ch-card nav-item" id="ch4" data-act="ch:4"><div class="ch-num">04</div><div class="ch-name">Citra Bioskop</div><div class="badge hd">HD</div></div>
-      <div class="ch-card nav-item" id="ch5" data-act="ch:5"><div class="ch-num">05</div><div class="ch-name">Thrill</div><div class="badge hd">HD</div></div>
-      <div class="ch-card nav-item" id="ch6" data-act="ch:6"><div class="ch-num">06</div><div class="ch-name">Zee Bioskop</div><div class="badge hd">HD</div></div>
-      <div class="ch-card nav-item" id="ch7" data-act="ch:7"><div class="ch-num">07</div><div class="ch-name">Rock Action</div><div class="badge hd">HD</div></div>
-      <div class="ch-card nav-item" id="ch8" data-act="ch:8"><div class="ch-num">08</div><div class="ch-name">Rock Entertainment</div><div class="badge hd">HD</div></div>
-      <div class="ch-card nav-item" id="ch9" data-act="ch:9"><div class="ch-num">09</div><div class="ch-name">RT News</div><div class="badge hd">HD</div></div>
-      <div class="ch-card nav-item" id="ch10" data-act="ch:10"><div class="ch-num">10</div><div class="ch-name">BBC News</div><div class="badge hd">HD</div></div>
-      <div class="ch-card nav-item" id="ch11" data-act="ch:11"><div class="ch-num">11</div><div class="ch-name">CNA</div><div class="badge hd">HD</div></div>
-      <div class="ch-card nav-item" id="ch12" data-act="ch:12"><div class="ch-num">12</div><div class="ch-name">Al Jazeera</div><div class="badge hd">HD</div></div>
-      <div class="ch-card nav-item" id="ch13" data-act="ch:13"><div class="ch-num">13</div><div class="ch-name">HGTV</div><div class="badge hd">HD</div></div>
-      <div class="ch-card nav-item" id="ch14" data-act="ch:14"><div class="ch-num">14</div><div class="ch-name">AFC</div><div class="badge hd">HD</div></div>
-      <div class="ch-card nav-item" id="ch15" data-act="ch:15"><div class="ch-num">15</div><div class="ch-name">BBC Life</div><div class="badge hd">HD</div></div>
-      <div class="ch-card nav-item" id="ch16" data-act="ch:16"><div class="ch-num">16</div><div class="ch-name">BBC Earth</div><div class="badge hd">HD</div></div>
-      <div class="ch-card nav-item" id="ch17" data-act="ch:17"><div class="ch-num">17</div><div class="ch-name">Discovery</div><div class="badge hd">HD</div></div>
-      <div class="ch-card nav-item" id="ch18" data-act="ch:18"><div class="ch-num">18</div><div class="ch-name">Animal Planet</div><div class="badge hd">HD</div></div>
-      <div class="ch-card nav-item" id="ch19" data-act="ch:19"><div class="ch-num">19</div><div class="ch-name">Nickelodeon</div><div class="badge hd">HD</div></div>
-      <div class="ch-card nav-item" id="ch20" data-act="ch:20"><div class="ch-num">20</div><div class="ch-name">Nick Jr</div><div class="badge hd">HD</div></div>
-      <div class="ch-card nav-item" id="ch21" data-act="ch:21"><div class="ch-num">21</div><div class="ch-name">DreamWorks</div><div class="badge hd">HD</div></div>
-      <div class="ch-card nav-item" id="ch22" data-act="ch:22"><div class="ch-num">22</div><div class="ch-name">Zoomoo</div><div class="badge hd">HD</div></div>
-      <div class="ch-card nav-item" id="ch23" data-act="ch:23"><div class="ch-num">23</div><div class="ch-name">TVN</div><div class="badge hd">HD</div></div>
-      <div class="ch-card nav-item" id="ch24" data-act="ch:24"><div class="ch-num">24</div><div class="ch-name">TVRI World</div><div class="badge hd">HD</div></div>
-      <div class="ch-card nav-item" id="ch25" data-act="ch:25"><div class="ch-num">25</div><div class="ch-name">NHK World</div><div class="badge hd">HD</div></div>
-      <div class="ch-card nav-item" id="ch26" data-act="ch:26"><div class="ch-num">26</div><div class="ch-name">Red Bull TV</div><div class="badge hd">HD</div></div>
-      <div class="ch-card nav-item" id="ch27" data-act="ch:27"><div class="ch-num">27</div><div class="ch-name">SCTV</div><div class="badge hd">HD</div></div>
-      <div class="ch-card nav-item" id="ch28" data-act="ch:28"><div class="ch-num">28</div><div class="ch-name">Moji</div><div class="badge hd">HD</div></div>
-      <div class="ch-card nav-item" id="ch29" data-act="ch:29"><div class="ch-num">29</div><div class="ch-name">Mentari TV</div><div class="badge hd">HD</div></div>
-      <div class="ch-card nav-item" id="ch30" data-act="ch:30"><div class="ch-num">30</div><div class="ch-name">Trans TV</div><div class="badge hd">HD</div></div>
-      <div class="ch-card nav-item" id="ch31" data-act="ch:31"><div class="ch-num">31</div><div class="ch-name">Trans 7</div><div class="badge hd">HD</div></div>
-      <div class="ch-card nav-item" id="ch32" data-act="ch:32"><div class="ch-num">32</div><div class="ch-name">Madinah TV</div><div class="badge hd">HD</div></div>
-      <div class="ch-card nav-item" id="ch33" data-act="ch:33"><div class="ch-num">33</div><div class="ch-name">Mekkah TV</div><div class="badge hd">HD</div></div>
-      <div class="ch-card nav-item" id="ch34" data-act="ch:34"><div class="ch-num">34</div><div class="ch-name">Rodja TV</div><div class="badge hd">HD</div></div>
-      <div class="ch-card nav-item" id="ch35" data-act="ch:35"><div class="ch-num">35</div><div class="ch-name">RCTI</div><div class="badge hd">HD</div></div>
-      <div class="ch-card nav-item" id="ch36" data-act="ch:36"><div class="ch-num">36</div><div class="ch-name">MNCTV</div><div class="badge hd">HD</div></div>
-      <div class="ch-card nav-item" id="ch37" data-act="ch:37"><div class="ch-num">37</div><div class="ch-name">Global TV</div><div class="badge hd">HD</div></div>
-      <div class="ch-card nav-item" id="ch38" data-act="ch:38"><div class="ch-num">38</div><div class="ch-name">iNews</div><div class="badge hd">HD</div></div>
-      <div class="ch-card nav-item" id="ch39" data-act="ch:39"><div class="ch-num">39</div><div class="ch-name">ANTV</div><div class="badge hd">HD</div></div>
-      <div class="ch-card nav-item" id="ch40" data-act="ch:40"><div class="ch-num">40</div><div class="ch-name">TV One</div><div class="badge hd">HD</div></div>
-      <div class="ch-card nav-item" id="ch41" data-act="ch:41"><div class="ch-num">41</div><div class="ch-name">Kompas TV</div><div class="badge hd">HD</div></div>
-      <div class="ch-card nav-item" id="ch42" data-act="ch:42"><div class="ch-num">42</div><div class="ch-name">Metro TV</div><div class="badge hd">HD</div></div>
-      <div class="ch-card nav-item" id="ch43" data-act="ch:43"><div class="ch-num">43</div><div class="ch-name">Phoenix China</div><div class="badge hd">HD</div></div>
-      <div class="ch-card nav-item" id="ch44" data-act="ch:44"><div class="ch-num">44</div><div class="ch-name">DW TV</div><div class="badge hd">HD</div></div>
-      <div class="ch-card nav-item" id="ch45" data-act="ch:45"><div class="ch-num">45</div><div class="ch-name">Arirang TV</div><div class="badge hd">HD</div></div>
-    </div>
+    <div class="tv-grid" id="tvList">
+        </div>
   </div>
 </div>
 
 <div id="streamModal" class="modal">
   <div class="modal-box">
     <div id="mTitle" style="font-family:'Cinzel'; font-size:24px; margin-bottom:20px;">LAUNCH APP</div>
-    <div id="mMsg">Do you want to open this application?</div>
+    <div id="mMsg">Do you want to open this application on your TV?</div>
     <div class="m-btns">
-      <div class="stream-btn nav-item" id="s-ok" data-act="stream-confirm">YES, OPEN</div>
+      <div class="stream-btn nav-item" id="s-ok" data-act="stream-confirm">OPEN APP</div>
       <div class="stream-btn nav-item" id="s-no" data-act="stream-cancel">CANCEL</div>
     </div>
   </div>
@@ -181,142 +153,190 @@ html,body{
 <script>
 (function(){
 'use strict';
+var page = 'home', focused = null, modal = false, streamSvc = null;
 
-var page = 'home';
-var focused = null;
-var modal = false;
-var streamSvc = null;
+// 1. DATA CHANNEL (URL & LOGO)
+const CHANNELS = [
+    { id: 1, name: "CCM", url: "http://157.66.14.66:7635/ccm/ccm.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/4/4c/Celestial_Classic_Movies_logo.png" },
+    { id: 2, name: "Celestial Movies", url: "http://157.66.14.66:7635/celestialmovies/celestialmovies.m3u8", logo: "https://upload.wikimedia.org/wikipedia/en/thumb/e/ef/Celestial_Movies_logo.png/250px-Celestial_Movies_logo.png" },
+    { id: 3, name: "KIX", url: "http://157.66.14.66:7635/kix/kix.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/KIX_Logo.svg/1200px-KIX_Logo.svg.png" },
+    { id: 4, name: "Citra Bioskop", url: "http://157.66.14.66:7635/citrabioskop/citrabioskop.m3u8", logo: "https://yt3.googleusercontent.com/ytc/AIdro_n8-G1_9N3-V-Y5_I9-X8_X_X-X=s900-c-k-c0x00ffffff-no-rj" },
+    { id: 5, name: "Thrill", url: "http://157.66.14.66:7635/thrill/thrill.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/4/4b/Thrill_logo.png" },
+    { id: 6, name: "Zee Bioskop", url: "http://157.66.14.66:7635/zeebioskop/zeebioskop.m3u8", logo: "https://zeebioskop.com/wp-content/uploads/2021/04/Zee-Bioskop-Logo.png" },
+    { id: 7, name: "Rock Action", url: "http://157.66.14.66:7635/rockaction/rockaction.m3u8", logo: "https://rockentertainment.com/wp-content/uploads/2022/11/RockAction_Logo.png" },
+    { id: 8, name: "Rock Entertainment", url: "http://157.66.14.66:7635/rockentertainment/rockentertainment.m3u8", logo: "https://rockentertainment.com/wp-content/uploads/2021/08/RE_Logo_White.png" },
+    { id: 9, name: "RT News", url: "http://157.66.14.66:7635/rtnews/rtnews.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/RT_logo.svg/1200px-RT_logo.svg.png" },
+    { id: 10, name: "BBC News", url: "http://157.66.14.66:7635/bbcnews/bbcnews.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/BBC_News_2022.svg/1200px-BBC_News_2022.svg.png" },
+    { id: 11, name: "CNA", url: "http://157.66.14.66:7635/cna/cna.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/CNA_logo.svg/1200px-CNA_logo.svg.png" },
+    { id: 12, name: "Al Jazeera", url: "http://157.66.14.66:7635/aljazeera/aljazeera.m3u8", logo: "https://upload.wikimedia.org/wikipedia/en/thumb/f/f2/Al_jazeera_logo.svg/1200px-Al_jazeera_logo.svg.png" },
+    { id: 13, name: "HGTV", url: "http://157.66.14.66:7635/hgtv/hgtv.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/HGTV_logo_2010.svg/2560px-HGTV_logo_2010.svg.png" },
+    { id: 14, name: "AFC", url: "http://157.66.14.66:7635/afn/afn.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/AFC_Logo.svg/1200px-AFC_Logo.svg.png" },
+    { id: 15, name: "BBC Lifestyle", url: "http://157.66.14.66:7635/bbclefestyle/bbclefestyle.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/BBC_Lifestyle.svg/1200px-BBC_Lifestyle.svg.png" },
+    { id: 16, name: "BBC Earth", url: "http://157.66.14.66:7635/bbcearth/bbcearth.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/BBC_Earth.svg/1200px-BBC_Earth.svg.png" },
+    { id: 17, name: "Discovery", url: "http://157.66.14.66:7635/discovery/discovery.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Discovery_Channel_logo_2019.svg/1200px-Discovery_Channel_logo_2019.svg.png" },
+    { id: 18, name: "Animal Planet", url: "http://157.66.14.66:7635/animalplanet/animalplanet.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Animal_Planet_logo_2018.svg/2560px-Animal_Planet_logo_2018.svg.png" },
+    { id: 19, name: "Nickelodeon", url: "http://157.66.14.66:7635/nickelodeon/nickelodeon.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Nickelodeon_2023.svg/1200px-Nickelodeon_2023.svg.png" },
+    { id: 20, name: "Nick Jr", url: "http://157.66.14.66:7635/nickjr/nickjr.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Nick_Jr._logo_2023.svg/1200px-Nick_Jr._logo_2023.svg.png" },
+    { id: 21, name: "DreamWorks", url: "http://157.66.14.66:7635/dreamworks/dreamworks.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/DreamWorks_Channel_Logo.svg/1200px-DreamWorks_Channel_Logo.svg.png" },
+    { id: 22, name: "Zoomoo", url: "http://157.66.14.66:7635/zoomoo/zoomoo.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/ZooMoo_Logo.svg/1200px-ZooMoo_Logo.svg.png" },
+    { id: 23, name: "TVN", url: "http://157.66.14.66:7635/tvn/tvn.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/TVN_Logo_2015.svg/1200px-TVN_Logo_2015.svg.png" },
+    { id: 24, name: "TVRI World", url: "http://157.66.14.66:7635/tvrinas/tvrinas.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/TVRI_World.svg/1200px-TVRI_World.svg.png" },
+    { id: 25, name: "NHK World", url: "http://157.66.14.66:7635/nhkworld/nhkworld.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/NHK_World_Japan_logo.svg/1200px-NHK_World_Japan_logo.svg.png" },
+    { id: 26, name: "Red Bull TV", url: "http://157.66.14.66:7635/redbull/redbull.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Red_Bull_TV_logo.svg/1200px-Red_Bull_TV_logo.svg.png" },
+    { id: 27, name: "SCTV", url: "http://157.66.14.66:7635/sctv/sctv.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/SCTV_logo.svg/1200px-SCTV_logo.svg.png" },
+    { id: 28, name: "Moji", url: "http://157.66.14.66:7635/moji/moji.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Moji_logo.svg/1200px-Moji_logo.svg.png" },
+    { id: 29, name: "Mentari TV", url: "http://157.66.14.66:7635/mentaritv/mentaritv.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Mentari_TV_logo.svg/1200px-Mentari_TV_logo.svg.png" },
+    { id: 30, name: "Trans TV", url: "http://157.66.14.66:7635/transtv/transtv.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Trans_TV_logo_2013.svg/1200px-Trans_TV_logo_2013.svg.png" },
+    { id: 31, name: "Trans 7", url: "http://157.66.14.66:7635/trans7/trans7.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Trans7_logo_2013.svg/1200px-Trans7_logo_2013.svg.png" },
+    { id: 32, name: "Madinah TV", url: "http://157.66.14.66:7635/madinahtv/madinahtv.m3u8", logo: "https://seeklogo.com/images/S/saudi-madinah-tv-logo-07A5E0C2D8-seeklogo.com.png" },
+    { id: 33, name: "Mekkah TV", url: "http://157.66.14.66:7635/mekkahtv2/mekkahtv2.m3u8", logo: "https://seeklogo.com/images/S/saudi-makkah-tv-logo-7C8B648C6B-seeklogo.com.png" },
+    { id: 34, name: "Rodja TV", url: "http://157.66.14.66:7635/rodjatv/rodjatv.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Rodja_TV_logo.png/800px-Rodja_TV_logo.png" },
+    { id: 35, name: "RCTI", url: "http://157.66.14.66:7635/rcti/rcti.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/RCTI_logo.svg/1200px-RCTI_logo.svg.png" },
+    { id: 36, name: "MNCTV", url: "http://157.66.14.66:7635/mnctv/mnctv.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/MNCTV_logo_2015.svg/1200px-MNCTV_logo_2015.svg.png" },
+    { id: 37, name: "Global TV", url: "http://157.66.14.66:7635/globaltv/globaltv.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/GTV_logo_2017.svg/1200px-GTV_logo_2017.svg.png" },
+    { id: 38, name: "iNews", url: "http://157.66.14.66:7635/inews/inews.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/INews_logo_2015.svg/1200px-INews_logo_2015.svg.png" },
+    { id: 39, name: "ANTV", url: "http://157.66.14.66:7635/antv/antv.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/ANTV_logo_2013.svg/1200px-ANTV_logo_2013.svg.png" },
+    { id: 40, name: "TV One", url: "http://157.66.14.66:7635/tvone/tvone.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/TVOne_logo.svg/1200px-TVOne_logo.svg.png" },
+    { id: 41, name: "Kompas TV", url: "http://157.66.14.66:7635/kompastv/kompastv.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Kompas_TV_logo.svg/1200px-Kompas_TV_logo.svg.png" },
+    { id: 42, name: "Metro TV", url: "http://157.66.14.66:7635/metrotv/metrotv.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Metro_TV_logo.svg/1200px-Metro_TV_logo.svg.png" },
+    { id: 43, name: "Phoenix China", url: "http://157.66.14.66:7635/phoenix/phoenix.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Phoenix_Television_Logo.svg/1200px-Phoenix_Television_Logo.svg.png" },
+    { id: 44, name: "DW TV", url: "http://157.66.14.66:7635/dwtv/dwtv.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/DW_logo_2012.svg/1200px-DW_logo_2012.svg.png" },
+    { id: 45, name: "Arirang TV", url: "http://157.66.14.66:7635/arirang/arirang.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Arirang_TV_logo.svg/1200px-Arirang_TV_logo.svg.png" }
+];
 
-// Nav Pools - Mendaftarkan semua 45 Channel
+// 2. GENERATE HTML CHANNELS
+const tvList = document.getElementById('tvList');
+CHANNELS.forEach(ch => {
+    const card = document.createElement('div');
+    card.className = "ch-card nav-item";
+    card.id = `ch${ch.id}`;
+    card.setAttribute('data-act', `stream-url:${ch.url}`);
+    card.innerHTML = `
+        <div class="ch-num">${String(ch.id).padStart(2, '0')}</div>
+        <div class="ch-logo-wrap"><img src="${ch.logo}" alt="${ch.name}"></div>
+        <div class="ch-name">${ch.name}</div>
+    `;
+    tvList.appendChild(card);
+});
+
+// 3. NAVIGATION ENGINE
+var page = 'home', focused = null, modal = false, currentStream = null;
 var POOLS = {
-  home: ['c-info','c-dining','c-wellness','c-fac','c-yt','c-nf','c-tv'],
-  livetv: ['bk-tv','ch1','ch2','ch3','ch4','ch5','ch6','ch7','ch8','ch9','ch10',
-           'ch11','ch12','ch13','ch14','ch15','ch16','ch17','ch18','ch19','ch20',
-           'ch21','ch22','ch23','ch24','ch25','ch26','ch27','ch28','ch29','ch30',
-           'ch31','ch32','ch33','ch34','ch35','ch36','ch37','ch38','ch39','ch40',
-           'ch41','ch42','ch43','ch44','ch45'],
-  modal: ['s-ok','s-no']
+    home: ['c-info','c-dining','c-wellness','c-fac','c-yt','c-nf','c-tv'],
+    livetv: ['bk-tv', ...CHANNELS.map(ch => `ch${ch.id}`)],
+    modal: ['s-ok','s-no']
 };
 
 function $(id){ return document.getElementById(id); }
 
 function focus(el){
-  if(focused) focused.classList.remove('tv-focus');
-  focused = el;
-  if(el) {
-    el.classList.add('tv-focus');
-    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }
+    if(focused) focused.classList.remove('tv-focus');
+    focused = el;
+    if(el) {
+        el.classList.add('tv-focus');
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
 }
 
 function pool(){
-  var ids = modal ? POOLS.modal : (POOLS[page] || []);
-  return ids.map($).filter(function(e){ return e && e.offsetParent !== null; });
+    var ids = modal ? POOLS.modal : (POOLS[page] || []);
+    return ids.map($).filter(function(e){ return e && e.offsetParent !== null; });
 }
 
 function navigate(dir){
-  var p = pool();
-  if(!p.length) return;
-  var idx = p.indexOf(focused);
-  if(idx === -1) { focus(p[0]); return; }
+    var p = pool();
+    if(!p.length) return;
+    var idx = p.indexOf(focused);
+    if(idx === -1) { focus(p[0]); return; }
 
-  // Simple Grid Logic (4 Columns for TV Page, 7 for Home)
-  var cols = (page === 'home') ? 7 : 4;
-  var nextIdx = idx;
-
-  if(dir === 'left') nextIdx = Math.max(0, idx - 1);
-  if(dir === 'right') nextIdx = Math.min(p.length - 1, idx + 1);
-  if(dir === 'up') nextIdx = Math.max(0, idx - cols);
-  if(dir === 'down') nextIdx = Math.min(p.length - 1, idx + cols);
-
-  focus(p[nextIdx]);
+    var cols = (page === 'home') ? 7 : 4;
+    var nextIdx = idx;
+    if(dir==='left') nextIdx = Math.max(0, idx - 1);
+    if(dir==='right') nextIdx = Math.min(p.length - 1, idx + 1);
+    if(dir==='up') nextIdx = Math.max(0, idx - cols);
+    if(dir==='down') nextIdx = Math.min(p.length - 1, idx + cols);
+    focus(p[nextIdx]);
 }
 
 function dispatch(el){
-  var a = el.getAttribute('data-act');
-  if(!a) return;
-  if(a.startsWith('page:')) goPage(a.split(':')[1]);
-  if(a.startsWith('stream:')) openModal(a.split(':')[1]);
-  if(a.startsWith('ch:')) switchCh(a.split(':')[1]);
-  if(a === 'stream-confirm') confirmStream();
-  if(a === 'stream-cancel') closeModal();
+    var a = el.getAttribute('data-act');
+    if(!a) return;
+    
+    if(a.startsWith('page:')) goPage(a.split(':')[1]);
+    if(a.startsWith('stream:')) openModal(a.split(':')[1]);
+    if(a.startsWith('stream-url:')) launchPlayer(a.split(':')[1]); // DIRECT STREAM
+    if(a === 'stream-confirm') confirmAppLaunch();
+    if(a === 'stream-cancel') closeModal();
 }
 
 function goPage(name){
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  $( 'page-' + name ).classList.add('active');
-  page = name;
-  modal = false;
-  setTimeout(() => focus(pool()[0]), 100);
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    $('page-'+name).classList.add('active');
+    page = name;
+    modal = false;
+    setTimeout(() => focus(pool()[0]), 100);
 }
 
 function openModal(svc){
-  streamSvc = svc;
-  $('mTitle').textContent = svc.toUpperCase();
-  $('streamModal').classList.add('active');
-  modal = true;
-  setTimeout(() => focus($('s-ok')), 100);
+    currentStream = svc;
+    $('mTitle').textContent = svc.toUpperCase();
+    $('mLogo').textContent = (svc === 'youtube') ? '▶' : 'N';
+    $('mLogo').style.color = (svc === 'youtube') ? '#ff0000' : '#e50914';
+    $('streamModal').classList.add('active');
+    modal = true;
+    setTimeout(() => focus($('s-ok')), 100);
 }
 
 function closeModal(){
-  $('streamModal').classList.remove('active');
-  modal = false;
-  focus(pool()[0]);
+    $('streamModal').classList.remove('active');
+    modal = false;
+    focus(pool()[0]);
 }
 
-function confirmStream(){
-  var appId = (streamSvc === 'youtube') ? 'com.webos.app.youtube' : 'netflix';
-  closeModal();
-  
-  if(typeof webOS !== 'undefined' && webOS.service) {
-    webOS.service.request('luna://com.webos.applicationManager', {
-      method: 'launch',
-      parameters: { id: appId },
-      onFailure: function() { window.location.href = 'sssp://' + streamSvc; }
-    });
-  } else {
-    window.location.href = 'https://www.' + streamSvc + '.com';
-  }
+// FUNGSI STREAMING LANGSUNG (M3U8)
+function launchPlayer(url){
+    console.log("Streaming URL: " + url);
+    // Di LG Procentric, cara paling umum memutar M3U8 adalah mengalihkan window ke URL stream
+    // Sistem TV akan otomatis mendeteksi format M3U8 dan membuka internal player
+    window.location.href = url;
 }
 
-function switchCh(num){
-  if(typeof webOS !== 'undefined' && webOS.service) {
-    webOS.service.request('luna://com.webos.service.tv.channel', {
-      method: 'setChannel',
-      parameters: { channelNumber: String(num) }
-    });
-  }
+// FUNGSI LAUNCH APP (YOUTUBE/NETFLIX)
+function confirmAppLaunch(){
+    var appId = (currentStream === 'youtube') ? 'com.webos.app.youtube' : 'netflix';
+    closeModal();
+    if(typeof webOS !== 'undefined' && webOS.service) {
+        webOS.service.request('luna://com.webos.applicationManager', {
+            method: 'launch',
+            parameters: { id: appId },
+            onFailure: function() { window.location.href = 'sssp://' + currentStream; }
+        });
+    } else { window.location.href = 'https://www.' + currentStream + '.com'; }
 }
 
 function onKey(e){
-  var k = e.keyCode;
-  if(k === 37) navigate('left');
-  if(k === 39) navigate('right');
-  if(k === 38) navigate('up');
-  if(k === 40) navigate('down');
-  if(k === 13) dispatch(focused);
-  if(k === 461 || k === 8) { // Back key
-    if(modal) closeModal();
-    else if(page !== 'home') goPage('home');
-  }
-  e.preventDefault();
+    var k = e.keyCode;
+    if(k===37) navigate('left');
+    if(k===39) navigate('right');
+    if(k===38) navigate('up');
+    if(k===40) navigate('down');
+    if(k===13) dispatch(focused);
+    if(k===461 || k===8) { 
+        if(modal) closeModal(); 
+        else if(page!=='home') goPage('home'); 
+    }
+    e.preventDefault();
 }
-
 window.onkeydown = onKey;
 
-// Clock
-setInterval(() => {
-  var n = new Date();
-  $('T0').textContent = n.getHours().toString().padStart(2,'0') + ":" + n.getMinutes().toString().padStart(2,'0');
-}, 1000);
+function tick(){
+    var n = new Date();
+    var ts = n.getHours().toString().padStart(2,'0') + ":" + n.getMinutes().toString().padStart(2,'0');
+    $('T0').textContent = ts;
+}
+setInterval(tick, 10000); tick();
 
-window.onload = () => {
-  setTimeout(() => {
-    $('loading').classList.add('gone');
-    goPage('home');
-  }, 2000);
-};
-
+window.onload = () => { setTimeout(() => { $('loading').classList.add('gone'); goPage('home'); }, 2200); };
 })();
 </script>
 </body>
