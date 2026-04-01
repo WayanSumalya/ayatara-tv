@@ -1,219 +1,836 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=1920, initial-scale=1.0">
-    <title>Ayatara Resort — In-Room Portal</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Cinzel:wght@400;500;600&family=Lato:wght@300;400&display=swap" rel="stylesheet">
-    <script src="webOS.js"></script>
-    <style>
-        :root {
-            --bg-deep: #080f0d;
-            --bg-mid: #0e1c18;
-            --bg-card: #132219;
-            --bg-card-hover: #1c3028;
-            --gold: #c9a96e;
-            --gold-light: #e8cfa0;
-            --gold-dark: #8a6d3b;
-            --cream: #f2ece0;
-            --cream-muted: #b8a98a;
-            --border: rgba(201,169,110,0.25);
-            --border-focus: #c9a96e;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920, initial-scale=1.0">
+<title>Ayatara Resort — In-Room Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Cinzel:wght@400;500;600&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep:    #080f0d;
+  --bg-card:    #111f19;
+  --bg-hover:   #1a2f24;
+  --gold:       #c9a96e;
+  --gold-light: #e8cfa0;
+  --gold-dark:  #8a6d3b;
+  --cream:      #f0e9d8;
+  --muted:      #b0a086;
+  --green:      #3d6b57;
+  --border:     rgba(201,169,110,0.2);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{
+  width:1920px;height:1080px;overflow:hidden;
+  background:var(--bg-deep);
+  font-family:'Lato',sans-serif;color:var(--cream);
+  user-select:none;-webkit-user-select:none;
+}
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html, body { width: 1920px; height: 1080px; overflow: hidden; background: var(--bg-deep); font-family: 'Lato', sans-serif; color: var(--cream); }
+/* ══ PAGE SYSTEM ══ */
+.page{display:none;position:absolute;inset:0;flex-direction:column;animation:pgIn .4s ease both;}
+.page.active{display:flex;}
+@keyframes pgIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 
-        /* Page Transitions */
-        .page { display: none; position: absolute; inset: 0; animation: fadeIn .45s ease both; flex-direction: column; }
-        .page.active { display: flex; }
-        @keyframes fadeIn { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:none; } }
+/* ══ FOCUS — ALL interactive states via .tv-focus only ══ */
+.nav-item{
+  transition:
+    transform .22s cubic-bezier(.25,.46,.45,.94),
+    border-color .22s ease,
+    box-shadow .22s ease,
+    background .22s ease;
+  outline:none;-webkit-tap-highlight-color:transparent;cursor:pointer;
+}
+.menu-card.tv-focus{
+  border-color:var(--gold)!important;
+  transform:translateY(-8px) scale(1.02)!important;
+  box-shadow:0 22px 55px rgba(0,0,0,.7),0 0 0 1px rgba(201,169,110,.5),0 0 50px rgba(201,169,110,.15)!important;
+  background:var(--bg-hover)!important;
+}
+.menu-card.tv-focus .card-label{color:var(--gold-light)!important;}
+.menu-card.tv-focus .card-icon-ring{border-color:var(--gold)!important;}
+.menu-card.tv-focus::after{transform:scaleX(1)!important;}
+.menu-card.tv-focus .card-icon{transform:scale(1.12)!important;}
+.yt-card.tv-focus{border-color:#ff0000!important;box-shadow:0 22px 55px rgba(0,0,0,.7),0 0 0 1px rgba(255,0,0,.5),0 0 45px rgba(255,0,0,.12)!important;}
+.nf-card.tv-focus{border-color:#e50914!important;box-shadow:0 22px 55px rgba(0,0,0,.7),0 0 0 1px rgba(229,9,20,.5),0 0 45px rgba(229,9,20,.12)!important;}
+.tv-chan.tv-focus{border-color:#4a9fd4!important;box-shadow:0 22px 55px rgba(0,0,0,.7),0 0 0 1px rgba(74,159,212,.5),0 0 45px rgba(74,159,212,.12)!important;}
+.sub-card.tv-focus{
+  border-color:var(--gold)!important;
+  transform:translateY(-5px)!important;
+  box-shadow:0 18px 50px rgba(0,0,0,.6),0 0 0 1px rgba(201,169,110,.45),0 0 35px rgba(201,169,110,.12)!important;
+  background:var(--bg-hover)!important;
+}
+.sub-card.tv-focus::after{transform:scaleX(1)!important;}
+.ch-card.tv-focus{
+  border-color:#4a9fd4!important;
+  transform:translateX(6px)!important;
+  background:rgba(74,159,212,.07)!important;
+  box-shadow:0 8px 30px rgba(0,0,0,.4),0 0 0 1px rgba(74,159,212,.4)!important;
+}
+.btn-back.tv-focus{
+  color:var(--gold)!important;border-color:var(--gold)!important;
+  background:rgba(201,169,110,.08)!important;transform:translateX(-4px)!important;
+}
+.stream-btn.primary.tv-focus{transform:scale(1.05)!important;background:var(--gold-light)!important;box-shadow:0 0 0 2px var(--gold)!important;}
+.stream-btn.secondary.tv-focus{transform:scale(1.05)!important;border-color:var(--gold)!important;color:var(--gold)!important;box-shadow:0 0 0 2px rgba(201,169,110,.4)!important;}
 
-        /* Shared Header */
-        .header { display: flex; align-items: center; justify-content: space-between; padding: 40px 80px; background: linear-gradient(180deg, rgba(8,15,13,1) 0%, rgba(8,15,13,0) 100%); }
-        .logo-name { font-family: 'Cinzel', serif; font-size: 32px; letter-spacing: 8px; color: var(--gold-light); }
-        .logo-sub { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 16px; color: var(--cream-muted); letter-spacing: 4px; }
-        .header-time { font-family: 'Cinzel', serif; font-size: 48px; color: var(--gold-light); text-align: center; }
+/* ══ SHARED HEADER ══ */
+.header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:24px 64px 18px;
+  border-bottom:1px solid var(--border);flex-shrink:0;
+  background:linear-gradient(180deg,rgba(8,15,13,.98) 0%,rgba(8,15,13,.75) 100%);
+  position:relative;z-index:10;
+}
+.header::after{
+  content:'';position:absolute;bottom:-1px;left:64px;right:64px;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.4;
+}
+.logo-name{font-family:'Cinzel',serif;font-size:26px;font-weight:500;letter-spacing:7px;color:var(--gold-light);line-height:1;}
+.logo-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;color:var(--muted);letter-spacing:3px;margin-top:3px;}
+.hdr-center{position:absolute;left:50%;transform:translateX(-50%);text-align:center;}
+.hdr-date{font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--muted);letter-spacing:2.5px;}
+.hdr-time{font-family:'Cinzel',serif;font-size:38px;color:var(--gold-light);letter-spacing:4px;line-height:1;margin-top:2px;}
+.room-label{font-size:10px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;}
+.room-number{font-family:'Cinzel',serif;font-size:24px;color:var(--gold-light);letter-spacing:4px;}
+.weather{font-size:12px;color:var(--muted);letter-spacing:1px;margin-top:3px;}
+.btn-back{
+  display:inline-flex;align-items:center;gap:10px;
+  font-family:'Cinzel',serif;font-size:12px;letter-spacing:3px;color:var(--muted);
+  background:none;border:1px solid var(--border);padding:10px 24px;border-radius:2px;
+}
+.btn-back svg{width:14px;height:14px;stroke:currentColor;fill:none;}
 
-        /* Grid Layout (7 Columns) */
-        .menu-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 20px; padding: 40px 80px; flex: 1; }
-        
-        .menu-card { 
-            background: var(--bg-card); 
-            border: 1px solid var(--border); 
-            padding: 40px 20px; 
-            text-align: center; 
-            transition: all 0.3s; 
-            outline: none; 
-            border-radius: 4px;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-        }
+/* ══ HOME ══ */
+#page-home{background:var(--bg-deep);}
+.home-bg{
+  position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 75% 55% at 50% 110%,rgba(61,107,87,.16) 0%,transparent 65%),
+    radial-gradient(ellipse 35% 40% at 10% 50%,rgba(201,169,110,.03) 0%,transparent 60%);
+}
+.home-welcome{text-align:center;padding:20px 0 14px;position:relative;z-index:2;}
+.home-greeting{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:20px;color:var(--muted);letter-spacing:4px;}
+.home-headline{font-family:'Cinzel',serif;font-size:13px;letter-spacing:7px;color:var(--gold);margin-top:5px;}
+.gold-div{display:flex;align-items:center;justify-content:center;gap:14px;margin:8px auto 0;width:300px;}
+.gold-div::before,.gold-div::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--gold-dark));}
+.gold-div::after{background:linear-gradient(90deg,var(--gold-dark),transparent);}
+.gold-dia{width:7px;height:7px;background:var(--gold);transform:rotate(45deg);flex-shrink:0;}
+.menu-grid{
+  display:grid;grid-template-columns:repeat(7,1fr);gap:18px;
+  padding:16px 52px 12px;flex:1;position:relative;z-index:2;
+}
+.menu-card{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  border:1px solid var(--border);border-radius:4px;
+  background:linear-gradient(158deg,var(--bg-card) 0%,rgba(8,15,13,.92) 100%);
+  padding:0 18px;min-height:216px;position:relative;overflow:hidden;
+}
+.menu-card::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(201,169,110,.06) 0%,transparent 55%);
+  opacity:0;transition:opacity .25s;
+}
+.menu-card.tv-focus::before{opacity:1;}
+.menu-card::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  transform:scaleX(0);transition:transform .3s ease;
+}
+.card-icon{
+  width:66px;height:66px;display:flex;align-items:center;justify-content:center;
+  position:relative;margin-bottom:20px;transition:transform .25s ease;
+}
+.card-icon-ring{position:absolute;inset:0;border-radius:50%;border:1px solid var(--border);transition:border-color .25s;}
+.card-icon svg{width:30px;height:30px;}
+.card-label{font-family:'Cinzel',serif;font-size:11.5px;letter-spacing:2.5px;color:var(--cream);text-align:center;line-height:1.55;text-transform:uppercase;transition:color .25s;}
+.card-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:12px;color:var(--muted);text-align:center;margin-top:6px;line-height:1.4;}
+.home-footer{
+  display:flex;align-items:center;justify-content:center;gap:40px;
+  padding:11px 64px;border-top:1px solid var(--border);flex-shrink:0;position:relative;z-index:2;
+}
+.home-footer::before{content:'';position:absolute;top:-1px;left:64px;right:64px;height:1px;background:linear-gradient(90deg,transparent,var(--gold-dark),transparent);opacity:.5;}
+.fi{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted);letter-spacing:1.5px;}
+.fi svg{width:15px;height:15px;stroke:var(--gold-dark);fill:none;}
+.fh{font-family:'Cinzel',serif;font-size:10px;letter-spacing:2px;color:var(--gold-dark);text-align:center;flex:1;}
 
-        /* KHUSUS: Efek Focus Remote */
-        .menu-card:focus {
-            background: var(--bg-card-hover);
-            border-color: var(--gold);
-            transform: translateY(-10px) scale(1.05);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 20px rgba(201,169,110,0.3);
-        }
-        
-        .card-label { font-family: 'Cinzel', serif; font-size: 14px; letter-spacing: 2px; margin-top: 20px; text-transform: uppercase; }
+/* ══ SUB-PAGE SHARED ══ */
+.sub-hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 64px 10px;flex-shrink:0;}
+.sub-eyebrow{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:var(--gold);letter-spacing:3px;}
+.sub-title{font-family:'Cinzel',serif;font-size:26px;letter-spacing:6px;color:var(--cream);line-height:1;margin-top:4px;}
+.sub-line{flex:1;height:1px;background:linear-gradient(90deg,var(--border),transparent);margin:0 36px;}
+.sub-body{flex:1;overflow:hidden;padding:0 64px 26px;}
+.sub-card{
+  border:1px solid var(--border);border-radius:4px;background:var(--bg-card);
+  padding:26px 28px;display:flex;flex-direction:column;position:relative;overflow:hidden;
+}
+.sub-card::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  transform:scaleX(0);transition:transform .3s ease;
+}
 
-        /* Loading Screen */
-        #loading { position: fixed; inset: 0; background: var(--bg-deep); z-index: 999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.8s; }
-        #loading.hide { opacity: 0; pointer-events: none; }
+/* ══ INFO ══ */
+.info-grid{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:18px;height:100%;}
+.i-ttl{font-family:'Cinzel',serif;font-size:12px;letter-spacing:3.5px;color:var(--gold);margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+.i-ttl svg{width:16px;height:16px;stroke:var(--gold);fill:none;}
+.i-body{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--cream);line-height:1.75;font-weight:300;}
+.i-tag{display:inline-block;background:rgba(201,169,110,.1);border:1px solid rgba(201,169,110,.22);border-radius:2px;padding:3px 12px;font-family:'Cinzel',serif;font-size:11px;color:var(--gold-light);letter-spacing:2px;margin:6px 5px 0 0;}
 
-        /* Modal */
-        .stream-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 1000; align-items: center; justify-content: center; }
-        .stream-modal.active { display: flex; }
-        .stream-box { background: var(--bg-card); padding: 60px; border: 1px solid var(--gold); text-align: center; border-radius: 8px; }
-        .stream-btn { padding: 15px 40px; margin: 10px; border: 1px solid var(--gold); background: none; color: white; cursor: pointer; font-family: 'Cinzel'; }
-        .stream-btn:focus { background: var(--gold); color: black; }
-    </style>
+/* ══ DINING ══ */
+.dining-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;height:100%;}
+.d-ico{font-size:38px;margin-bottom:12px;}
+.d-name{font-family:'Cinzel',serif;font-size:15px;letter-spacing:3px;color:var(--gold-light);margin-bottom:5px;}
+.d-type{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;color:var(--gold);letter-spacing:2px;margin-bottom:12px;}
+.d-desc{font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--cream);line-height:1.65;flex:1;}
+.d-hrs{margin-top:14px;padding-top:12px;border-top:1px solid var(--border);display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);letter-spacing:1px;}
+.d-hrs svg{width:13px;height:13px;stroke:var(--gold-dark);fill:none;}
+
+/* ══ WELLNESS ══ */
+.wellness-grid{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:1fr 1fr;gap:16px;height:100%;}
+.w-feat{grid-column:span 2;}
+.w-ico{font-size:30px;margin-bottom:12px;}
+.w-name{font-family:'Cinzel',serif;font-size:12px;letter-spacing:3px;color:var(--gold-light);margin-bottom:10px;text-transform:uppercase;}
+.w-desc{font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--cream);line-height:1.6;flex:1;}
+.w-tag{margin-top:10px;font-size:11px;letter-spacing:2px;color:var(--green);border:1px solid rgba(61,107,87,.4);padding:3px 10px;border-radius:2px;text-transform:uppercase;display:inline-block;}
+
+/* ══ FACILITIES ══ */
+.fac-grid{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:1fr 1fr;gap:16px;height:100%;}
+.f-ico{font-size:30px;margin-bottom:12px;}
+.f-name{font-family:'Cinzel',serif;font-size:12px;letter-spacing:3px;color:var(--gold-light);margin-bottom:9px;}
+.f-desc{font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--cream);line-height:1.6;flex:1;}
+.f-st{margin-top:10px;font-size:10.5px;letter-spacing:2px;padding:3px 10px;border-radius:2px;display:inline-block;text-transform:uppercase;}
+.f-st.on{color:#5aba8a;border:1px solid rgba(90,186,138,.3);}
+.f-st.tm{color:var(--gold);border:1px solid var(--border);}
+
+/* ══ LIVE TV ══ */
+.tv-grid{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(3,1fr);gap:14px;height:100%;}
+.ch-card{
+  border:1px solid var(--border);border-radius:4px;background:var(--bg-card);
+  padding:18px 22px;display:flex;align-items:center;gap:18px;
+  position:relative;overflow:hidden;
+}
+.ch-num{font-family:'Cinzel',serif;font-size:22px;color:var(--gold-dark);min-width:40px;text-align:center;}
+.ch-info{flex:1;}
+.ch-name{font-family:'Cinzel',serif;font-size:13px;letter-spacing:2px;color:var(--cream);}
+.ch-now{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;color:var(--muted);margin-top:4px;}
+.badge{font-size:10px;letter-spacing:1px;padding:2px 8px;border-radius:2px;text-transform:uppercase;flex-shrink:0;}
+.badge.hd{background:rgba(74,159,212,.18);color:#4a9fd4;border:1px solid rgba(74,159,212,.3);}
+.badge.live{background:rgba(192,57,43,.18);color:#e74c3c;border:1px solid rgba(192,57,43,.3);animation:livePulse 2s infinite;}
+@keyframes livePulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* ══ MODAL ══ */
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.86);z-index:200;align-items:center;justify-content:center;}
+.modal.active{display:flex;animation:pgIn .3s ease both;}
+.modal-box{background:var(--bg-card);border:1px solid var(--border);border-radius:6px;padding:54px 74px;text-align:center;max-width:640px;}
+.m-logo{font-size:70px;margin-bottom:22px;line-height:1;}
+.m-title{font-family:'Cinzel',serif;font-size:22px;letter-spacing:5px;color:var(--gold-light);margin-bottom:10px;}
+.m-msg{font-family:'Cormorant Garamond',serif;font-size:19px;color:var(--muted);line-height:1.65;margin-bottom:34px;}
+.m-btns{display:flex;gap:16px;justify-content:center;}
+.stream-btn{font-family:'Cinzel',serif;font-size:11.5px;letter-spacing:3px;padding:14px 34px;border-radius:2px;border:1px solid;transition:transform .2s ease,box-shadow .2s ease,background .2s ease;}
+.stream-btn.primary{background:var(--gold);border-color:var(--gold);color:#080f0d;}
+.stream-btn.secondary{background:transparent;border-color:var(--border);color:var(--muted);}
+
+/* ══ LOADING ══ */
+#loading{
+  position:fixed;inset:0;z-index:300;background:var(--bg-deep);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  transition:opacity .9s ease;
+}
+#loading.gone{opacity:0;pointer-events:none;}
+.l-logo{font-family:'Cinzel',serif;font-size:52px;letter-spacing:14px;color:var(--gold);animation:glow 2s ease-in-out infinite alternate;}
+@keyframes glow{from{text-shadow:0 0 24px rgba(201,169,110,.28)}to{text-shadow:0 0 70px rgba(201,169,110,.72)}}
+.l-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:17px;color:var(--muted);letter-spacing:6px;margin-top:6px;margin-bottom:52px;}
+.l-bar{width:220px;height:1px;background:var(--border);position:relative;overflow:hidden;}
+.l-bar::after{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,var(--gold),transparent);animation:sweep 1.8s ease infinite;}
+@keyframes sweep{to{left:200%}}
+::-webkit-scrollbar{display:none;}
+</style>
 </head>
 <body>
 
+<!-- LOADING -->
 <div id="loading">
-    <div style="font-family: 'Cinzel'; font-size: 60px; color: var(--gold);">AYATARA</div>
-    <div style="letter-spacing: 10px; color: var(--cream-muted);">RESORT & SPA</div>
+  <div class="l-logo">AYATARA</div>
+  <div class="l-sub">Resort &amp; Spa</div>
+  <div class="l-bar"></div>
 </div>
 
+<!-- ═══ HOME ═══ -->
 <div id="page-home" class="page active">
-    <header class="header">
-        <div class="logo-wrap">
-            <div class="logo-name">AYATARA</div>
-            <div class="logo-sub">Experience Serenity</div>
-        </div>
-        <div class="header-center">
-            <div id="hTime" class="header-time">00:00</div>
-            <div id="hDate" style="color: var(--cream-muted); font-size: 18px;">Wednesday, 1 April 2026</div>
-        </div>
-        <div class="header-right" style="text-align: right;">
-            <div style="font-size: 12px; color: var(--cream-muted);">SUITE</div>
-            <div style="font-family: 'Cinzel'; font-size: 24px; color: var(--gold-light);">612</div>
-        </div>
-    </header>
-
-    <div class="menu-grid">
-        <div class="menu-card focusable" tabindex="1" onclick="showPage('info')">
-            <div class="card-label">Hotel Info</div>
-        </div>
-        <div class="menu-card focusable" tabindex="2" onclick="showPage('dining')">
-            <div class="card-label">Dining</div>
-        </div>
-        <div class="menu-card focusable" tabindex="3" onclick="showPage('wellness')">
-            <div class="card-label">Wellness</div>
-        </div>
-        <div class="menu-card focusable" tabindex="4" onclick="showPage('facilities')">
-            <div class="card-label">Facilities</div>
-        </div>
-        <div class="menu-card focusable" tabindex="5" onclick="openStream('youtube')">
-            <div class="card-label" style="color: #ff0000;">YouTube</div>
-        </div>
-        <div class="menu-card focusable" tabindex="6" onclick="openStream('netflix')">
-            <div class="card-label" style="color: #e50914;">Netflix</div>
-        </div>
-        <div class="menu-card focusable" tabindex="7" onclick="showPage('livetv')">
-            <div class="card-label">Live TV</div>
-        </div>
+  <div class="home-bg"></div>
+  <header class="header">
+    <div><div class="logo-name">AYATARA</div><div class="logo-sub">Resort &amp; Spa</div></div>
+    <div class="hdr-center">
+      <div class="hdr-date" id="D0"></div>
+      <div class="hdr-time" id="T0">--:--</div>
     </div>
+    <div style="text-align:right;">
+      <div class="room-label">Your Suite</div>
+      <div class="room-number">612</div>
+      <div class="weather">☀ 31°C &nbsp;·&nbsp; Chiang Mai</div>
+    </div>
+  </header>
+  <div class="home-welcome">
+    <div class="home-greeting">Welcome to Ayatara</div>
+    <div class="home-headline">How may we serve you today?</div>
+    <div class="gold-div"><div class="gold-dia"></div></div>
+  </div>
+  <div class="menu-grid">
+    <div class="menu-card nav-item" id="c-info" data-act="page:info">
+      <div class="card-icon"><div class="card-icon-ring"></div>
+        <svg viewBox="0 0 24 24" stroke="var(--gold)" stroke-width="1.5" fill="none"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      </div>
+      <div class="card-label">Hotel<br>Information</div>
+      <div class="card-sub">Contacts &amp; Services</div>
+    </div>
+    <div class="menu-card nav-item" id="c-dining" data-act="page:dining">
+      <div class="card-icon"><div class="card-icon-ring"></div>
+        <svg viewBox="0 0 24 24" stroke="var(--gold)" stroke-width="1.5" fill="none"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+      </div>
+      <div class="card-label">Dining</div>
+      <div class="card-sub">Restaurants &amp; Bars</div>
+    </div>
+    <div class="menu-card nav-item" id="c-wellness" data-act="page:wellness">
+      <div class="card-icon"><div class="card-icon-ring"></div>
+        <svg viewBox="0 0 24 24" stroke="var(--gold)" stroke-width="1.5" fill="none"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+      </div>
+      <div class="card-label">Wellness<br>&amp; Spa</div>
+      <div class="card-sub">Treatments &amp; Yoga</div>
+    </div>
+    <div class="menu-card nav-item" id="c-fac" data-act="page:facilities">
+      <div class="card-icon"><div class="card-icon-ring"></div>
+        <svg viewBox="0 0 24 24" stroke="var(--gold)" stroke-width="1.5" fill="none"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      </div>
+      <div class="card-label">Facilities</div>
+      <div class="card-sub">Pool &amp; Amenities</div>
+    </div>
+    <div class="menu-card nav-item yt-card" id="c-yt" data-act="stream:youtube">
+      <div class="card-icon"><div class="card-icon-ring"></div>
+        <svg viewBox="0 0 24 24" width="34" height="34"><path fill="#ff0000" d="M22.54 6.42a2.78 2.78 0 00-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 001.46 6.42 29 29 0 001 12a29 29 0 00.46 5.58 2.78 2.78 0 001.95 1.95C5.12 20 12 20 12 20s6.88 0 8.59-.47a2.78 2.78 0 001.95-1.95A29 29 0 0023 12a29 29 0 00-.46-5.58z"/><polygon fill="#fff" points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg>
+      </div>
+      <div class="card-label">YouTube</div>
+      <div class="card-sub">Watch &amp; Explore</div>
+    </div>
+    <div class="menu-card nav-item nf-card" id="c-nf" data-act="stream:netflix">
+      <div class="card-icon"><div class="card-icon-ring"></div>
+        <svg viewBox="0 0 28 36" width="36" height="36">
+          <defs><linearGradient id="nfG" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#e50914"/><stop offset="100%" stop-color="#b00711"/></linearGradient></defs>
+          <path fill="url(#nfG)" d="M0 0h10v36H0z"/>
+          <path fill="url(#nfG)" d="M18 0h10v36H18z"/>
+          <path fill="#111" d="M10 0l14 36h-6L4 0z"/>
+        </svg>
+      </div>
+      <div class="card-label">Netflix</div>
+      <div class="card-sub">Movies &amp; Series</div>
+    </div>
+    <div class="menu-card nav-item tv-chan" id="c-tv" data-act="page:livetv">
+      <div class="card-icon"><div class="card-icon-ring"></div>
+        <svg viewBox="0 0 24 24" stroke="#4a9fd4" stroke-width="1.5" fill="none"><rect x="2" y="7" width="20" height="14" rx="2"/><polyline points="17 2 12 7 7 2"/><circle cx="12" cy="14" r="3" fill="rgba(74,159,212,.2)" stroke="#4a9fd4"/><circle cx="12" cy="14" r="1" fill="#4a9fd4" stroke="none"/></svg>
+      </div>
+      <div class="card-label">Live TV</div>
+      <div class="card-sub">Channels &amp; News</div>
+    </div>
+  </div>
+  <div class="home-footer">
+    <div class="fi"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8a2 2 0 012-2.18h3"/></svg>Front Desk: Ext. 0</div>
+    <div class="fi"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Room Service: 24 Hours</div>
+    <div class="fh">↑ ↓ ← → NAVIGATE &nbsp;·&nbsp; OK SELECT &nbsp;·&nbsp; BACK RETURN</div>
+    <div class="fi"><svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>In-Room Dining: Ext. 5</div>
+    <div class="fi"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Chiang Mai, Thailand</div>
+  </div>
 </div>
 
-<div id="streamModal" class="stream-modal">
-    <div class="stream-box">
-        <h2 id="streamTitle" style="font-family: 'Cinzel'; margin-bottom: 20px;">LAUNCH APP</h2>
-        <p id="streamMsg" style="margin-bottom: 40px;">Do you want to open this application?</p>
-        <button class="stream-btn focusable" tabindex="10" id="btnConfirm" onclick="confirmStream()">YES, OPEN</button>
-        <button class="stream-btn focusable" tabindex="11" onclick="closeStream()">CANCEL</button>
+<!-- ═══ HOTEL INFO ═══ -->
+<div id="page-info" class="page">
+  <header class="header">
+    <div><div class="logo-name">AYATARA</div><div class="logo-sub">Resort &amp; Spa</div></div>
+    <div class="hdr-center"><div class="hdr-date" id="D1"></div><div class="hdr-time" id="T1">--:--</div></div>
+    <div style="text-align:right;"><div class="btn-back nav-item" id="bk-info" data-act="page:home"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>BACK</div></div>
+  </header>
+  <div class="sub-hdr">
+    <div><div class="sub-eyebrow">Discover</div><div class="sub-title">HOTEL INFORMATION</div></div>
+    <div class="sub-line"></div>
+  </div>
+  <div class="sub-body">
+    <div class="info-grid">
+      <div class="sub-card nav-item" id="ic1" data-act="noop">
+        <div class="i-ttl"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8a2 2 0 012-2.18h3"/></svg>HOTEL CONTACTS</div>
+        <p class="i-body">Front Desk &nbsp;·&nbsp; Ext. <b>0</b><br>Room Service &nbsp;·&nbsp; Ext. <b>5</b><br>Spa &amp; Wellness &nbsp;·&nbsp; Ext. <b>3</b><br>Concierge &nbsp;·&nbsp; Ext. <b>4</b><br>Housekeeping &nbsp;·&nbsp; Ext. <b>6</b></p>
+      </div>
+      <div class="sub-card nav-item" id="ic2" data-act="noop">
+        <div class="i-ttl"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>CHECK-IN &amp; CHECK-OUT</div>
+        <p class="i-body">Check-in from &nbsp;<b>14:00</b><br>Check-out until &nbsp;<b>12:00</b><br>Late check-out: upon request<br>Early check-in: subject to availability</p>
+        <span class="i-tag">Late Check-out → Ext. 0</span>
+      </div>
+      <div class="sub-card nav-item" id="ic3" data-act="noop">
+        <div class="i-ttl"><svg viewBox="0 0 24 24"><rect x="1" y="6" width="22" height="13" rx="2"/><polyline points="16 6 12 2 8 6"/></svg>WI-FI ACCESS</div>
+        <p class="i-body">Complimentary high-speed Wi-Fi<br>available throughout the resort.</p><br>
+        <span class="i-tag">Network: AYATARA_GUEST</span>
+        <span class="i-tag">Password: Welcome2025</span>
+      </div>
+      <div class="sub-card nav-item" id="ic4" data-act="noop">
+        <div class="i-ttl"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>RESORT LOCATION</div>
+        <p class="i-body">Set along the Mae Ping River, Ayatara is 20 min from Chiang Mai Airport and a short ride from the ancient Old City.</p>
+        <span class="i-tag">Airport Transfer → Ext. 4</span>
+        <span class="i-tag">Tuk-Tuk → Ext. 4</span>
+      </div>
     </div>
+  </div>
 </div>
 
+<!-- ═══ DINING ═══ -->
+<div id="page-dining" class="page">
+  <header class="header">
+    <div><div class="logo-name">AYATARA</div><div class="logo-sub">Resort &amp; Spa</div></div>
+    <div class="hdr-center"><div class="hdr-date" id="D2"></div><div class="hdr-time" id="T2">--:--</div></div>
+    <div style="text-align:right;"><div class="btn-back nav-item" id="bk-dining" data-act="page:home"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>BACK</div></div>
+  </header>
+  <div class="sub-hdr">
+    <div><div class="sub-eyebrow">Culinary Journeys</div><div class="sub-title">DINING &amp; BAR</div></div>
+    <div class="sub-line"></div>
+  </div>
+  <div class="sub-body">
+    <div class="dining-grid">
+      <div class="sub-card nav-item" id="dc1" data-act="noop">
+        <div class="d-ico">🍜</div><div class="d-name">SALA BAAN</div>
+        <div class="d-type">Signature Thai Restaurant</div>
+        <div class="d-desc">Authentic Northern Thai cuisine crafted with heirloom recipes and locally sourced ingredients. Savour the flavours of Lanna in our open-air riverside pavilion.</div>
+        <div class="d-hrs"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Breakfast 06:30–10:30 &nbsp;·&nbsp; Dinner 18:00–22:30</div>
+      </div>
+      <div class="sub-card nav-item" id="dc2" data-act="noop">
+        <div class="d-ico">🥩</div><div class="d-name">THE VERANDA</div>
+        <div class="d-type">International &amp; Grill</div>
+        <div class="d-desc">Elegant all-day dining with Western classics, premium grills and seasonal menus overlooking our tropical garden and infinity pool.</div>
+        <div class="d-hrs"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>All Day 11:00–22:00 &nbsp;·&nbsp; Sun Brunch 11:00–15:00</div>
+      </div>
+      <div class="sub-card nav-item" id="dc3" data-act="noop">
+        <div class="d-ico">🍸</div><div class="d-name">LOTUS BAR</div>
+        <div class="d-type">Cocktail Lounge &amp; Pool Bar</div>
+        <div class="d-desc">Handcrafted cocktails infused with Thai botanicals alongside live acoustic music. Our poolside bar is the perfect sunset gathering destination.</div>
+        <div class="d-hrs"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Daily 10:00–00:00 &nbsp;·&nbsp; Happy Hour 17:00–19:00</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ WELLNESS ═══ -->
+<div id="page-wellness" class="page">
+  <header class="header">
+    <div><div class="logo-name">AYATARA</div><div class="logo-sub">Resort &amp; Spa</div></div>
+    <div class="hdr-center"><div class="hdr-date" id="D3"></div><div class="hdr-time" id="T3">--:--</div></div>
+    <div style="text-align:right;"><div class="btn-back nav-item" id="bk-wellness" data-act="page:home"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>BACK</div></div>
+  </header>
+  <div class="sub-hdr">
+    <div><div class="sub-eyebrow">Restore · Rejuvenate · Renew</div><div class="sub-title">WELLNESS &amp; SPA</div></div>
+    <div class="sub-line"></div>
+  </div>
+  <div class="sub-body">
+    <div class="wellness-grid">
+      <div class="sub-card nav-item w-feat" id="wc1" data-act="noop" style="background:linear-gradient(135deg,#0e2820 0%,#111f19 100%);">
+        <div class="w-ico">🌸</div><div class="w-name">Ayatara Signature Spa</div>
+        <div class="w-desc">Surrender to ancient healing traditions reimagined for the modern soul. Our signature 4-hand Thai massage uses warm herbal compresses and aromatic oils for a deeply restorative experience.</div>
+        <div class="w-tag">Reservations: Ext. 3</div>
+      </div>
+      <div class="sub-card nav-item" id="wc2" data-act="noop">
+        <div class="w-ico">🧘</div><div class="w-name">Morning Yoga</div>
+        <div class="w-desc">Sunrise yoga on the garden terrace overlooking the lotus pond. Open to all levels.</div>
+        <div class="w-tag">Daily 07:00</div>
+      </div>
+      <div class="sub-card nav-item" id="wc3" data-act="noop">
+        <div class="w-ico">💆</div><div class="w-name">Thai Massage</div>
+        <div class="w-desc">Traditional Thai bodywork to release tension and restore balance throughout the body.</div>
+        <div class="w-tag">60 · 90 · 120 min</div>
+      </div>
+      <div class="sub-card nav-item w-feat" id="wc4" data-act="noop" style="background:linear-gradient(135deg,#0a2030 0%,#111f19 100%);">
+        <div class="w-ico">🌊</div><div class="w-name">Hydrotherapy Pool</div>
+        <div class="w-desc">Warm mineral pools with therapeutic jets, cold plunge and steam room — a complete circuit for deep relaxation and circulation stimulation.</div>
+        <div class="w-tag">Daily 08:00–20:00</div>
+      </div>
+      <div class="sub-card nav-item" id="wc5" data-act="noop">
+        <div class="w-ico">🌿</div><div class="w-name">Herbal Steam</div>
+        <div class="w-desc">Traditional Thai steam with lemongrass, kaffir lime and galangal.</div>
+        <div class="w-tag">Daily 08:00–20:00</div>
+      </div>
+      <div class="sub-card nav-item" id="wc6" data-act="noop">
+        <div class="w-ico">✨</div><div class="w-name">Facial Ritual</div>
+        <div class="w-desc">Luxury skin treatments using organic Thai botanicals and gold-infused serums.</div>
+        <div class="w-tag">By Appointment</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ FACILITIES ═══ -->
+<div id="page-facilities" class="page">
+  <header class="header">
+    <div><div class="logo-name">AYATARA</div><div class="logo-sub">Resort &amp; Spa</div></div>
+    <div class="hdr-center"><div class="hdr-date" id="D4"></div><div class="hdr-time" id="T4">--:--</div></div>
+    <div style="text-align:right;"><div class="btn-back nav-item" id="bk-fac" data-act="page:home"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>BACK</div></div>
+  </header>
+  <div class="sub-hdr">
+    <div><div class="sub-eyebrow">World-Class Amenities</div><div class="sub-title">RESORT FACILITIES</div></div>
+    <div class="sub-line"></div>
+  </div>
+  <div class="sub-body">
+    <div class="fac-grid">
+      <div class="sub-card nav-item" id="fc1" data-act="noop"><div class="f-ico">🏊</div><div class="f-name">INFINITY POOL</div><div class="f-desc">Horizon-edge pool overlooking Mae Ping River with private cabanas and pool butler service.</div><div class="f-st on">Open 06:00–22:00</div></div>
+      <div class="sub-card nav-item" id="fc2" data-act="noop"><div class="f-ico">🏋️</div><div class="f-name">FITNESS CENTRE</div><div class="f-desc">State-of-the-art Technogym equipment, free weights, TRX and personal training on request.</div><div class="f-st on">Open 24 Hours</div></div>
+      <div class="sub-card nav-item" id="fc3" data-act="noop"><div class="f-ico">🚴</div><div class="f-name">CYCLING</div><div class="f-desc">Complimentary bicycles for exploring Old City temples, night markets and the riverside trail.</div><div class="f-st tm">08:00–18:00</div></div>
+      <div class="sub-card nav-item" id="fc4" data-act="noop"><div class="f-ico">🎾</div><div class="f-name">TENNIS COURT</div><div class="f-desc">Floodlit court for resident guests. Equipment rental and professional lessons available.</div><div class="f-st tm">Book via Ext. 4</div></div>
+      <div class="sub-card nav-item" id="fc5" data-act="noop"><div class="f-ico">🛶</div><div class="f-name">RIVER CRUISE</div><div class="f-desc">Private longtail boat excursions along the Mae Ping River at sunset with champagne.</div><div class="f-st tm">Daily 17:30</div></div>
+      <div class="sub-card nav-item" id="fc6" data-act="noop"><div class="f-ico">🍳</div><div class="f-name">COOKING CLASS</div><div class="f-desc">Learn Northern Thai cuisine with our head chef at the open-air Lanna kitchen garden.</div><div class="f-st tm">Tue, Thu, Sat 10:00</div></div>
+      <div class="sub-card nav-item" id="fc7" data-act="noop"><div class="f-ico">🧸</div><div class="f-name">KIDS CLUB</div><div class="f-desc">Supervised Thai craft workshops, cooking for kids and garden treasure hunts.</div><div class="f-st on">09:00–17:00</div></div>
+      <div class="sub-card nav-item" id="fc8" data-act="noop"><div class="f-ico">🗺️</div><div class="f-name">CONCIERGE</div><div class="f-desc">Your dedicated team arranges temple tours, elephant sanctuaries and airport transfers.</div><div class="f-st on">24 Hours · Ext. 4</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ LIVE TV ═══ -->
+<div id="page-livetv" class="page">
+  <header class="header">
+    <div><div class="logo-name">AYATARA</div><div class="logo-sub">Resort &amp; Spa</div></div>
+    <div class="hdr-center"><div class="hdr-date" id="D5"></div><div class="hdr-time" id="T5">--:--</div></div>
+    <div style="text-align:right;"><div class="btn-back nav-item" id="bk-tv" data-act="page:home"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>BACK</div></div>
+  </header>
+  <div class="sub-hdr">
+    <div><div class="sub-eyebrow">Entertainment</div><div class="sub-title">LIVE TELEVISION</div></div>
+    <div class="sub-line"></div>
+  </div>
+  <div class="sub-body">
+    <div class="tv-grid">
+      <div class="ch-card nav-item" id="ch1" data-act="ch:1"><div class="ch-num">01</div><div class="ch-info"><div class="ch-name">BBC World News</div><div class="ch-now">Global Headlines</div></div><div class="badge hd">HD</div></div>
+      <div class="ch-card nav-item" id="ch2" data-act="ch:2"><div class="ch-num">02</div><div class="ch-info"><div class="ch-name">CNN International</div><div class="ch-now">World Report</div></div><div class="badge live">LIVE</div></div>
+      <div class="ch-card nav-item" id="ch3" data-act="ch:3"><div class="ch-num">03</div><div class="ch-info"><div class="ch-name">NHK World Japan</div><div class="ch-now">Asia Tonight</div></div><div class="badge hd">HD</div></div>
+      <div class="ch-card nav-item" id="ch4" data-act="ch:4"><div class="ch-num">04</div><div class="ch-info"><div class="ch-name">CGTN English</div><div class="ch-now">Business Asia</div></div><div class="badge hd">HD</div></div>
+      <div class="ch-card nav-item" id="ch5" data-act="ch:5"><div class="ch-num">05</div><div class="ch-info"><div class="ch-name">Bloomberg TV</div><div class="ch-now">Markets Open</div></div><div class="badge live">LIVE</div></div>
+      <div class="ch-card nav-item" id="ch6" data-act="ch:6"><div class="ch-num">06</div><div class="ch-info"><div class="ch-name">National Geographic</div><div class="ch-now">Wild Thailand</div></div><div class="badge hd">HD</div></div>
+      <div class="ch-card nav-item" id="ch7" data-act="ch:7"><div class="ch-num">07</div><div class="ch-info"><div class="ch-name">Discovery Channel</div><div class="ch-now">MythBusters</div></div><div class="badge hd">HD</div></div>
+      <div class="ch-card nav-item" id="ch8" data-act="ch:8"><div class="ch-num">08</div><div class="ch-info"><div class="ch-name">Thai PBS</div><div class="ch-now">สุดสัปดาห์</div></div><div class="badge hd">HD</div></div>
+      <div class="ch-card nav-item" id="ch9" data-act="ch:9"><div class="ch-num">09</div><div class="ch-info"><div class="ch-name">Channel 3 Thailand</div><div class="ch-now">Evening Drama</div></div><div class="badge live">LIVE</div></div>
+      <div class="ch-card nav-item" id="ch10" data-act="ch:10"><div class="ch-num">10</div><div class="ch-info"><div class="ch-name">True Vision Sports</div><div class="ch-now">Premier League</div></div><div class="badge live">LIVE</div></div>
+      <div class="ch-card nav-item" id="ch11" data-act="ch:11"><div class="ch-num">11</div><div class="ch-info"><div class="ch-name">ESPN Asia</div><div class="ch-now">SportsCenter Asia</div></div><div class="badge hd">HD</div></div>
+      <div class="ch-card nav-item" id="ch12" data-act="ch:12"><div class="ch-num">12</div><div class="ch-info"><div class="ch-name">MTV Asia</div><div class="ch-now">Top 20 Countdown</div></div><div class="badge hd">HD</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MODAL ═══ -->
+<div id="streamModal" class="modal">
+  <div class="modal-box">
+    <div class="m-logo" id="mLogo"></div>
+    <div class="m-title" id="mTitle">LAUNCHING APP</div>
+    <div class="m-msg" id="mMsg"></div>
+    <div class="m-btns">
+      <div class="stream-btn primary nav-item" id="s-ok"  data-act="stream-confirm">OPEN APP</div>
+      <div class="stream-btn secondary nav-item" id="s-no" data-act="stream-cancel">CANCEL</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     NAVIGATION ENGINE — LG Procentric / webOS Widget
+═══════════════════════════════════════════════════ -->
 <script>
-    // 1. UPDATE CLOCK
-    function updateClock() {
-        const now = new Date();
-        const time = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
-        document.getElementById('hTime').innerText = time;
+(function(){
+'use strict';
+
+/* ─── STATE ──────────────────────────────────── */
+var page      = 'home';
+var focused   = null;
+var modal     = false;
+var streamSvc = null;
+
+/* ─── PER-PAGE NAV POOLS ─────────────────────── */
+/* Order matters: first item gets focus by default after page load */
+var POOLS = {
+  home:       ['c-info','c-dining','c-wellness','c-fac','c-yt','c-nf','c-tv'],
+  info:       ['bk-info','ic1','ic2','ic3','ic4'],
+  dining:     ['bk-dining','dc1','dc2','dc3'],
+  wellness:   ['bk-wellness','wc1','wc2','wc3','wc4','wc5','wc6'],
+  facilities: ['bk-fac','fc1','fc2','fc3','fc4','fc5','fc6','fc7','fc8'],
+  livetv:     ['bk-tv','ch1','ch2','ch3','ch4','ch5','ch6','ch7','ch8','ch9','ch10','ch11','ch12'],
+  modal:      ['s-ok','s-no']
+};
+
+/* ─── HELPERS ────────────────────────────────── */
+function $(id){ return document.getElementById(id); }
+
+function center(el){
+  var r = el.getBoundingClientRect();
+  return { x: r.left + r.width/2, y: r.top + r.height/2 };
+}
+
+function pool(){
+  var ids = modal ? POOLS.modal : (POOLS[page] || []);
+  return ids.map($).filter(function(e){ return e && e.offsetParent !== null; });
+}
+
+/* ─── FOCUS ──────────────────────────────────── */
+function focus(el){
+  if(focused) focused.classList.remove('tv-focus');
+  focused = el;
+  if(el) el.classList.add('tv-focus');
+}
+
+/* ─── SPATIAL NAV ────────────────────────────── */
+function navigate(dir){
+  var p = pool();
+  if(!p.length) return;
+  if(!focused || p.indexOf(focused) < 0){ focus(p[0]); return; }
+
+  var cc = center(focused);
+  var best = null, bestScore = 1e9;
+
+  p.forEach(function(cand){
+    if(cand === focused) return;
+    var c  = center(cand);
+    var dx = c.x - cc.x;
+    var dy = c.y - cc.y;
+    var ok = false;
+
+    // Must be generally in the pressed direction (threshold 8px)
+    if(dir==='left'  && dx < -8) ok=true;
+    if(dir==='right' && dx >  8) ok=true;
+    if(dir==='up'    && dy < -8) ok=true;
+    if(dir==='down'  && dy >  8) ok=true;
+    if(!ok) return;
+
+    // Score = primary axis distance + 2.5× secondary axis penalty
+    var pri = (dir==='left'||dir==='right') ? Math.abs(dx) : Math.abs(dy);
+    var sec = (dir==='left'||dir==='right') ? Math.abs(dy) : Math.abs(dx);
+    var score = pri + sec * 2.5;
+    if(score < bestScore){ bestScore = score; best = cand; }
+  });
+
+  if(best) focus(best);
+}
+
+/* ─── ACTION DISPATCH ────────────────────────── */
+function dispatch(el){
+  if(!el) return;
+  var a = el.getAttribute('data-act') || '';
+  if(!a || a==='noop') return;
+
+  if(a.indexOf('page:')===0){
+    goPage(a.slice(5));
+  } else if(a.indexOf('stream:')===0){
+    openModal(a.slice(7));
+  } else if(a.indexOf('ch:')===0){
+    switchCh(parseInt(a.slice(3)));
+  } else if(a==='stream-confirm'){
+    confirmStream();
+  } else if(a==='stream-cancel'){
+    closeModal();
+  }
+}
+
+/* ─── PAGE SWITCH ────────────────────────────── */
+function goPage(name){
+  document.querySelectorAll('.page').forEach(function(p){
+    p.classList.remove('active');
+  });
+  var pg = $('page-'+name);
+  if(!pg) return;
+  pg.classList.add('active');
+  page = name;
+  if(focused) focused.classList.remove('tv-focus');
+  focused = null;
+
+  setTimeout(function(){
+    var p = pool();
+    if(!p.length) return;
+    // Sub-pages: start on first content card (index 1), skip back button
+    var idx = (name !== 'home') ? 1 : 0;
+    focus(p[Math.min(idx, p.length-1)]);
+  }, 90);
+}
+
+/* ─── STREAM MODAL ───────────────────────────── */
+function openModal(svc){
+  streamSvc = svc;
+  if(svc==='youtube'){
+    $('mLogo').textContent       = '▶';
+    $('mLogo').style.color       = '#ff0000';
+    $('mLogo').style.fontFamily  = 'sans-serif';
+    $('mTitle').textContent      = 'YOUTUBE';
+    $('mMsg').textContent        = 'YouTube will open on your TV.\nPress OPEN APP to launch.';
+  } else {
+    $('mLogo').textContent       = 'N';
+    $('mLogo').style.color       = '#e50914';
+    $('mLogo').style.fontFamily  = "'Cinzel',serif";
+    $('mLogo').style.fontWeight  = '900';
+    $('mTitle').textContent      = 'NETFLIX';
+    $('mMsg').textContent        = 'Netflix will open on your TV.\nPress OPEN APP to launch.';
+  }
+  $('streamModal').classList.add('active');
+  modal = true;
+  if(focused) focused.classList.remove('tv-focus');
+  focused = null;
+  setTimeout(function(){ focus($('s-ok')); }, 60);
+}
+
+function closeModal(){
+  $('streamModal').classList.remove('active');
+  modal = false;
+  if(focused) focused.classList.remove('tv-focus');
+  focused = null;
+  setTimeout(function(){
+    var p = pool();
+    if(p.length) focus(p[0]);
+  }, 60);
+}
+
+function confirmStream(){
+  var svc = streamSvc;
+  closeModal();
+  if(svc==='youtube')  launchApp('youtube.leanback.v4','sssp://youtube');
+  if(svc==='netflix')  launchApp('netflix','sssp://netflix');
+}
+
+function launchApp(webosId, fallback){
+  try{
+    if(typeof webOS !== 'undefined' && webOS.service){
+      webOS.service.request('luna://com.webos.service.applicationManager',{
+        method:'launch',
+        parameters:{ id: webosId },
+        onSuccess:function(){},
+        onFailure:function(){ window.location.href = fallback; }
+      });
+    } else { window.location.href = fallback; }
+  } catch(e){ window.location.href = fallback; }
+}
+
+/* ─── CHANNEL SWITCH ─────────────────────────── */
+function switchCh(num){
+  try{
+    if(typeof webOS !== 'undefined' && webOS.service){
+      webOS.service.request('luna://com.webos.service.tv.channel',{
+        method:'setChannel',
+        parameters:{ channelNumber: String(num) },
+        onSuccess:function(){},
+        onFailure:function(){}
+      });
     }
-    setInterval(updateClock, 1000);
-    updateClock();
+    // Procentric multicast fallback — adjust path to your system:
+    // var x=new XMLHttpRequest(); x.open('GET','/procentric/channel/'+num,true); x.send();
+  } catch(e){}
+}
 
-    // 2. LOADING HANDLING
-    window.onload = () => {
-        setTimeout(() => {
-            document.getElementById('loading').classList.add('hide');
-            document.querySelector('.menu-card').focus(); // Auto focus pertama
-        }, 2000);
-    };
+/* ══════════════════════════════════════════════
+   KEY HANDLER
+   Registered THREE ways for maximum widget compat
+   on LG Procentric / webOS HTML Widget renderer.
 
-    // 3. NAVIGATION LOGIC
-    function showPage(id) {
-        console.log("Navigating to: " + id);
-        // Tambahkan logika perpindahan halaman Bli di sini jika ada sub-page
-        alert("Navigating to " + id + ". Add your sub-page content here.");
+   Key codes:
+     37=LEFT  38=UP  39=RIGHT  40=DOWN
+     13=OK/Enter  10=Enter(alt)  32=Space
+     461=LG Back  27=Escape  8=Backspace
+═══════════════════════════════════════════════ */
+function onKey(e){
+  var k = e.keyCode || e.which || 0;
+  var eaten = true;
+
+  switch(k){
+    case 37: navigate('left');  break;
+    case 39: navigate('right'); break;
+    case 38: navigate('up');    break;
+    case 40: navigate('down');  break;
+
+    case 13: case 10:            // OK / Enter
+      dispatch(focused); break;
+
+    case 461: case 8: case 27:   // Back / Backspace / Escape
+      if(modal){ closeModal(); }
+      else if(page !== 'home'){ goPage('home'); }
+      break;
+
+    default: eaten = false;
+  }
+
+  if(eaten){
+    if(e.preventDefault)  e.preventDefault();
+    if(e.stopPropagation) e.stopPropagation();
+    return false;
+  }
+}
+
+/*
+  Three registrations — critical for LG Procentric widget:
+  1. window.onkeydown      — fires even when no DOM element has focus
+  2. document (capture)    — catches before anything else
+  3. document.body (capture)
+*/
+window.onkeydown = onKey;
+document.addEventListener('keydown', onKey, true);
+if(document.body) document.body.addEventListener('keydown', onKey, true);
+
+/* ─── MOUSE / TOUCH (for PC testing) ────────── */
+document.addEventListener('click', function(e){
+  var t = e.target.closest ? e.target.closest('.nav-item') : null;
+  if(!t) return;
+  focus(t);
+  setTimeout(function(){ dispatch(t); }, 40);
+}, false);
+
+/* ─── KEEP DOCUMENT FOCUSABLE ────────────────── */
+// Forces the widget renderer to keep sending key events to us
+document.documentElement.setAttribute('tabindex','-1');
+if(document.body){
+  document.body.setAttribute('tabindex','-1');
+  document.body.style.outline = 'none';
+}
+
+// Periodically re-focus body so keys keep flowing in widget context
+setInterval(function(){
+  try{
+    var ae = document.activeElement;
+    if(!ae || ae===document.body || ae===document.documentElement){
+      document.body.focus();
     }
+  } catch(e){}
+}, 2500);
 
-    // 4. STREAMING APP LAUNCHER
-    let selectedApp = "";
-    function openStream(app) {
-        selectedApp = app;
-        document.getElementById('streamTitle').innerText = app.toUpperCase();
-        document.getElementById('streamModal').classList.add('active');
-        document.getElementById('btnConfirm').focus();
-    }
+// Re-assert focus when page becomes visible
+document.addEventListener('visibilitychange', function(){
+  if(document.visibilityState === 'visible'){
+    try{ document.body.focus(); } catch(e){}
+  }
+});
 
-    function closeStream() {
-        document.getElementById('streamModal').classList.remove('active');
-        document.querySelector('.menu-card').focus();
-    }
+/* ─── CLOCK ──────────────────────────────────── */
+var DAYS   = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+var MONTHS = ['January','February','March','April','May','June',
+              'July','August','September','October','November','December'];
 
-    function confirmStream() {
-        const appId = (selectedApp === 'youtube') ? 'youtube.leanback.v4' : 'netflix';
-        console.log("Launching: " + appId);
-        
-        if (window.webOS && window.webOS.service) {
-            window.webOS.service.request("luna://com.webos.applicationManager", {
-                method: "launch",
-                parameters: { "id": appId },
-                onSuccess: (res) => console.log("Success"),
-                onFailure: (err) => alert("Failed to launch " + selectedApp)
-            });
-        } else {
-            alert("App launching is only available on LG TV.");
-        }
-        closeStream();
-    }
+function tick(){
+  var n  = new Date();
+  var h  = String(n.getHours()).padStart('00'.length,'0');
+  var m  = String(n.getMinutes()).padStart('00'.length,'0');
+  var ts = h+':'+m;
+  var ds = DAYS[n.getDay()]+', '+n.getDate()+' '+MONTHS[n.getMonth()]+' '+n.getFullYear();
+  for(var i=0;i<6;i++){
+    var te=$('T'+i), de=$('D'+i);
+    if(te) te.textContent=ts;
+    if(de) de.textContent=ds;
+  }
+}
+tick();
+setInterval(tick, 10000);
 
-    // 5. MASTER REMOTE CONTROL HANDLER
-    document.addEventListener('keydown', function(e) {
-        const active = document.activeElement;
-        
-        // LG Magic Remote / D-Pad Keys
-        switch(e.keyCode) {
-            case 37: // Left
-                if (active.previousElementSibling && active.previousElementSibling.classList.contains('focusable')) {
-                    active.previousElementSibling.focus();
-                }
-                break;
-            case 39: // Right
-                if (active.nextElementSibling && active.nextElementSibling.classList.contains('focusable')) {
-                    active.nextElementSibling.focus();
-                }
-                break;
-            case 13: // Enter / OK
-                active.click();
-                break;
-            case 461: // Back Button LG
-                if (document.getElementById('streamModal').classList.contains('active')) {
-                    closeStream();
-                } else {
-                    // Logic untuk kembali ke Home jika sedang di sub-page
-                }
-                break;
-        }
-    });
+/* ─── INIT ───────────────────────────────────── */
+window.addEventListener('load', function(){
+  setTimeout(function(){
+    var ld = $('loading');
+    if(ld) ld.classList.add('gone');
+  }, 2200);
+  setTimeout(function(){
+    goPage('home');
+    try{ document.body.focus(); } catch(e){}
+  }, 2400);
+});
+
+})();
 </script>
-
 </body>
 </html>
