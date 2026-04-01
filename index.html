@@ -3,21 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=1920, initial-scale=1.0">
-<title>Ayatara Resort — In-Room Portal</title>
+<title>Ayatara Resort — Clean Luxury Portal</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Cinzel:wght@400;500;600&family=Lato:wght@300;400&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg-deep:    #080f0d;
-  --bg-card:    rgba(17, 31, 25, 0.85); /* Dibuat sedikit transparan agar slider BG terlihat */
-  --bg-hover:   #1a2f24;
+  --bg-card:    rgba(17, 31, 25, 0.45); /* Transparan untuk Marriott Look */
+  --bg-hover:   rgba(8, 15, 13, 0.95);
   --gold:       #c9a96e;
   --gold-light: #e8cfa0;
   --gold-dark:  #8a6d3b;
   --cream:      #f0e9d8;
   --muted:      #b0a086;
   --green:      #3d6b57;
-  --border:     rgba(201,169,110,0.2);
+  --border:     rgba(201,169,110,0.25);
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 html,body{
@@ -27,35 +27,24 @@ html,body{
   user-select:none;-webkit-user-select:none;
 }
 
-/* ══ BACKGROUND SLIDER & GOLD DUST ══ */
-#bg-slider { position:absolute; inset:0; z-index:0; overflow:hidden; }
-.bg-slide {
-  position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
-  opacity:0; transform:scale(1.1); transition:opacity 3s ease-in-out;
+/* ══ BACKGROUND SLIDER (CLEAN LUXURY) ══ */
+.slider-container { position: absolute; inset: 0; z-index: 0; overflow: hidden; background: var(--bg-deep); }
+.slide { 
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  opacity: 0; transform: scale(1.05); transition: opacity 2s ease, transform 12s linear;
 }
-.bg-slide.active {
-  opacity: 0.35; /* Tingkat transparansi BG */
-  transform: scale(1);
-  transition: opacity 3s ease-in-out, transform 15s linear;
+.slide.active { opacity: 0.65; transform: scale(1); } /* 0.65 opacity agar teks tetap terbaca */
+.slider-overlay {
+  position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background: linear-gradient(180deg, rgba(8,15,13,0.8) 0%, rgba(8,15,13,0.1) 30%, rgba(8,15,13,0.95) 100%);
 }
-#bg-overlay { position:absolute; inset:0; background:linear-gradient(180deg, rgba(8,15,13,0.7) 0%, var(--bg-deep) 100%); z-index:1; }
-#gold-dust { position:absolute; inset:0; z-index:2; pointer-events:none; }
 
 /* ══ PAGE SYSTEM ══ */
-.page{display:none;position:absolute;inset:0;flex-direction:column; z-index:10;}
-.page.active{display:flex; animation: pgIn .4s ease both;}
-@keyframes pgIn{from{opacity:0;}to{opacity:1;}}
+.page{display:none;position:absolute;inset:0;flex-direction:column;animation:pgIn .4s ease both; z-index: 10;}
+.page.active{display:flex;}
+@keyframes pgIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 
-/* ══ CARD MOTION EFFECT (NEW) ══ */
-@keyframes cardIn {
-  from { opacity: 0; transform: translateY(40px) scale(0.95); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
-.page.active .nav-item {
-  animation: cardIn 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both;
-}
-
-/* ══ FOCUS — ALL interactive states via .tv-focus only ══ */
+/* ══ FOCUS — 100% DARI KODE BLI WAYAN ══ */
 .nav-item{
   transition:
     transform .22s cubic-bezier(.25,.46,.45,.94),
@@ -66,8 +55,8 @@ html,body{
 }
 .menu-card.tv-focus{
   border-color:var(--gold)!important;
-  transform:translateY(-8px) scale(1.02)!important;
-  box-shadow:0 22px 55px rgba(0,0,0,.9),0 0 0 1px rgba(201,169,110,.5),0 0 60px rgba(201,169,110,.25)!important;
+  transform:translateY(-12px) scale(1.02)!important;
+  box-shadow:0 22px 55px rgba(0,0,0,.9),0 0 0 1px rgba(201,169,110,.6),0 0 50px rgba(201,169,110,.2)!important;
   background:var(--bg-hover)!important;
 }
 .menu-card.tv-focus .card-label{color:var(--gold-light)!important;}
@@ -94,63 +83,51 @@ html,body{
   color:var(--gold)!important;border-color:var(--gold)!important;
   background:rgba(201,169,110,.08)!important;transform:translateX(-4px)!important;
 }
-.stream-btn.primary.tv-focus{transform:scale(1.05)!important;background:var(--gold-light)!important;box-shadow:0 0 0 2px var(--gold)!important;}
-.stream-btn.secondary.tv-focus{transform:scale(1.05)!important;border-color:var(--gold)!important;color:var(--gold)!important;box-shadow:0 0 0 2px rgba(201,169,110,.4)!important;}
 
-/* ══ SHARED HEADER ══ */
+/* ══ SHARED HEADER (CLEAN) ══ */
 .header{
   display:flex;align-items:center;justify-content:space-between;
-  padding:24px 64px 18px;
-  border-bottom:1px solid var(--border);flex-shrink:0;
-  background:linear-gradient(180deg,rgba(8,15,13,.95) 0%,rgba(8,15,13,0) 100%);
-  position:relative;z-index:10;
+  padding:40px 80px 20px;
+  flex-shrink:0; position:relative; z-index:10;
 }
-.header::after{
-  content:'';position:absolute;bottom:-1px;left:64px;right:64px;height:1px;
-  background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.4;
-}
-.logo-name{font-family:'Cinzel',serif;font-size:26px;font-weight:500;letter-spacing:7px;color:var(--gold-light);line-height:1;}
-.logo-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;color:var(--muted);letter-spacing:3px;margin-top:3px;}
+.logo-name{font-family:'Cinzel',serif;font-size:32px;font-weight:500;letter-spacing:9px;color:var(--gold-light);line-height:1;}
+.logo-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:var(--muted);letter-spacing:4px;margin-top:5px;}
 .hdr-center{position:absolute;left:50%;transform:translateX(-50%);text-align:center;}
-.hdr-date{font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--muted);letter-spacing:2.5px;}
-.hdr-time{font-family:'Cinzel',serif;font-size:38px;color:var(--gold-light);letter-spacing:4px;line-height:1;margin-top:2px;}
-.room-label{font-size:10px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;}
-.room-number{font-family:'Cinzel',serif;font-size:24px;color:var(--gold-light);letter-spacing:4px;}
-.weather{font-size:12px;color:var(--muted);letter-spacing:1px;margin-top:3px;}
+.hdr-date{font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--muted);letter-spacing:3px;}
+.hdr-time{font-family:'Cinzel',serif;font-size:46px;color:var(--white);letter-spacing:5px;line-height:1;margin-top:5px; text-shadow: 0 2px 10px rgba(0,0,0,0.5);}
+.room-label{font-size:12px;letter-spacing:4px;color:var(--muted);text-transform:uppercase;}
+.room-number{font-family:'Cinzel',serif;font-size:30px;color:var(--gold-light);letter-spacing:5px;}
+.weather{font-size:14px;color:var(--muted);letter-spacing:2px;margin-top:6px;}
 .btn-back{
   display:inline-flex;align-items:center;gap:10px;
-  font-family:'Cinzel',serif;font-size:12px;letter-spacing:3px;color:var(--muted);
-  background:rgba(8,15,13,0.8);border:1px solid var(--border);padding:10px 24px;border-radius:2px;
+  font-family:'Cinzel',serif;font-size:14px;letter-spacing:4px;color:var(--cream);
+  background:rgba(8,15,13,0.6);border:1px solid var(--border);padding:14px 30px;border-radius:2px;
+  backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
 }
-.btn-back svg{width:14px;height:14px;stroke:currentColor;fill:none;}
+.btn-back svg{width:16px;height:16px;stroke:currentColor;fill:none;}
 
-/* ══ HOME ══ */
-.home-welcome{text-align:center;padding:20px 0 14px;position:relative;z-index:2;}
-.home-greeting{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:20px;color:var(--muted);letter-spacing:4px;}
-.home-headline{font-family:'Cinzel',serif;font-size:13px;letter-spacing:7px;color:var(--gold);margin-top:5px; text-shadow: 0 2px 10px rgba(0,0,0,0.8);}
-.gold-div{display:flex;align-items:center;justify-content:center;gap:14px;margin:8px auto 0;width:300px;}
-.gold-div::before,.gold-div::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--gold-dark));}
-.gold-div::after{background:linear-gradient(90deg,var(--gold-dark),transparent);}
-.gold-dia{width:7px;height:7px;background:var(--gold);transform:rotate(45deg);flex-shrink:0;box-shadow: 0 0 10px var(--gold);}
+/* ══ HOME (MARRIOTT STYLE LAYOUT) ══ */
+#page-home{background:none;}
+.home-welcome{
+  text-align:center; flex:1; display:flex; flex-direction:column; justify-content:center;
+  padding:0 80px; position:relative; z-index:2;
+}
+.home-greeting{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:34px;color:var(--gold-light);letter-spacing:5px; text-shadow: 0 4px 15px rgba(0,0,0,0.8);}
+.home-headline{font-family:'Cinzel',serif;font-size:18px;letter-spacing:10px;color:var(--white);margin-top:15px; text-shadow: 0 4px 15px rgba(0,0,0,0.8);}
+
 .menu-grid{
   display:grid;grid-template-columns:repeat(7,1fr);gap:18px;
-  padding:16px 52px 12px;flex:1;position:relative;z-index:2;
+  padding:0 80px 40px; position:relative; z-index:2;
 }
 .menu-card{
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  border:1px solid var(--border);border-radius:4px;
-  background:linear-gradient(158deg, var(--bg-card) 0%, rgba(8,15,13,.7) 100%);
-  padding:0 18px;min-height:216px;position:relative;overflow:hidden;
+  border:1px solid var(--border);border-radius:2px;
+  background:var(--bg-card); /* Glassmorphism */
   backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  padding:0 18px;min-height:216px;position:relative;overflow:hidden;
 }
-.menu-card::before{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(180deg,rgba(201,169,110,.06) 0%,transparent 55%);
-  opacity:0;transition:opacity .25s;
-}
-.menu-card.tv-focus::before{opacity:1;}
 .menu-card::after{
-  content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
+  content:'';position:absolute;bottom:0;left:0;right:0;height:3px;
   background:linear-gradient(90deg,transparent,var(--gold),transparent);
   transform:scaleX(0);transition:transform .3s ease;
 }
@@ -162,26 +139,17 @@ html,body{
 .card-icon svg{width:30px;height:30px;}
 .card-label{font-family:'Cinzel',serif;font-size:11.5px;letter-spacing:2.5px;color:var(--cream);text-align:center;line-height:1.55;text-transform:uppercase;transition:color .25s;}
 .card-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:12px;color:var(--muted);text-align:center;margin-top:6px;line-height:1.4;}
-.home-footer{
-  display:flex;align-items:center;justify-content:center;gap:40px;
-  padding:11px 64px;border-top:1px solid var(--border);flex-shrink:0;position:relative;z-index:2;
-  background:rgba(8,15,13,0.8); backdrop-filter:blur(4px);
-}
-.home-footer::before{content:'';position:absolute;top:-1px;left:64px;right:64px;height:1px;background:linear-gradient(90deg,transparent,var(--gold-dark),transparent);opacity:.5;}
-.fi{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted);letter-spacing:1.5px;}
-.fi svg{width:15px;height:15px;stroke:var(--gold-dark);fill:none;}
-.fh{font-family:'Cinzel',serif;font-size:10px;letter-spacing:2px;color:var(--gold-dark);text-align:center;flex:1;}
 
 /* ══ SUB-PAGE SHARED ══ */
-.sub-hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 64px 10px;flex-shrink:0; text-shadow:0 2px 10px rgba(0,0,0,0.8);}
-.sub-eyebrow{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:var(--gold);letter-spacing:3px;}
-.sub-title{font-family:'Cinzel',serif;font-size:26px;letter-spacing:6px;color:var(--cream);line-height:1;margin-top:4px;}
-.sub-line{flex:1;height:1px;background:linear-gradient(90deg,var(--border),transparent);margin:0 36px;}
-.sub-body{flex:1;overflow:hidden;padding:0 64px 26px;}
+.page:not(#page-home) { background: var(--bg-deep); } /* Sub-page menggunakan background solid gelap agar konten mudah dibaca */
+.sub-hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 80px 20px;flex-shrink:0;}
+.sub-eyebrow{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:16px;color:var(--gold);letter-spacing:4px;}
+.sub-title{font-family:'Cinzel',serif;font-size:32px;letter-spacing:8px;color:var(--cream);line-height:1;margin-top:6px;}
+.sub-line{flex:1;height:1px;background:linear-gradient(90deg,var(--border),transparent);margin:0 40px;}
+.sub-body{flex:1;overflow:hidden;padding:0 80px 40px;}
 .sub-card{
-  border:1px solid var(--border);border-radius:4px;background:var(--bg-card);
-  padding:26px 28px;display:flex;flex-direction:column;position:relative;overflow:hidden;
-  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  border:1px solid var(--border);border-radius:2px;background:rgba(17, 31, 25, 0.8);
+  padding:35px 35px;display:flex;flex-direction:column;position:relative;overflow:hidden;
 }
 .sub-card::after{
   content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
@@ -190,111 +158,85 @@ html,body{
 }
 
 /* ══ INFO ══ */
-.info-grid{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:18px;height:100%;}
-.i-ttl{font-family:'Cinzel',serif;font-size:12px;letter-spacing:3.5px;color:var(--gold);margin-bottom:14px;display:flex;align-items:center;gap:10px;}
-.i-ttl svg{width:16px;height:16px;stroke:var(--gold);fill:none;}
-.i-body{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--cream);line-height:1.75;font-weight:300;}
-.i-tag{display:inline-block;background:rgba(201,169,110,.1);border:1px solid rgba(201,169,110,.22);border-radius:2px;padding:3px 12px;font-family:'Cinzel',serif;font-size:11px;color:var(--gold-light);letter-spacing:2px;margin:6px 5px 0 0;}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:20px;height:100%;}
+.i-ttl{font-family:'Cinzel',serif;font-size:14px;letter-spacing:4px;color:var(--gold);margin-bottom:18px;display:flex;align-items:center;gap:12px;}
+.i-ttl svg{width:20px;height:20px;stroke:var(--gold);fill:none;}
+.i-body{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--cream);line-height:1.8;font-weight:300;}
+.i-tag{display:inline-block;background:rgba(201,169,110,.1);border:1px solid rgba(201,169,110,.22);border-radius:2px;padding:4px 16px;font-family:'Cinzel',serif;font-size:12px;color:var(--gold-light);letter-spacing:2px;margin:10px 8px 0 0;}
 
 /* ══ DINING ══ */
-.dining-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;height:100%;}
-.d-ico{font-size:38px;margin-bottom:12px;}
-.d-name{font-family:'Cinzel',serif;font-size:15px;letter-spacing:3px;color:var(--gold-light);margin-bottom:5px;}
-.d-type{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;color:var(--gold);letter-spacing:2px;margin-bottom:12px;}
-.d-desc{font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--cream);line-height:1.65;flex:1;}
-.d-hrs{margin-top:14px;padding-top:12px;border-top:1px solid var(--border);display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);letter-spacing:1px;}
-.d-hrs svg{width:13px;height:13px;stroke:var(--gold-dark);fill:none;}
-
-/* ══ WELLNESS ══ */
-.wellness-grid{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:1fr 1fr;gap:16px;height:100%;}
-.w-feat{grid-column:span 2;}
-.w-ico{font-size:30px;margin-bottom:12px;}
-.w-name{font-family:'Cinzel',serif;font-size:12px;letter-spacing:3px;color:var(--gold-light);margin-bottom:10px;text-transform:uppercase;}
-.w-desc{font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--cream);line-height:1.6;flex:1;}
-.w-tag{margin-top:10px;font-size:11px;letter-spacing:2px;color:var(--green);border:1px solid rgba(61,107,87,.4);padding:3px 10px;border-radius:2px;text-transform:uppercase;display:inline-block;}
-
-/* ══ FACILITIES ══ */
-.fac-grid{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:1fr 1fr;gap:16px;height:100%;}
-.f-ico{font-size:30px;margin-bottom:12px;}
-.f-name{font-family:'Cinzel',serif;font-size:12px;letter-spacing:3px;color:var(--gold-light);margin-bottom:9px;}
-.f-desc{font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--cream);line-height:1.6;flex:1;}
-.f-st{margin-top:10px;font-size:10.5px;letter-spacing:2px;padding:3px 10px;border-radius:2px;display:inline-block;text-transform:uppercase;}
-.f-st.on{color:#5aba8a;border:1px solid rgba(90,186,138,.3);}
-.f-st.tm{color:var(--gold);border:1px solid var(--border);}
+.dining-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;height:100%;}
+.d-ico{font-size:42px;margin-bottom:15px;}
+.d-name{font-family:'Cinzel',serif;font-size:18px;letter-spacing:4px;color:var(--gold-light);margin-bottom:8px;}
+.d-type{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:var(--gold);letter-spacing:3px;margin-bottom:15px;}
+.d-desc{font-family:'Cormorant Garamond',serif;font-size:19px;color:var(--cream);line-height:1.7;flex:1;}
+.d-hrs{margin-top:18px;padding-top:15px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;font-size:14px;color:var(--muted);letter-spacing:1px;}
+.d-hrs svg{width:16px;height:16px;stroke:var(--gold-dark);fill:none;}
 
 /* ══ LIVE TV ══ */
-.tv-grid{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:min-content;gap:14px;height:100%;overflow-y:auto;padding-bottom:50px;}
+.tv-grid{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(3,1fr);gap:16px;height:100%;}
 .ch-card{
-  border:1px solid var(--border);border-radius:4px;background:var(--bg-card);
-  padding:15px 22px;display:flex;align-items:center;gap:18px;
-  position:relative;overflow:hidden; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  border:1px solid var(--border);border-radius:2px;background:rgba(17, 31, 25, 0.8);
+  padding:20px 25px;display:flex;align-items:center;gap:20px;
+  position:relative;overflow:hidden;
 }
-.ch-num{font-family:'Cinzel',serif;font-size:22px;color:var(--gold-dark);min-width:40px;text-align:center;}
+.ch-num{font-family:'Cinzel',serif;font-size:26px;color:var(--gold-dark);min-width:45px;text-align:center;}
 .ch-info{flex:1;}
-.ch-name{font-family:'Cinzel',serif;font-size:14px;letter-spacing:2px;color:var(--cream);}
+.ch-name{font-family:'Cinzel',serif;font-size:15px;letter-spacing:2px;color:var(--cream);}
+.ch-now{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:var(--muted);margin-top:6px;}
 
 /* ══ MODAL ══ */
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.86);z-index:200;align-items:center;justify-content:center;}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:200;align-items:center;justify-content:center;}
 .modal.active{display:flex;animation:pgIn .3s ease both;}
-.modal-box{background:var(--bg-card);border:1px solid var(--border);border-radius:6px;padding:54px 74px;text-align:center;max-width:640px;backdrop-filter: blur(15px);}
-.m-logo{font-size:70px;margin-bottom:22px;line-height:1;}
-.m-title{font-family:'Cinzel',serif;font-size:22px;letter-spacing:5px;color:var(--gold-light);margin-bottom:10px;}
-.m-msg{font-family:'Cormorant Garamond',serif;font-size:19px;color:var(--muted);line-height:1.65;margin-bottom:34px;}
-.m-btns{display:flex;gap:16px;justify-content:center;}
-.stream-btn{font-family:'Cinzel',serif;font-size:11.5px;letter-spacing:3px;padding:14px 34px;border-radius:2px;border:1px solid;transition:transform .2s ease,box-shadow .2s ease,background .2s ease;}
+.modal-box{background:var(--bg-card);border:1px solid var(--gold);border-radius:2px;padding:60px 80px;text-align:center;max-width:700px;backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);}
+.m-logo{font-size:75px;margin-bottom:25px;line-height:1;}
+.m-title{font-family:'Cinzel',serif;font-size:26px;letter-spacing:6px;color:var(--gold-light);margin-bottom:15px;}
+.m-msg{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--cream);line-height:1.65;margin-bottom:40px;}
+.m-btns{display:flex;gap:20px;justify-content:center;}
+.stream-btn{font-family:'Cinzel',serif;font-size:13px;letter-spacing:4px;padding:16px 40px;border-radius:2px;border:1px solid;transition:transform .2s ease,box-shadow .2s ease,background .2s ease;}
 .stream-btn.primary{background:var(--gold);border-color:var(--gold);color:#080f0d;}
 .stream-btn.secondary{background:transparent;border-color:var(--border);color:var(--muted);}
 
 /* ══ LOADING ══ */
-#loading{
-  position:fixed;inset:0;z-index:300;background:var(--bg-deep);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  transition:opacity .9s ease;
-}
+#loading{ position:fixed;inset:0;z-index:300;background:var(--bg-deep); display:flex;flex-direction:column;align-items:center;justify-content:center; transition:opacity 1s ease; }
 #loading.gone{opacity:0;pointer-events:none;}
-.l-logo{font-family:'Cinzel',serif;font-size:52px;letter-spacing:14px;color:var(--gold);animation:glow 2s ease-in-out infinite alternate;}
+.l-logo{font-family:'Cinzel',serif;font-size:60px;letter-spacing:18px;color:var(--gold);animation:glow 2s ease-in-out infinite alternate;}
 @keyframes glow{from{text-shadow:0 0 24px rgba(201,169,110,.28)}to{text-shadow:0 0 70px rgba(201,169,110,.72)}}
-.l-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:17px;color:var(--muted);letter-spacing:6px;margin-top:6px;margin-bottom:52px;}
-.l-bar{width:220px;height:1px;background:var(--border);position:relative;overflow:hidden;}
-.l-bar::after{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,var(--gold),transparent);animation:sweep 1.8s ease infinite;}
-@keyframes sweep{to{left:200%}}
+.l-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:20px;color:var(--muted);letter-spacing:8px;margin-top:10px;}
 ::-webkit-scrollbar{display:none;}
 </style>
 </head>
 <body>
 
-<div id="bg-slider">
-  <img class="bg-slide" src="assets/promo-dining.jpg" />
-  <img class="bg-slide" src="assets/promo-pool.jpg" />
-  <img class="bg-slide" src="assets/promo-spa.jpg" />
+<div class="slider-container">
+  <img class="slide active" src="assets/promo-dining.jpg" onerror="this.src='https://images.unsplash.com/photo-1542314831-c6a4d14d837e?q=80&w=1920&auto=format&fit=crop'">
+  <img class="slide" src="assets/promo-pool.jpg" onerror="this.src='https://images.unsplash.com/photo-1571896349842-33c89424de2d?q=80&w=1920&auto=format&fit=crop'">
+  <img class="slide" src="assets/promo-spa.jpg" onerror="this.src='https://images.unsplash.com/photo-1582719508461-905c673771fd?q=80&w=1920&auto=format&fit=crop'">
 </div>
-<div id="bg-overlay"></div>
-<canvas id="gold-dust"></canvas>
+<div class="slider-overlay"></div>
 
 <div id="loading">
   <div class="l-logo">AYATARA</div>
   <div class="l-sub">Resort &amp; Spa</div>
-  <div class="l-bar"></div>
 </div>
 
 <div id="page-home" class="page active">
   <header class="header">
     <div><div class="logo-name">AYATARA</div><div class="logo-sub">Resort &amp; Spa</div></div>
-    <div class="hdr-center">
-      <div class="hdr-date" id="D0"></div>
-      <div class="hdr-time" id="T0">--:--</div>
-    </div>
     <div style="text-align:right;">
-      <div class="room-label">Your Suite</div>
+      <div class="room-label">Suite</div>
       <div class="room-number">612</div>
       <div class="weather">☀ 31°C &nbsp;·&nbsp; Chiang Mai</div>
     </div>
   </header>
+  
   <div class="home-welcome">
-    <div class="home-greeting">Welcome to Ayatara</div>
-    <div class="home-headline">How may we serve you today?</div>
-    <div class="gold-div"><div class="gold-dia"></div></div>
+    <div class="hdr-time" id="T0">--:--</div>
+    <div class="hdr-date" id="D0" style="margin-top: 10px;"></div>
+    <div class="home-greeting" style="margin-top: 60px;">Welcome to Ayatara, Bli Wayan</div>
+    <div class="home-headline">EXPERIENCE UNPARALLELED LUXURY</div>
   </div>
+
   <div class="menu-grid">
     <div class="menu-card nav-item" id="c-info" data-act="page:info">
       <div class="card-icon"><div class="card-icon-ring"></div>
@@ -328,7 +270,7 @@ html,body{
       <div class="card-icon"><div class="card-icon-ring"></div>
         <svg viewBox="0 0 24 24" width="34" height="34"><path fill="#ff0000" d="M22.54 6.42a2.78 2.78 0 00-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 001.46 6.42 29 29 0 001 12a29 29 0 00.46 5.58 2.78 2.78 0 001.95 1.95C5.12 20 12 20 12 20s6.88 0 8.59-.47a2.78 2.78 0 001.95-1.95A29 29 0 0023 12a29 29 0 00-.46-5.58z"/><polygon fill="#fff" points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg>
       </div>
-      <div class="card-label">YouTube</div>
+      <div class="card-label" style="color:#ff0000;">YouTube</div>
       <div class="card-sub">Watch &amp; Explore</div>
     </div>
     <div class="menu-card nav-item nf-card" id="c-nf" data-act="stream:netflix">
@@ -340,23 +282,16 @@ html,body{
           <path fill="#111" d="M10 0l14 36h-6L4 0z"/>
         </svg>
       </div>
-      <div class="card-label">Netflix</div>
+      <div class="card-label" style="color:#e50914;">Netflix</div>
       <div class="card-sub">Movies &amp; Series</div>
     </div>
     <div class="menu-card nav-item tv-chan" id="c-tv" data-act="page:livetv">
       <div class="card-icon"><div class="card-icon-ring"></div>
         <svg viewBox="0 0 24 24" stroke="#4a9fd4" stroke-width="1.5" fill="none"><rect x="2" y="7" width="20" height="14" rx="2"/><polyline points="17 2 12 7 7 2"/><circle cx="12" cy="14" r="3" fill="rgba(74,159,212,.2)" stroke="#4a9fd4"/><circle cx="12" cy="14" r="1" fill="#4a9fd4" stroke="none"/></svg>
       </div>
-      <div class="card-label">Live TV</div>
+      <div class="card-label" style="color:#4a9fd4;">Live TV</div>
       <div class="card-sub">Channels &amp; News</div>
     </div>
-  </div>
-  <div class="home-footer">
-    <div class="fi"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8a2 2 0 012-2.18h3"/></svg>Front Desk: Ext. 0</div>
-    <div class="fi"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Room Service: 24 Hours</div>
-    <div class="fh">↑ ↓ ← → NAVIGATE &nbsp;·&nbsp; OK SELECT &nbsp;·&nbsp; BACK RETURN</div>
-    <div class="fi"><svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>In-Room Dining: Ext. 5</div>
-    <div class="fi"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Chiang Mai, Thailand</div>
   </div>
 </div>
 
@@ -391,7 +326,6 @@ html,body{
         <div class="i-ttl"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>RESORT LOCATION</div>
         <p class="i-body">Set along the Mae Ping River, Ayatara is 20 min from Chiang Mai Airport and a short ride from the ancient Old City.</p>
         <span class="i-tag">Airport Transfer → Ext. 4</span>
-        <span class="i-tag">Tuk-Tuk → Ext. 4</span>
       </div>
     </div>
   </div>
@@ -412,19 +346,19 @@ html,body{
       <div class="sub-card nav-item" id="dc1" data-act="noop">
         <div class="d-ico">🍜</div><div class="d-name">SALA BAAN</div>
         <div class="d-type">Signature Thai Restaurant</div>
-        <div class="d-desc">Authentic Northern Thai cuisine crafted with heirloom recipes and locally sourced ingredients. Savour the flavours of Lanna in our open-air riverside pavilion.</div>
+        <div class="d-desc">Authentic Northern Thai cuisine crafted with heirloom recipes and locally sourced ingredients.</div>
         <div class="d-hrs"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Breakfast 06:30–10:30 &nbsp;·&nbsp; Dinner 18:00–22:30</div>
       </div>
       <div class="sub-card nav-item" id="dc2" data-act="noop">
         <div class="d-ico">🥩</div><div class="d-name">THE VERANDA</div>
         <div class="d-type">International &amp; Grill</div>
-        <div class="d-desc">Elegant all-day dining with Western classics, premium grills and seasonal menus overlooking our tropical garden and infinity pool.</div>
+        <div class="d-desc">Elegant all-day dining with Western classics, premium grills and seasonal menus overlooking our tropical garden.</div>
         <div class="d-hrs"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>All Day 11:00–22:00 &nbsp;·&nbsp; Sun Brunch 11:00–15:00</div>
       </div>
       <div class="sub-card nav-item" id="dc3" data-act="noop">
         <div class="d-ico">🍸</div><div class="d-name">LOTUS BAR</div>
         <div class="d-type">Cocktail Lounge &amp; Pool Bar</div>
-        <div class="d-desc">Handcrafted cocktails infused with Thai botanicals alongside live acoustic music. Our poolside bar is the perfect sunset gathering destination.</div>
+        <div class="d-desc">Handcrafted cocktails infused with Thai botanicals alongside live acoustic music.</div>
         <div class="d-hrs"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Daily 10:00–00:00 &nbsp;·&nbsp; Happy Hour 17:00–19:00</div>
       </div>
     </div>
@@ -442,36 +376,26 @@ html,body{
     <div class="sub-line"></div>
   </div>
   <div class="sub-body">
-    <div class="wellness-grid">
-      <div class="sub-card nav-item w-feat" id="wc1" data-act="noop" style="background:linear-gradient(135deg,#0e2820 0%,#111f19 100%);">
-        <div class="w-ico">🌸</div><div class="w-name">Ayatara Signature Spa</div>
-        <div class="w-desc">Surrender to ancient healing traditions reimagined for the modern soul. Our signature 4-hand Thai massage uses warm herbal compresses and aromatic oils for a deeply restorative experience.</div>
-        <div class="w-tag">Reservations: Ext. 3</div>
+    <div class="info-grid">
+      <div class="sub-card nav-item" id="wc1" data-act="noop">
+        <div class="i-ttl">Ayatara Signature Spa</div>
+        <p class="i-body">Surrender to ancient healing traditions. Our signature 4-hand Thai massage uses warm herbal compresses and aromatic oils.</p>
+        <span class="i-tag">Reservations: Ext. 3</span>
       </div>
       <div class="sub-card nav-item" id="wc2" data-act="noop">
-        <div class="w-ico">🧘</div><div class="w-name">Morning Yoga</div>
-        <div class="w-desc">Sunrise yoga on the garden terrace overlooking the lotus pond. Open to all levels.</div>
-        <div class="w-tag">Daily 07:00</div>
+        <div class="i-ttl">Morning Yoga</div>
+        <p class="i-body">Sunrise yoga on the garden terrace overlooking the lotus pond. Open to all levels.</p>
+        <span class="i-tag">Daily 07:00</span>
       </div>
       <div class="sub-card nav-item" id="wc3" data-act="noop">
-        <div class="w-ico">💆</div><div class="w-name">Thai Massage</div>
-        <div class="w-desc">Traditional Thai bodywork to release tension and restore balance throughout the body.</div>
-        <div class="w-tag">60 · 90 · 120 min</div>
+        <div class="i-ttl">Hydrotherapy Pool</div>
+        <p class="i-body">Warm mineral pools with therapeutic jets, cold plunge and steam room.</p>
+        <span class="i-tag">Daily 08:00–20:00</span>
       </div>
-      <div class="sub-card nav-item w-feat" id="wc4" data-act="noop" style="background:linear-gradient(135deg,#0a2030 0%,#111f19 100%);">
-        <div class="w-ico">🌊</div><div class="w-name">Hydrotherapy Pool</div>
-        <div class="w-desc">Warm mineral pools with therapeutic jets, cold plunge and steam room — a complete circuit for deep relaxation and circulation stimulation.</div>
-        <div class="w-tag">Daily 08:00–20:00</div>
-      </div>
-      <div class="sub-card nav-item" id="wc5" data-act="noop">
-        <div class="w-ico">🌿</div><div class="w-name">Herbal Steam</div>
-        <div class="w-desc">Traditional Thai steam with lemongrass, kaffir lime and galangal.</div>
-        <div class="w-tag">Daily 08:00–20:00</div>
-      </div>
-      <div class="sub-card nav-item" id="wc6" data-act="noop">
-        <div class="w-ico">✨</div><div class="w-name">Facial Ritual</div>
-        <div class="w-desc">Luxury skin treatments using organic Thai botanicals and gold-infused serums.</div>
-        <div class="w-tag">By Appointment</div>
+      <div class="sub-card nav-item" id="wc4" data-act="noop">
+        <div class="i-ttl">Thai Massage</div>
+        <p class="i-body">Traditional Thai bodywork to release tension and restore balance throughout the body.</p>
+        <span class="i-tag">60 · 90 · 120 min</span>
       </div>
     </div>
   </div>
@@ -488,15 +412,27 @@ html,body{
     <div class="sub-line"></div>
   </div>
   <div class="sub-body">
-    <div class="fac-grid">
-      <div class="sub-card nav-item" id="fc1" data-act="noop"><div class="f-ico">🏊</div><div class="f-name">INFINITY POOL</div><div class="f-desc">Horizon-edge pool overlooking Mae Ping River with private cabanas and pool butler service.</div><div class="f-st on">Open 06:00–22:00</div></div>
-      <div class="sub-card nav-item" id="fc2" data-act="noop"><div class="f-ico">🏋️</div><div class="f-name">FITNESS CENTRE</div><div class="f-desc">State-of-the-art Technogym equipment, free weights, TRX and personal training on request.</div><div class="f-st on">Open 24 Hours</div></div>
-      <div class="sub-card nav-item" id="fc3" data-act="noop"><div class="f-ico">🚴</div><div class="f-name">CYCLING</div><div class="f-desc">Complimentary bicycles for exploring Old City temples, night markets and the riverside trail.</div><div class="f-st tm">08:00–18:00</div></div>
-      <div class="sub-card nav-item" id="fc4" data-act="noop"><div class="f-ico">🎾</div><div class="f-name">TENNIS COURT</div><div class="f-desc">Floodlit court for resident guests. Equipment rental and professional lessons available.</div><div class="f-st tm">Book via Ext. 4</div></div>
-      <div class="sub-card nav-item" id="fc5" data-act="noop"><div class="f-ico">🛶</div><div class="f-name">RIVER CRUISE</div><div class="f-desc">Private longtail boat excursions along the Mae Ping River at sunset with champagne.</div><div class="f-st tm">Daily 17:30</div></div>
-      <div class="sub-card nav-item" id="fc6" data-act="noop"><div class="f-ico">🍳</div><div class="f-name">COOKING CLASS</div><div class="f-desc">Learn Northern Thai cuisine with our head chef at the open-air Lanna kitchen garden.</div><div class="f-st tm">Tue, Thu, Sat 10:00</div></div>
-      <div class="sub-card nav-item" id="fc7" data-act="noop"><div class="f-ico">🧸</div><div class="f-name">KIDS CLUB</div><div class="f-desc">Supervised Thai craft workshops, cooking for kids and garden treasure hunts.</div><div class="f-st on">09:00–17:00</div></div>
-      <div class="sub-card nav-item" id="fc8" data-act="noop"><div class="f-ico">🗺️</div><div class="f-name">CONCIERGE</div><div class="f-desc">Your dedicated team arranges temple tours, elephant sanctuaries and airport transfers.</div><div class="f-st on">24 Hours · Ext. 4</div></div>
+    <div class="info-grid">
+      <div class="sub-card nav-item" id="fc1" data-act="noop">
+        <div class="i-ttl">INFINITY POOL</div>
+        <p class="i-body">Horizon-edge pool overlooking Mae Ping River with private cabanas and pool butler service.</p>
+        <span class="i-tag">Open 06:00–22:00</span>
+      </div>
+      <div class="sub-card nav-item" id="fc2" data-act="noop">
+        <div class="i-ttl">FITNESS CENTRE</div>
+        <p class="i-body">State-of-the-art Technogym equipment, free weights, TRX and personal training on request.</p>
+        <span class="i-tag">Open 24 Hours</span>
+      </div>
+      <div class="sub-card nav-item" id="fc3" data-act="noop">
+        <div class="i-ttl">CONCIERGE & TOURS</div>
+        <p class="i-body">Your dedicated team arranges temple tours, elephant sanctuaries and airport transfers.</p>
+        <span class="i-tag">24 Hours · Ext. 4</span>
+      </div>
+      <div class="sub-card nav-item" id="fc4" data-act="noop">
+        <div class="i-ttl">RIVER CRUISE</div>
+        <p class="i-body">Private longtail boat excursions along the Mae Ping River at sunset with champagne.</p>
+        <span class="i-tag">Daily 17:30</span>
+      </div>
     </div>
   </div>
 </div>
@@ -512,8 +448,20 @@ html,body{
     <div class="sub-line"></div>
   </div>
   <div class="sub-body">
-    <div class="tv-grid" id="tvListContainer">
-       </div>
+    <div class="tv-grid">
+      <div class="ch-card nav-item" id="ch1" data-act="ch:1"><div class="ch-num">01</div><div class="ch-info"><div class="ch-name">BBC World News</div><div class="ch-now">Global Headlines</div></div></div>
+      <div class="ch-card nav-item" id="ch2" data-act="ch:2"><div class="ch-num">02</div><div class="ch-info"><div class="ch-name">CNN International</div><div class="ch-now">World Report</div></div></div>
+      <div class="ch-card nav-item" id="ch3" data-act="ch:3"><div class="ch-num">03</div><div class="ch-info"><div class="ch-name">NHK World Japan</div><div class="ch-now">Asia Tonight</div></div></div>
+      <div class="ch-card nav-item" id="ch4" data-act="ch:4"><div class="ch-num">04</div><div class="ch-info"><div class="ch-name">CGTN English</div><div class="ch-now">Business Asia</div></div></div>
+      <div class="ch-card nav-item" id="ch5" data-act="ch:5"><div class="ch-num">05</div><div class="ch-info"><div class="ch-name">Bloomberg TV</div><div class="ch-now">Markets Open</div></div></div>
+      <div class="ch-card nav-item" id="ch6" data-act="ch:6"><div class="ch-num">06</div><div class="ch-info"><div class="ch-name">National Geographic</div><div class="ch-now">Wild Thailand</div></div></div>
+      <div class="ch-card nav-item" id="ch7" data-act="ch:7"><div class="ch-num">07</div><div class="ch-info"><div class="ch-name">Discovery Channel</div><div class="ch-now">MythBusters</div></div></div>
+      <div class="ch-card nav-item" id="ch8" data-act="ch:8"><div class="ch-num">08</div><div class="ch-info"><div class="ch-name">Thai PBS</div><div class="ch-now">สุดสัปดาห์</div></div></div>
+      <div class="ch-card nav-item" id="ch9" data-act="ch:9"><div class="ch-num">09</div><div class="ch-info"><div class="ch-name">Channel 3 Thailand</div><div class="ch-now">Evening Drama</div></div></div>
+      <div class="ch-card nav-item" id="ch10" data-act="ch:10"><div class="ch-num">10</div><div class="ch-info"><div class="ch-name">True Vision Sports</div><div class="ch-now">Premier League</div></div></div>
+      <div class="ch-card nav-item" id="ch11" data-act="ch:11"><div class="ch-num">11</div><div class="ch-info"><div class="ch-name">ESPN Asia</div><div class="ch-now">SportsCenter Asia</div></div></div>
+      <div class="ch-card nav-item" id="ch12" data-act="ch:12"><div class="ch-num">12</div><div class="ch-info"><div class="ch-name">MTV Asia</div><div class="ch-now">Top 20 Countdown</div></div></div>
+    </div>
   </div>
 </div>
 
@@ -533,71 +481,6 @@ html,body{
 (function(){
 'use strict';
 
-/* ─── DATA CHANNELS ──────────────────────────── */
-const CHANNELS = [
-  { id:1, name:"CCM", url:"http://157.66.14.66:7635/ccm/ccm.m3u8", logo:"https://upload.wikimedia.org/wikipedia/commons/4/4c/Celestial_Classic_Movies_logo.png"},
-  { id:2, name:"Celestial Movies", url:"http://157.66.14.66:7635/celestialmovies/celestialmovies.m3u8", logo:"https://upload.wikimedia.org/wikipedia/en/thumb/e/ef/Celestial_Movies_logo.png/250px-Celestial_Movies_logo.png"},
-  { id:3, name:"KIX", url:"http://157.66.14.66:7635/kix/kix.m3u8", logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/KIX_Logo.svg/120px-KIX_Logo.svg.png"},
-  { id:4, name:"Citra Bioskop", url:"http://157.66.14.66:7635/citrabioskop/citrabioskop.m3u8", logo:""},
-  { id:5, name:"Thrill", url:"http://157.66.14.66:7635/thrill/thrill.m3u8", logo:"https://upload.wikimedia.org/wikipedia/commons/4/4b/Thrill_logo.png"},
-  { id:6, name:"Zee Bioskop", url:"http://157.66.14.66:7635/zeebioskop/zeebioskop.m3u8", logo:""},
-  { id:7, name:"Rock Action", url:"http://157.66.14.66:7635/rockaction/rockaction.m3u8", logo:""},
-  { id:8, name:"Rock Entertainment", url:"http://157.66.14.66:7635/rockentertainment/rockentertainment.m3u8", logo:""},
-  { id:9, name:"RT News", url:"http://157.66.14.66:7635/rtnews/rtnews.m3u8", logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/RT_logo.svg/120px-RT_logo.svg.png"},
-  { id:10, name:"BBC News", url:"http://157.66.14.66:7635/bbcnews/bbcnews.m3u8", logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/BBC_News_2022.svg/120px-BBC_News_2022.svg.png"},
-  { id:11, name:"CNA", url:"http://157.66.14.66:7635/cna/cna.m3u8", logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/CNA_logo.svg/120px-CNA_logo.svg.png"},
-  { id:12, name:"Al Jazeera", url:"http://157.66.14.66:7635/aljazeera/aljazeera.m3u8", logo:"https://upload.wikimedia.org/wikipedia/en/thumb/f/f2/Al_jazeera_logo.svg/120px-Al_jazeera_logo.svg.png"},
-  { id:13, name:"HGTV", url:"http://157.66.14.66:7635/hgtv/hgtv.m3u8", logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/HGTV_logo_2010.svg/120px-HGTV_logo_2010.svg.png"},
-  { id:14, name:"AFC", url:"http://157.66.14.66:7635/afn/afn.m3u8", logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/AFC_Logo.svg/120px-AFC_Logo.svg.png"},
-  { id:15, name:"BBC Lifestyle", url:"http://157.66.14.66:7635/bbclefestyle/bbclefestyle.m3u8", logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/BBC_Lifestyle.svg/120px-BBC_Lifestyle.svg.png"},
-  { id:16, name:"BBC Earth", url:"http://157.66.14.66:7635/bbcearth/bbcearth.m3u8", logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/BBC_Earth.svg/120px-BBC_Earth.svg.png"},
-  { id:17, name:"Discovery", url:"http://157.66.14.66:7635/discovery/discovery.m3u8", logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Discovery_Channel_logo_2019.svg/120px-Discovery_Channel_logo_2019.svg.png"},
-  { id:18, name:"Animal Planet", url:"http://157.66.14.66:7635/animalplanet/animalplanet.m3u8", logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Animal_Planet_logo_2018.svg/120px-Animal_Planet_logo_2018.svg.png"},
-  { id:19, name:"Nickelodeon", url:"http://157.66.14.66:7635/nickelodeon/nickelodeon.m3u8", logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Nickelodeon_2023.svg/120px-Nickelodeon_2023.svg.png"},
-  { id:20, name:"Nick Jr", url:"http://157.66.14.66:7635/nickjr/nickjr.m3u8", logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Nick_Jr._logo_2023.svg/120px-Nick_Jr._logo_2023.svg.png"},
-  { id:21, name:"DreamWorks", url:"http://157.66.14.66:7635/dreamworks/dreamworks.m3u8", logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/DreamWorks_Channel_Logo.svg/120px-DreamWorks_Channel_Logo.svg.png"},
-  { id:22, name:"Zoomoo", url:"http://157.66.14.66:7635/zoomoo/zoomoo.m3u8", logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/ZooMoo_Logo.svg/120px-ZooMoo_Logo.svg.png"},
-  { id:23, name:"TVN", url:"http://157.66.14.66:7635/tvn/tvn.m3u8", logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/TVN_Logo_2015.svg/120px-TVN_Logo_2015.svg.png"},
-  { id:24, name:"TVRI World", url:"http://157.66.14.66:7635/tvrinas/tvrinas.m3u8", logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/TVRI_World.svg/120px-TVRI_World.svg.png"},
-  { id:25, name:"NHK World", url:"http://157.66.14.66:7635/nhkworld/nhkworld.m3u8", logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/NHK_World_Japan_logo.svg/120px-NHK_World_Japan_logo.svg.png"},
-  { id:26, name:"Red Bull TV", url:"http://157.66.14.66:7635/redbull/redbull.m3u8", logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Red_Bull_TV_logo.svg/120px-Red_Bull_TV_logo.svg.png"},
-  { id:27, name:"SCTV", url:"http://157.66.14.66:7635/sctv/sctv.m3u8", logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/SCTV_logo.svg/120px-SCTV_logo.svg.png"},
-  { id:28, name:"Moji", url:"http://157.66.14.66:7635/moji/moji.m3u8", logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Moji_logo.svg/120px-Moji_logo.svg.png"},
-  { id:29, name:"Mentari TV", url:"http://157.66.14.66:7635/mentaritv/mentaritv.m3u8", logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Mentari_TV_logo.svg/120px-Mentari_TV_logo.svg.png"},
-  { id:30, name:"Trans TV", url:"http://157.66.14.66:7635/transtv/transtv.m3u8", logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Trans_TV_logo_2013.svg/120px-Trans_TV_logo_2013.svg.png"},
-  { id:31, name:"Trans 7", url:"http://157.66.14.66:7635/trans7/trans7.m3u8", logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Trans7_logo_2013.svg/120px-Trans7_logo_2013.svg.png"},
-  { id:32, name:"Madinah TV", url:"http://157.66.14.66:7635/madinahtv/madinahtv.m3u8", logo:""},
-  { id:33, name:"Mekkah TV", url:"http://157.66.14.66:7635/mekkahtv2/mekkahtv2.m3u8", logo:""},
-  { id:34, name:"Rodja TV", url:"http://157.66.14.66:7635/rodjatv/rodjatv.m3u8", logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Rodja_TV_logo.png/120px-Rodja_TV_logo.png"},
-  { id:35, name:"RCTI", url:"http://157.66.14.66:7635/rcti/rcti.m3u8", logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/RCTI_logo.svg/120px-RCTI_logo.svg.png"},
-  { id:36, name:"MNCTV", url:"http://157.66.14.66:7635/mnctv/mnctv.m3u8", logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/MNCTV_logo_2015.svg/120px-MNCTV_logo_2015.svg.png"},
-  { id:37, name:"Global TV", url:"http://157.66.14.66:7635/globaltv/globaltv.m3u8", logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/GTV_logo_2017.svg/120px-GTV_logo_2017.svg.png"},
-  { id:38, name:"iNews", url:"http://157.66.14.66:7635/inews/inews.m3u8", logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/INews_logo_2015.svg/120px-INews_logo_2015.svg.png"},
-  { id:39, name:"ANTV", url:"http://157.66.14.66:7635/antv/antv.m3u8", logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/ANTV_logo_2013.svg/120px-ANTV_logo_2013.svg.png"},
-  { id:40, name:"TV One", url:"http://157.66.14.66:7635/tvone/tvone.m3u8", logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/TVOne_logo.svg/120px-TVOne_logo.svg.png"},
-  { id:41, name:"Kompas TV", url:"http://157.66.14.66:7635/kompastv/kompastv.m3u8", logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Kompas_TV_logo.svg/120px-Kompas_TV_logo.svg.png"},
-  { id:42, name:"Metro TV", url:"http://157.66.14.66:7635/metrotv/metrotv.m3u8", logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Metro_TV_logo.svg/120px-Metro_TV_logo.svg.png"},
-  { id:43, name:"Phoenix China", url:"http://157.66.14.66:7635/phoenix/phoenix.m3u8", logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Phoenix_Television_Logo.svg/120px-Phoenix_Television_Logo.svg.png"},
-  { id:44, name:"DW TV", url:"http://157.66.14.66:7635/dwtv/dwtv.m3u8", logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/DW_logo_2012.svg/120px-DW_logo_2012.svg.png"},
-  { id:45, name:"Arirang TV", url:"http://157.66.14.66:7635/arirang/arirang.m3u8", logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Arirang_TV_logo.svg/120px-Arirang_TV_logo.svg.png"}
-];
-
-var tvContainer = document.getElementById('tvListContainer');
-var tvPools = ['bk-tv'];
-CHANNELS.forEach(function(ch){
-  var card = document.createElement('div');
-  card.className = "ch-card nav-item";
-  card.id = "ch" + ch.id;
-  // Di sini link M3U8 disisipkan
-  card.setAttribute('data-act', "stream-url:" + ch.url);
-  
-  var logoHtml = ch.logo ? '<img src="'+ch.logo+'" style="height:35px; width:50px; object-fit:contain; margin-right:15px;" onerror="this.style.display=\'none\'">' : '';
-  
-  card.innerHTML = '<div class="ch-num">' + String(ch.id).padStart(2,'0') + '</div>' + logoHtml + '<div class="ch-info"><div class="ch-name">' + ch.name + '</div></div>';
-  tvContainer.appendChild(card);
-  tvPools.push("ch" + ch.id);
-});
-
 /* ─── STATE ──────────────────────────────────── */
 var page      = 'home';
 var focused   = null;
@@ -609,9 +492,9 @@ var POOLS = {
   home:       ['c-info','c-dining','c-wellness','c-fac','c-yt','c-nf','c-tv'],
   info:       ['bk-info','ic1','ic2','ic3','ic4'],
   dining:     ['bk-dining','dc1','dc2','dc3'],
-  wellness:   ['bk-wellness','wc1','wc2','wc3','wc4','wc5','wc6'],
-  facilities: ['bk-fac','fc1','fc2','fc3','fc4','fc5','fc6','fc7','fc8'],
-  livetv:     tvPools,
+  wellness:   ['bk-wellness','wc1','wc2','wc3','wc4'],
+  facilities: ['bk-fac','fc1','fc2','fc3','fc4'],
+  livetv:     ['bk-tv','ch1','ch2','ch3','ch4','ch5','ch6','ch7','ch8','ch9','ch10','ch11','ch12'],
   modal:      ['s-ok','s-no']
 };
 
@@ -632,10 +515,7 @@ function pool(){
 function focus(el){
   if(focused) focused.classList.remove('tv-focus');
   focused = el;
-  if(el) {
-    el.classList.add('tv-focus');
-    if(page === 'livetv') el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }
+  if(el) el.classList.add('tv-focus');
 }
 
 /* ─── SPATIAL NAV ────────────────────────────── */
@@ -679,9 +559,8 @@ function dispatch(el){
     goPage(a.slice(5));
   } else if(a.indexOf('stream:')===0){
     openModal(a.slice(7));
-  } else if(a.indexOf('stream-url:')===0){
-    // Langsung menuju M3U8
-    window.location.href = a.slice(11);
+  } else if(a.indexOf('ch:')===0){
+    switchCh(parseInt(a.slice(3)));
   } else if(a==='stream-confirm'){
     confirmStream();
   } else if(a==='stream-cancel'){
@@ -689,7 +568,7 @@ function dispatch(el){
   }
 }
 
-/* ─── PAGE SWITCH & STAGGER EFFECT ───────────── */
+/* ─── PAGE SWITCH ────────────────────────────── */
 function goPage(name){
   document.querySelectorAll('.page').forEach(function(p){
     p.classList.remove('active');
@@ -700,12 +579,6 @@ function goPage(name){
   page = name;
   if(focused) focused.classList.remove('tv-focus');
   focused = null;
-
-  // Stagger Effect Dinamis untuk Cards
-  var items = pg.querySelectorAll('.nav-item');
-  items.forEach(function(el, i){
-      el.style.animationDelay = (i * 0.03) + 's';
-  });
 
   setTimeout(function(){
     var p = pool();
@@ -753,7 +626,7 @@ function closeModal(){
 function confirmStream(){
   var svc = streamSvc;
   closeModal();
-  if(svc==='youtube')  launchApp('com.webos.app.youtube','sssp://youtube');
+  if(svc==='youtube')  launchApp('youtube.leanback.v4','sssp://youtube');
   if(svc==='netflix')  launchApp('netflix','sssp://netflix');
 }
 
@@ -770,9 +643,20 @@ function launchApp(webosId, fallback){
   } catch(e){ window.location.href = fallback; }
 }
 
-/* ══════════════════════════════════════════════
-   KEY HANDLER
-═══════════════════════════════════════════════ */
+function switchCh(num){
+  try{
+    if(typeof webOS !== 'undefined' && webOS.service){
+      webOS.service.request('luna://com.webos.service.tv.channel',{
+        method:'setChannel',
+        parameters:{ channelNumber: String(num) },
+        onSuccess:function(){},
+        onFailure:function(){}
+      });
+    }
+  } catch(e){}
+}
+
+/* ─── KEY HANDLER ────────────────────────────── */
 function onKey(e){
   var k = e.keyCode || e.which || 0;
   var eaten = true;
@@ -783,10 +667,10 @@ function onKey(e){
     case 38: navigate('up');    break;
     case 40: navigate('down');  break;
 
-    case 13: case 10:            // OK / Enter
+    case 13: case 10:            
       dispatch(focused); break;
 
-    case 461: case 8: case 27:   // Back / Backspace / Escape
+    case 461: case 8: case 27:   
       if(modal){ closeModal(); }
       else if(page !== 'home'){ goPage('home'); }
       break;
@@ -833,51 +717,15 @@ document.addEventListener('visibilitychange', function(){
   }
 });
 
-/* ─── SLIDER BG & GOLD DUST LOGIC ────────────── */
-var slides = document.querySelectorAll('.bg-slide');
+/* ─── BACKGROUND SLIDER LOGIC ────────────────── */
 var currentSlide = 0;
-if(slides.length > 0){
-  slides[0].classList.add('active');
-  setInterval(function(){
-    slides[currentSlide].classList.remove('active');
-    currentSlide = (currentSlide + 1) % slides.length;
-    slides[currentSlide].classList.add('active');
-  }, 10000); // Ganti tiap 10 detik
-}
-
-var canvas = document.getElementById('gold-dust');
-if(canvas) {
-  var ctx = canvas.getContext('2d');
-  canvas.width = 1920;
-  canvas.height = 1080;
-  var particles = [];
-  for(var i=0; i<60; i++){
-    particles.push({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      r: Math.random() * 1.5 + 0.5,
-      vx: Math.random() * 0.4 - 0.2,
-      vy: Math.random() * -0.5 - 0.2,
-      o: Math.random() * 0.5 + 0.2
-    });
-  }
-  function drawDust(){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    for(var i=0; i<particles.length; i++){
-      var p = particles[i];
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
-      ctx.fillStyle = 'rgba(201, 169, 110, ' + p.o + ')';
-      ctx.fill();
-      p.x += p.vx;
-      p.y += p.vy;
-      if(p.y < -10) { p.y = canvas.height + 10; p.x = Math.random() * canvas.width; }
-      if(p.x < -10) { p.x = canvas.width + 10; }
-      if(p.x > canvas.width + 10) { p.x = -10; }
-    }
-    requestAnimationFrame(drawDust);
-  }
-  drawDust();
+var slides = document.querySelectorAll('.slide');
+if(slides.length > 0) {
+    setInterval(function() {
+        slides[currentSlide].classList.remove('active');
+        currentSlide = (currentSlide + 1) % slides.length;
+        slides[currentSlide].classList.add('active');
+    }, 8000); // Slider berganti setiap 8 detik
 }
 
 /* ─── CLOCK ──────────────────────────────────── */
