@@ -16,327 +16,820 @@
   --gold-dark:  #8a6d3b;
   --cream:      #f0e9d8;
   --muted:      #b0a086;
+  --green:      #3d6b57;
   --border:     rgba(201,169,110,0.2);
 }
 *{margin:0;padding:0;box-sizing:border-box;}
-html,body{ width:1280px;height:720px;overflow:hidden; background:var(--bg-deep); font-family:'Lato',sans-serif;color:var(--cream); user-select:none; }
+html,body{
+  width:1920px;height:1080px;overflow:hidden;
+  background:var(--bg-deep);
+  font-family:'Lato',sans-serif;color:var(--cream);
+  user-select:none;-webkit-user-select:none;
+}
 
 /* ══ PAGE SYSTEM ══ */
 .page{display:none;position:absolute;inset:0;flex-direction:column;animation:pgIn .4s ease both;}
 .page.active{display:flex;}
 @keyframes pgIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 
-/* ══ NAVIGATION FOCUS ══ */
-.nav-item{ transition: all .22s ease; outline:none; border: 1px solid transparent; }
-.nav-item.tv-focus{
-  border-color:var(--gold)!important;
-  transform: scale(1.02)!important;
-  background:var(--bg-hover)!important;
-  box-shadow:0 15px 40px rgba(0,0,0,0.7), 0 0 20px rgba(201,169,110,0.2)!important;
+/* ══ FOCUS — ALL interactive states via .tv-focus only ══ */
+.nav-item{
+  transition:
+    transform .22s cubic-bezier(.25,.46,.45,.94),
+    border-color .22s ease,
+    box-shadow .22s ease,
+    background .22s ease;
+  outline:none;-webkit-tap-highlight-color:transparent;cursor:pointer;
 }
+.menu-card.tv-focus{
+  border-color:var(--gold)!important;
+  transform:translateY(-8px) scale(1.02)!important;
+  box-shadow:0 22px 55px rgba(0,0,0,.7),0 0 0 1px rgba(201,169,110,.5),0 0 50px rgba(201,169,110,.15)!important;
+  background:var(--bg-hover)!important;
+}
+.menu-card.tv-focus .card-label{color:var(--gold-light)!important;}
+.menu-card.tv-focus .card-icon-ring{border-color:var(--gold)!important;}
+.menu-card.tv-focus::after{transform:scaleX(1)!important;}
+.menu-card.tv-focus .card-icon{transform:scale(1.12)!important;}
+.yt-card.tv-focus{border-color:#ff0000!important;box-shadow:0 22px 55px rgba(0,0,0,.7),0 0 0 1px rgba(255,0,0,.5),0 0 45px rgba(255,0,0,.12)!important;}
+.nf-card.tv-focus{border-color:#e50914!important;box-shadow:0 22px 55px rgba(0,0,0,.7),0 0 0 1px rgba(229,9,20,.5),0 0 45px rgba(229,9,20,.12)!important;}
+.tv-chan.tv-focus{border-color:#4a9fd4!important;box-shadow:0 22px 55px rgba(0,0,0,.7),0 0 0 1px rgba(74,159,212,.5),0 0 45px rgba(74,159,212,.12)!important;}
+.sub-card.tv-focus{
+  border-color:var(--gold)!important;
+  transform:translateY(-5px)!important;
+  box-shadow:0 18px 50px rgba(0,0,0,.6),0 0 0 1px rgba(201,169,110,.45),0 0 35px rgba(201,169,110,.12)!important;
+  background:var(--bg-hover)!important;
+}
+.sub-card.tv-focus::after{transform:scaleX(1)!important;}
+.ch-card.tv-focus{
+  border-color:#4a9fd4!important;
+  transform:translateX(6px)!important;
+  background:rgba(74,159,212,.07)!important;
+  box-shadow:0 8px 30px rgba(0,0,0,.4),0 0 0 1px rgba(74,159,212,.4)!important;
+}
+.btn-back.tv-focus{
+  color:var(--gold)!important;border-color:var(--gold)!important;
+  background:rgba(201,169,110,.08)!important;transform:translateX(-4px)!important;
+}
+.stream-btn.primary.tv-focus{transform:scale(1.05)!important;background:var(--gold-light)!important;box-shadow:0 0 0 2px var(--gold)!important;}
+.stream-btn.secondary.tv-focus{transform:scale(1.05)!important;border-color:var(--gold)!important;color:var(--gold)!important;box-shadow:0 0 0 2px rgba(201,169,110,.4)!important;}
 
-/* ══ HEADER ══ */
+/* ══ SHARED HEADER ══ */
 .header{
   display:flex;align-items:center;justify-content:space-between;
-  padding:24px 64px 18px; border-bottom:1px solid var(--border);
+  padding:24px 64px 18px;
+  border-bottom:1px solid var(--border);flex-shrink:0;
   background:linear-gradient(180deg,rgba(8,15,13,.98) 0%,rgba(8,15,13,.75) 100%);
+  position:relative;z-index:10;
 }
-.logo-name{font-family:'Cinzel',serif;font-size:26px;letter-spacing:7px;color:var(--gold-light);}
-.hdr-time{font-family:'Cinzel',serif;font-size:38px;color:var(--gold-light);}
+.header::after{
+  content:'';position:absolute;bottom:-1px;left:64px;right:64px;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.4;
+}
+.logo-name{font-family:'Cinzel',serif;font-size:26px;font-weight:500;letter-spacing:7px;color:var(--gold-light);line-height:1;}
+.logo-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;color:var(--muted);letter-spacing:3px;margin-top:3px;}
+.hdr-center{position:absolute;left:50%;transform:translateX(-50%);text-align:center;}
+.hdr-date{font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--muted);letter-spacing:2.5px;}
+.hdr-time{font-family:'Cinzel',serif;font-size:38px;color:var(--gold-light);letter-spacing:4px;line-height:1;margin-top:2px;}
+.room-label{font-size:10px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;}
+.room-number{font-family:'Cinzel',serif;font-size:24px;color:var(--gold-light);letter-spacing:4px;}
+.weather{font-size:12px;color:var(--muted);letter-spacing:1px;margin-top:3px;}
+.btn-back{
+  display:inline-flex;align-items:center;gap:10px;
+  font-family:'Cinzel',serif;font-size:12px;letter-spacing:3px;color:var(--muted);
+  background:none;border:1px solid var(--border);padding:10px 24px;border-radius:2px;
+}
+.btn-back svg{width:14px;height:14px;stroke:currentColor;fill:none;}
 
-/* ══ HOME GRID ══ */
-.menu-grid{ display:grid; grid-template-columns:repeat(7,1fr); gap:18px; padding:20px 52px; flex:1; }
+/* ══ HOME ══ */
+#page-home{background:var(--bg-deep);}
+.home-bg{
+  position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 75% 55% at 50% 110%,rgba(61,107,87,.16) 0%,transparent 65%),
+    radial-gradient(ellipse 35% 40% at 10% 50%,rgba(201,169,110,.03) 0%,transparent 60%);
+}
+.home-welcome{text-align:center;padding:20px 0 14px;position:relative;z-index:2;}
+.home-greeting{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:20px;color:var(--muted);letter-spacing:4px;}
+.home-headline{font-family:'Cinzel',serif;font-size:13px;letter-spacing:7px;color:var(--gold);margin-top:5px;}
+.gold-div{display:flex;align-items:center;justify-content:center;gap:14px;margin:8px auto 0;width:300px;}
+.gold-div::before,.gold-div::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--gold-dark));}
+.gold-div::after{background:linear-gradient(90deg,var(--gold-dark),transparent);}
+.gold-dia{width:7px;height:7px;background:var(--gold);transform:rotate(45deg);flex-shrink:0;}
+.menu-grid{
+  display:grid;grid-template-columns:repeat(7,1fr);gap:18px;
+  padding:16px 52px 12px;flex:1;position:relative;z-index:2;
+}
 .menu-card{
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   border:1px solid var(--border);border-radius:4px;
-  background:var(--bg-card); min-height:216px;
+  background:linear-gradient(158deg,var(--bg-card) 0%,rgba(8,15,13,.92) 100%);
+  padding:0 18px;min-height:216px;position:relative;overflow:hidden;
 }
-.card-icon{ width:66px; height:66px; margin-bottom:20px; position:relative; display:flex; align-items:center; justify-content:center; }
-.card-icon-ring{ position:absolute; inset:0; border-radius:50%; border:1px solid var(--border); }
-.card-label{font-family:'Cinzel',serif;font-size:11.5px;letter-spacing:2.5px;text-align:center;text-transform:uppercase;}
+.menu-card::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(201,169,110,.06) 0%,transparent 55%);
+  opacity:0;transition:opacity .25s;
+}
+.menu-card.tv-focus::before{opacity:1;}
+.menu-card::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  transform:scaleX(0);transition:transform .3s ease;
+}
+.card-icon{
+  width:66px;height:66px;display:flex;align-items:center;justify-content:center;
+  position:relative;margin-bottom:20px;transition:transform .25s ease;
+}
+.card-icon-ring{position:absolute;inset:0;border-radius:50%;border:1px solid var(--border);transition:border-color .25s;}
+.card-icon svg{width:30px;height:30px;}
+.card-label{font-family:'Cinzel',serif;font-size:11.5px;letter-spacing:2.5px;color:var(--cream);text-align:center;line-height:1.55;text-transform:uppercase;transition:color .25s;}
+.card-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:12px;color:var(--muted);text-align:center;margin-top:6px;line-height:1.4;}
+.home-footer{
+  display:flex;align-items:center;justify-content:center;gap:40px;
+  padding:11px 64px;border-top:1px solid var(--border);flex-shrink:0;position:relative;z-index:2;
+}
+.home-footer::before{content:'';position:absolute;top:-1px;left:64px;right:64px;height:1px;background:linear-gradient(90deg,transparent,var(--gold-dark),transparent);opacity:.5;}
+.fi{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted);letter-spacing:1.5px;}
+.fi svg{width:15px;height:15px;stroke:var(--gold-dark);fill:none;}
+.fh{font-family:'Cinzel',serif;font-size:10px;letter-spacing:2px;color:var(--gold-dark);text-align:center;flex:1;}
 
-/* ══ LIVE TV GRID (45 Channels) ══ */
-.tv-grid {
-  display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
-  overflow-y: auto; padding: 10px 64px; height: 100%;
+/* ══ SUB-PAGE SHARED ══ */
+.sub-hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 64px 10px;flex-shrink:0;}
+.sub-eyebrow{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:var(--gold);letter-spacing:3px;}
+.sub-title{font-family:'Cinzel',serif;font-size:26px;letter-spacing:6px;color:var(--cream);line-height:1;margin-top:4px;}
+.sub-line{flex:1;height:1px;background:linear-gradient(90deg,var(--border),transparent);margin:0 36px;}
+.sub-body{flex:1;overflow:hidden;padding:0 64px 26px;}
+.sub-card{
+  border:1px solid var(--border);border-radius:4px;background:var(--bg-card);
+  padding:26px 28px;display:flex;flex-direction:column;position:relative;overflow:hidden;
 }
-.ch-card {
-  border: 1px solid var(--border); background: var(--bg-card);
-  padding: 15px 20px; display: flex; align-items: center; gap: 20px; border-radius: 4px;
+.sub-card::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  transform:scaleX(0);transition:transform .3s ease;
 }
-.ch-num { font-family: 'Cinzel', serif; font-size: 20px; color: var(--gold-dark); min-width: 40px; }
-.ch-logo-wrap { width: 60px; height: 40px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); border-radius: 4px; padding: 5px; }
-.ch-logo-wrap img { max-width: 100%; max-height: 100%; object-fit: contain; }
-.ch-name { font-family: 'Cinzel', serif; font-size: 13px; color: var(--cream); letter-spacing: 1px; }
+
+/* ══ INFO ══ */
+.info-grid{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:18px;height:100%;}
+.i-ttl{font-family:'Cinzel',serif;font-size:12px;letter-spacing:3.5px;color:var(--gold);margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+.i-ttl svg{width:16px;height:16px;stroke:var(--gold);fill:none;}
+.i-body{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--cream);line-height:1.75;font-weight:300;}
+.i-tag{display:inline-block;background:rgba(201,169,110,.1);border:1px solid rgba(201,169,110,.22);border-radius:2px;padding:3px 12px;font-family:'Cinzel',serif;font-size:11px;color:var(--gold-light);letter-spacing:2px;margin:6px 5px 0 0;}
+
+/* ══ DINING ══ */
+.dining-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;height:100%;}
+.d-ico{font-size:38px;margin-bottom:12px;}
+.d-name{font-family:'Cinzel',serif;font-size:15px;letter-spacing:3px;color:var(--gold-light);margin-bottom:5px;}
+.d-type{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;color:var(--gold);letter-spacing:2px;margin-bottom:12px;}
+.d-desc{font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--cream);line-height:1.65;flex:1;}
+.d-hrs{margin-top:14px;padding-top:12px;border-top:1px solid var(--border);display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);letter-spacing:1px;}
+.d-hrs svg{width:13px;height:13px;stroke:var(--gold-dark);fill:none;}
+
+/* ══ WELLNESS ══ */
+.wellness-grid{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:1fr 1fr;gap:16px;height:100%;}
+.w-feat{grid-column:span 2;}
+.w-ico{font-size:30px;margin-bottom:12px;}
+.w-name{font-family:'Cinzel',serif;font-size:12px;letter-spacing:3px;color:var(--gold-light);margin-bottom:10px;text-transform:uppercase;}
+.w-desc{font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--cream);line-height:1.6;flex:1;}
+.w-tag{margin-top:10px;font-size:11px;letter-spacing:2px;color:var(--green);border:1px solid rgba(61,107,87,.4);padding:3px 10px;border-radius:2px;text-transform:uppercase;display:inline-block;}
+
+/* ══ FACILITIES ══ */
+.fac-grid{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:1fr 1fr;gap:16px;height:100%;}
+.f-ico{font-size:30px;margin-bottom:12px;}
+.f-name{font-family:'Cinzel',serif;font-size:12px;letter-spacing:3px;color:var(--gold-light);margin-bottom:9px;}
+.f-desc{font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--cream);line-height:1.6;flex:1;}
+.f-st{margin-top:10px;font-size:10.5px;letter-spacing:2px;padding:3px 10px;border-radius:2px;display:inline-block;text-transform:uppercase;}
+.f-st.on{color:#5aba8a;border:1px solid rgba(90,186,138,.3);}
+.f-st.tm{color:var(--gold);border:1px solid var(--border);}
+
+/* ══ LIVE TV ══ */
+.tv-grid{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(3,1fr);gap:14px;height:100%;}
+.ch-card{
+  border:1px solid var(--border);border-radius:4px;background:var(--bg-card);
+  padding:18px 22px;display:flex;align-items:center;gap:18px;
+  position:relative;overflow:hidden;
+}
+.ch-num{font-family:'Cinzel',serif;font-size:22px;color:var(--gold-dark);min-width:40px;text-align:center;}
+.ch-info{flex:1;}
+.ch-name{font-family:'Cinzel',serif;font-size:13px;letter-spacing:2px;color:var(--cream);}
+.ch-now{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;color:var(--muted);margin-top:4px;}
+.badge{font-size:10px;letter-spacing:1px;padding:2px 8px;border-radius:2px;text-transform:uppercase;flex-shrink:0;}
+.badge.hd{background:rgba(74,159,212,.18);color:#4a9fd4;border:1px solid rgba(74,159,212,.3);}
+.badge.live{background:rgba(192,57,43,.18);color:#e74c3c;border:1px solid rgba(192,57,43,.3);animation:livePulse 2s infinite;}
+@keyframes livePulse{0%,100%{opacity:1}50%{opacity:.4}}
 
 /* ══ MODAL ══ */
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:200;align-items:center;justify-content:center;}
-.modal.active{display:flex;}
-.modal-box{background:var(--bg-card); border:1px solid var(--gold); padding:50px; text-align:center; width:640px; border-radius:8px;}
-.m-btns{display:flex; gap:16px; justify-content:center; margin-top:30px;}
-.stream-btn{ font-family:'Cinzel',serif; padding:14px 34px; border:1px solid var(--gold); background:none; color:white; cursor:pointer; }
-.stream-btn.tv-focus { background: var(--gold); color: #000; font-weight: bold; }
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.86);z-index:200;align-items:center;justify-content:center;}
+.modal.active{display:flex;animation:pgIn .3s ease both;}
+.modal-box{background:var(--bg-card);border:1px solid var(--border);border-radius:6px;padding:54px 74px;text-align:center;max-width:640px;}
+.m-logo{font-size:70px;margin-bottom:22px;line-height:1;}
+.m-title{font-family:'Cinzel',serif;font-size:22px;letter-spacing:5px;color:var(--gold-light);margin-bottom:10px;}
+.m-msg{font-family:'Cormorant Garamond',serif;font-size:19px;color:var(--muted);line-height:1.65;margin-bottom:34px;}
+.m-btns{display:flex;gap:16px;justify-content:center;}
+.stream-btn{font-family:'Cinzel',serif;font-size:11.5px;letter-spacing:3px;padding:14px 34px;border-radius:2px;border:1px solid;transition:transform .2s ease,box-shadow .2s ease,background .2s ease;}
+.stream-btn.primary{background:var(--gold);border-color:var(--gold);color:#080f0d;}
+.stream-btn.secondary{background:transparent;border-color:var(--border);color:var(--muted);}
 
 /* ══ LOADING ══ */
-#loading{ position:fixed; inset:0; z-index:300; background:var(--bg-deep); display:flex; flex-direction:column; align-items:center; justify-content:center; }
-#loading.gone{ opacity:0; pointer-events:none; transition: opacity .9s; }
-
-.sub-body{ flex:1; overflow:hidden; padding:0 0 26px 0; }
-.btn-back{ border:1px solid var(--border); padding:10px 24px; font-family:'Cinzel'; cursor:pointer; margin-right: 64px; }
+#loading{
+  position:fixed;inset:0;z-index:300;background:var(--bg-deep);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  transition:opacity .9s ease;
+}
+#loading.gone{opacity:0;pointer-events:none;}
+.l-logo{font-family:'Cinzel',serif;font-size:52px;letter-spacing:14px;color:var(--gold);animation:glow 2s ease-in-out infinite alternate;}
+@keyframes glow{from{text-shadow:0 0 24px rgba(201,169,110,.28)}to{text-shadow:0 0 70px rgba(201,169,110,.72)}}
+.l-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:17px;color:var(--muted);letter-spacing:6px;margin-top:6px;margin-bottom:52px;}
+.l-bar{width:220px;height:1px;background:var(--border);position:relative;overflow:hidden;}
+.l-bar::after{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,var(--gold),transparent);animation:sweep 1.8s ease infinite;}
+@keyframes sweep{to{left:200%}}
 ::-webkit-scrollbar{display:none;}
 </style>
 </head>
 <body>
 
-<div id="loading"><div style="font-family:'Cinzel'; font-size:52px; color:var(--gold); letter-spacing:14px;">AYATARA</div></div>
+<!-- LOADING -->
+<div id="loading">
+  <div class="l-logo">AYATARA</div>
+  <div class="l-sub">Resort &amp; Spa</div>
+  <div class="l-bar"></div>
+</div>
 
+<!-- ═══ HOME ═══ -->
 <div id="page-home" class="page active">
+  <div class="home-bg"></div>
   <header class="header">
-    <div><div class="logo-name">AYATARA</div><div style="font-family:'Cormorant Garamond'; italic; font-size:13px; color:var(--muted);">Resort &amp; Spa</div></div>
-    <div id="T0" class="hdr-time">--:--</div>
-    <div style="text-align:right;"><div style="font-family:'Cinzel'; font-size:24px; color:var(--gold-light);">612</div></div>
+    <div><div class="logo-name">AYATARA</div><div class="logo-sub">Resort &amp; Spa</div></div>
+    <div class="hdr-center">
+      <div class="hdr-date" id="D0"></div>
+      <div class="hdr-time" id="T0">--:--</div>
+    </div>
+    <div style="text-align:right;">
+      <div class="room-label">Your Suite</div>
+      <div class="room-number">612</div>
+      <div class="weather">☀ 31°C &nbsp;·&nbsp; Chiang Mai</div>
+    </div>
   </header>
+  <div class="home-welcome">
+    <div class="home-greeting">Welcome to Ayatara</div>
+    <div class="home-headline">How may we serve you today?</div>
+    <div class="gold-div"><div class="gold-dia"></div></div>
+  </div>
   <div class="menu-grid">
     <div class="menu-card nav-item" id="c-info" data-act="page:info">
-        <div class="card-icon"><div class="card-icon-ring"></div><svg viewBox="0 0 24 24" stroke="var(--gold)" stroke-width="1.5" fill="none"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
-        <div class="card-label">Hotel Info</div>
+      <div class="card-icon"><div class="card-icon-ring"></div>
+        <svg viewBox="0 0 24 24" stroke="var(--gold)" stroke-width="1.5" fill="none"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      </div>
+      <div class="card-label">Hotel<br>Information</div>
+      <div class="card-sub">Contacts &amp; Services</div>
     </div>
     <div class="menu-card nav-item" id="c-dining" data-act="page:dining">
-        <div class="card-icon"><div class="card-icon-ring"></div><svg viewBox="0 0 24 24" stroke="var(--gold)" stroke-width="1.5" fill="none"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/></svg></div>
-        <div class="card-label">Dining</div>
+      <div class="card-icon"><div class="card-icon-ring"></div>
+        <svg viewBox="0 0 24 24" stroke="var(--gold)" stroke-width="1.5" fill="none"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+      </div>
+      <div class="card-label">Dining</div>
+      <div class="card-sub">Restaurants &amp; Bars</div>
     </div>
     <div class="menu-card nav-item" id="c-wellness" data-act="page:wellness">
-        <div class="card-icon"><div class="card-icon-ring"></div><svg viewBox="0 0 24 24" stroke="var(--gold)" stroke-width="1.5" fill="none"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23"/></svg></div>
-        <div class="card-label">Wellness</div>
+      <div class="card-icon"><div class="card-icon-ring"></div>
+        <svg viewBox="0 0 24 24" stroke="var(--gold)" stroke-width="1.5" fill="none"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+      </div>
+      <div class="card-label">Wellness<br>&amp; Spa</div>
+      <div class="card-sub">Treatments &amp; Yoga</div>
     </div>
     <div class="menu-card nav-item" id="c-fac" data-act="page:facilities">
-        <div class="card-icon"><div class="card-icon-ring"></div><svg viewBox="0 0 24 24" stroke="var(--gold)" stroke-width="1.5" fill="none"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/></svg></div>
-        <div class="card-label">Facilities</div>
+      <div class="card-icon"><div class="card-icon-ring"></div>
+        <svg viewBox="0 0 24 24" stroke="var(--gold)" stroke-width="1.5" fill="none"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      </div>
+      <div class="card-label">Facilities</div>
+      <div class="card-sub">Pool &amp; Amenities</div>
     </div>
-    <div class="menu-card nav-item" id="c-yt" data-act="stream:youtube">
-        <div class="card-icon"><div class="card-icon-ring"></div><svg viewBox="0 0 24 24" width="34" height="34"><path fill="#ff0000" d="M22.54 6.42a2.78 2.78 0 00-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 001.46 6.42 29 29 0 001 12a29 29 0 00.46 5.58z"/><polygon fill="#fff" points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg></div>
-        <div class="card-label" style="color:#ff0000;">YouTube</div>
+    <div class="menu-card nav-item yt-card" id="c-yt" data-act="stream:youtube">
+      <div class="card-icon"><div class="card-icon-ring"></div>
+        <svg viewBox="0 0 24 24" width="34" height="34"><path fill="#ff0000" d="M22.54 6.42a2.78 2.78 0 00-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 001.46 6.42 29 29 0 001 12a29 29 0 00.46 5.58 2.78 2.78 0 001.95 1.95C5.12 20 12 20 12 20s6.88 0 8.59-.47a2.78 2.78 0 001.95-1.95A29 29 0 0023 12a29 29 0 00-.46-5.58z"/><polygon fill="#fff" points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg>
+      </div>
+      <div class="card-label">YouTube</div>
+      <div class="card-sub">Watch &amp; Explore</div>
     </div>
-    <div class="menu-card nav-item" id="c-nf" data-act="stream:netflix">
-        <div class="card-icon"><div class="card-icon-ring"></div><svg viewBox="0 0 28 36" width="36" height="36"><path fill="#e50914" d="M0 0h10v36H0z"/><path fill="#e50914" d="M18 0h10v36H18z"/><path fill="#111" d="M10 0l14 36h-6L4 0z"/></svg></div>
-        <div class="card-label" style="color:#e50914;">Netflix</div>
+    <div class="menu-card nav-item nf-card" id="c-nf" data-act="stream:netflix">
+      <div class="card-icon"><div class="card-icon-ring"></div>
+        <svg viewBox="0 0 28 36" width="36" height="36">
+          <defs><linearGradient id="nfG" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#e50914"/><stop offset="100%" stop-color="#b00711"/></linearGradient></defs>
+          <path fill="url(#nfG)" d="M0 0h10v36H0z"/>
+          <path fill="url(#nfG)" d="M18 0h10v36H18z"/>
+          <path fill="#111" d="M10 0l14 36h-6L4 0z"/>
+        </svg>
+      </div>
+      <div class="card-label">Netflix</div>
+      <div class="card-sub">Movies &amp; Series</div>
     </div>
-    <div class="menu-card nav-item" id="c-tv" data-act="page:livetv">
-        <div class="card-icon"><div class="card-icon-ring"></div><svg viewBox="0 0 24 24" stroke="#4a9fd4" stroke-width="1.5" fill="none"><rect x="2" y="7" width="20" height="14" rx="2"/><circle cx="12" cy="14" r="3" stroke="#4a9fd4"/></svg></div>
-        <div class="card-label">Live TV</div>
+    <div class="menu-card nav-item tv-chan" id="c-tv" data-act="page:livetv">
+      <div class="card-icon"><div class="card-icon-ring"></div>
+        <svg viewBox="0 0 24 24" stroke="#4a9fd4" stroke-width="1.5" fill="none"><rect x="2" y="7" width="20" height="14" rx="2"/><polyline points="17 2 12 7 7 2"/><circle cx="12" cy="14" r="3" fill="rgba(74,159,212,.2)" stroke="#4a9fd4"/><circle cx="12" cy="14" r="1" fill="#4a9fd4" stroke="none"/></svg>
+      </div>
+      <div class="card-label">Live TV</div>
+      <div class="card-sub">Channels &amp; News</div>
+    </div>
+  </div>
+  <div class="home-footer">
+    <div class="fi"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8a2 2 0 012-2.18h3"/></svg>Front Desk: Ext. 0</div>
+    <div class="fi"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Room Service: 24 Hours</div>
+    <div class="fh">↑ ↓ ← → NAVIGATE &nbsp;·&nbsp; OK SELECT &nbsp;·&nbsp; BACK RETURN</div>
+    <div class="fi"><svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>In-Room Dining: Ext. 5</div>
+    <div class="fi"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Chiang Mai, Thailand</div>
+  </div>
+</div>
+
+<!-- ═══ HOTEL INFO ═══ -->
+<div id="page-info" class="page">
+  <header class="header">
+    <div><div class="logo-name">AYATARA</div><div class="logo-sub">Resort &amp; Spa</div></div>
+    <div class="hdr-center"><div class="hdr-date" id="D1"></div><div class="hdr-time" id="T1">--:--</div></div>
+    <div style="text-align:right;"><div class="btn-back nav-item" id="bk-info" data-act="page:home"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>BACK</div></div>
+  </header>
+  <div class="sub-hdr">
+    <div><div class="sub-eyebrow">Discover</div><div class="sub-title">HOTEL INFORMATION</div></div>
+    <div class="sub-line"></div>
+  </div>
+  <div class="sub-body">
+    <div class="info-grid">
+      <div class="sub-card nav-item" id="ic1" data-act="noop">
+        <div class="i-ttl"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8a2 2 0 012-2.18h3"/></svg>HOTEL CONTACTS</div>
+        <p class="i-body">Front Desk &nbsp;·&nbsp; Ext. <b>0</b><br>Room Service &nbsp;·&nbsp; Ext. <b>5</b><br>Spa &amp; Wellness &nbsp;·&nbsp; Ext. <b>3</b><br>Concierge &nbsp;·&nbsp; Ext. <b>4</b><br>Housekeeping &nbsp;·&nbsp; Ext. <b>6</b></p>
+      </div>
+      <div class="sub-card nav-item" id="ic2" data-act="noop">
+        <div class="i-ttl"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>CHECK-IN &amp; CHECK-OUT</div>
+        <p class="i-body">Check-in from &nbsp;<b>14:00</b><br>Check-out until &nbsp;<b>12:00</b><br>Late check-out: upon request<br>Early check-in: subject to availability</p>
+        <span class="i-tag">Late Check-out → Ext. 0</span>
+      </div>
+      <div class="sub-card nav-item" id="ic3" data-act="noop">
+        <div class="i-ttl"><svg viewBox="0 0 24 24"><rect x="1" y="6" width="22" height="13" rx="2"/><polyline points="16 6 12 2 8 6"/></svg>WI-FI ACCESS</div>
+        <p class="i-body">Complimentary high-speed Wi-Fi<br>available throughout the resort.</p><br>
+        <span class="i-tag">Network: AYATARA_GUEST</span>
+        <span class="i-tag">Password: Welcome2025</span>
+      </div>
+      <div class="sub-card nav-item" id="ic4" data-act="noop">
+        <div class="i-ttl"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>RESORT LOCATION</div>
+        <p class="i-body">Set along the Mae Ping River, Ayatara is 20 min from Chiang Mai Airport and a short ride from the ancient Old City.</p>
+        <span class="i-tag">Airport Transfer → Ext. 4</span>
+        <span class="i-tag">Tuk-Tuk → Ext. 4</span>
+      </div>
     </div>
   </div>
 </div>
 
+<!-- ═══ DINING ═══ -->
+<div id="page-dining" class="page">
+  <header class="header">
+    <div><div class="logo-name">AYATARA</div><div class="logo-sub">Resort &amp; Spa</div></div>
+    <div class="hdr-center"><div class="hdr-date" id="D2"></div><div class="hdr-time" id="T2">--:--</div></div>
+    <div style="text-align:right;"><div class="btn-back nav-item" id="bk-dining" data-act="page:home"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>BACK</div></div>
+  </header>
+  <div class="sub-hdr">
+    <div><div class="sub-eyebrow">Culinary Journeys</div><div class="sub-title">DINING &amp; BAR</div></div>
+    <div class="sub-line"></div>
+  </div>
+  <div class="sub-body">
+    <div class="dining-grid">
+      <div class="sub-card nav-item" id="dc1" data-act="noop">
+        <div class="d-ico">🍜</div><div class="d-name">SALA BAAN</div>
+        <div class="d-type">Signature Thai Restaurant</div>
+        <div class="d-desc">Authentic Northern Thai cuisine crafted with heirloom recipes and locally sourced ingredients. Savour the flavours of Lanna in our open-air riverside pavilion.</div>
+        <div class="d-hrs"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Breakfast 06:30–10:30 &nbsp;·&nbsp; Dinner 18:00–22:30</div>
+      </div>
+      <div class="sub-card nav-item" id="dc2" data-act="noop">
+        <div class="d-ico">🥩</div><div class="d-name">THE VERANDA</div>
+        <div class="d-type">International &amp; Grill</div>
+        <div class="d-desc">Elegant all-day dining with Western classics, premium grills and seasonal menus overlooking our tropical garden and infinity pool.</div>
+        <div class="d-hrs"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>All Day 11:00–22:00 &nbsp;·&nbsp; Sun Brunch 11:00–15:00</div>
+      </div>
+      <div class="sub-card nav-item" id="dc3" data-act="noop">
+        <div class="d-ico">🍸</div><div class="d-name">LOTUS BAR</div>
+        <div class="d-type">Cocktail Lounge &amp; Pool Bar</div>
+        <div class="d-desc">Handcrafted cocktails infused with Thai botanicals alongside live acoustic music. Our poolside bar is the perfect sunset gathering destination.</div>
+        <div class="d-hrs"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Daily 10:00–00:00 &nbsp;·&nbsp; Happy Hour 17:00–19:00</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ WELLNESS ═══ -->
+<div id="page-wellness" class="page">
+  <header class="header">
+    <div><div class="logo-name">AYATARA</div><div class="logo-sub">Resort &amp; Spa</div></div>
+    <div class="hdr-center"><div class="hdr-date" id="D3"></div><div class="hdr-time" id="T3">--:--</div></div>
+    <div style="text-align:right;"><div class="btn-back nav-item" id="bk-wellness" data-act="page:home"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>BACK</div></div>
+  </header>
+  <div class="sub-hdr">
+    <div><div class="sub-eyebrow">Restore · Rejuvenate · Renew</div><div class="sub-title">WELLNESS &amp; SPA</div></div>
+    <div class="sub-line"></div>
+  </div>
+  <div class="sub-body">
+    <div class="wellness-grid">
+      <div class="sub-card nav-item w-feat" id="wc1" data-act="noop" style="background:linear-gradient(135deg,#0e2820 0%,#111f19 100%);">
+        <div class="w-ico">🌸</div><div class="w-name">Ayatara Signature Spa</div>
+        <div class="w-desc">Surrender to ancient healing traditions reimagined for the modern soul. Our signature 4-hand Thai massage uses warm herbal compresses and aromatic oils for a deeply restorative experience.</div>
+        <div class="w-tag">Reservations: Ext. 3</div>
+      </div>
+      <div class="sub-card nav-item" id="wc2" data-act="noop">
+        <div class="w-ico">🧘</div><div class="w-name">Morning Yoga</div>
+        <div class="w-desc">Sunrise yoga on the garden terrace overlooking the lotus pond. Open to all levels.</div>
+        <div class="w-tag">Daily 07:00</div>
+      </div>
+      <div class="sub-card nav-item" id="wc3" data-act="noop">
+        <div class="w-ico">💆</div><div class="w-name">Thai Massage</div>
+        <div class="w-desc">Traditional Thai bodywork to release tension and restore balance throughout the body.</div>
+        <div class="w-tag">60 · 90 · 120 min</div>
+      </div>
+      <div class="sub-card nav-item w-feat" id="wc4" data-act="noop" style="background:linear-gradient(135deg,#0a2030 0%,#111f19 100%);">
+        <div class="w-ico">🌊</div><div class="w-name">Hydrotherapy Pool</div>
+        <div class="w-desc">Warm mineral pools with therapeutic jets, cold plunge and steam room — a complete circuit for deep relaxation and circulation stimulation.</div>
+        <div class="w-tag">Daily 08:00–20:00</div>
+      </div>
+      <div class="sub-card nav-item" id="wc5" data-act="noop">
+        <div class="w-ico">🌿</div><div class="w-name">Herbal Steam</div>
+        <div class="w-desc">Traditional Thai steam with lemongrass, kaffir lime and galangal.</div>
+        <div class="w-tag">Daily 08:00–20:00</div>
+      </div>
+      <div class="sub-card nav-item" id="wc6" data-act="noop">
+        <div class="w-ico">✨</div><div class="w-name">Facial Ritual</div>
+        <div class="w-desc">Luxury skin treatments using organic Thai botanicals and gold-infused serums.</div>
+        <div class="w-tag">By Appointment</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ FACILITIES ═══ -->
+<div id="page-facilities" class="page">
+  <header class="header">
+    <div><div class="logo-name">AYATARA</div><div class="logo-sub">Resort &amp; Spa</div></div>
+    <div class="hdr-center"><div class="hdr-date" id="D4"></div><div class="hdr-time" id="T4">--:--</div></div>
+    <div style="text-align:right;"><div class="btn-back nav-item" id="bk-fac" data-act="page:home"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>BACK</div></div>
+  </header>
+  <div class="sub-hdr">
+    <div><div class="sub-eyebrow">World-Class Amenities</div><div class="sub-title">RESORT FACILITIES</div></div>
+    <div class="sub-line"></div>
+  </div>
+  <div class="sub-body">
+    <div class="fac-grid">
+      <div class="sub-card nav-item" id="fc1" data-act="noop"><div class="f-ico">🏊</div><div class="f-name">INFINITY POOL</div><div class="f-desc">Horizon-edge pool overlooking Mae Ping River with private cabanas and pool butler service.</div><div class="f-st on">Open 06:00–22:00</div></div>
+      <div class="sub-card nav-item" id="fc2" data-act="noop"><div class="f-ico">🏋️</div><div class="f-name">FITNESS CENTRE</div><div class="f-desc">State-of-the-art Technogym equipment, free weights, TRX and personal training on request.</div><div class="f-st on">Open 24 Hours</div></div>
+      <div class="sub-card nav-item" id="fc3" data-act="noop"><div class="f-ico">🚴</div><div class="f-name">CYCLING</div><div class="f-desc">Complimentary bicycles for exploring Old City temples, night markets and the riverside trail.</div><div class="f-st tm">08:00–18:00</div></div>
+      <div class="sub-card nav-item" id="fc4" data-act="noop"><div class="f-ico">🎾</div><div class="f-name">TENNIS COURT</div><div class="f-desc">Floodlit court for resident guests. Equipment rental and professional lessons available.</div><div class="f-st tm">Book via Ext. 4</div></div>
+      <div class="sub-card nav-item" id="fc5" data-act="noop"><div class="f-ico">🛶</div><div class="f-name">RIVER CRUISE</div><div class="f-desc">Private longtail boat excursions along the Mae Ping River at sunset with champagne.</div><div class="f-st tm">Daily 17:30</div></div>
+      <div class="sub-card nav-item" id="fc6" data-act="noop"><div class="f-ico">🍳</div><div class="f-name">COOKING CLASS</div><div class="f-desc">Learn Northern Thai cuisine with our head chef at the open-air Lanna kitchen garden.</div><div class="f-st tm">Tue, Thu, Sat 10:00</div></div>
+      <div class="sub-card nav-item" id="fc7" data-act="noop"><div class="f-ico">🧸</div><div class="f-name">KIDS CLUB</div><div class="f-desc">Supervised Thai craft workshops, cooking for kids and garden treasure hunts.</div><div class="f-st on">09:00–17:00</div></div>
+      <div class="sub-card nav-item" id="fc8" data-act="noop"><div class="f-ico">🗺️</div><div class="f-name">CONCIERGE</div><div class="f-desc">Your dedicated team arranges temple tours, elephant sanctuaries and airport transfers.</div><div class="f-st on">24 Hours · Ext. 4</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ LIVE TV ═══ -->
 <div id="page-livetv" class="page">
   <header class="header">
-    <div class="logo-name">AYATARA LIVE TV</div>
-    <div class="btn-back nav-item" id="bk-tv" data-act="page:home">BACK</div>
+    <div><div class="logo-name">AYATARA</div><div class="logo-sub">Resort &amp; Spa</div></div>
+    <div class="hdr-center"><div class="hdr-date" id="D5"></div><div class="hdr-time" id="T5">--:--</div></div>
+    <div style="text-align:right;"><div class="btn-back nav-item" id="bk-tv" data-act="page:home"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>BACK</div></div>
   </header>
-  <div class="sub-body">
-    <div class="tv-grid" id="tvList">
-        </div>
+  <div class="sub-hdr">
+    <div><div class="sub-eyebrow">Entertainment</div><div class="sub-title">LIVE TELEVISION</div></div>
+    <div class="sub-line"></div>
   </div>
-</div>
-
-<div id="streamModal" class="modal">
-  <div class="modal-box">
-    <div id="mTitle" style="font-family:'Cinzel'; font-size:24px; margin-bottom:20px;">LAUNCH APP</div>
-    <div id="mMsg">Do you want to open this application on your TV?</div>
-    <div class="m-btns">
-      <div class="stream-btn nav-item" id="s-ok" data-act="stream-confirm">OPEN APP</div>
-      <div class="stream-btn nav-item" id="s-no" data-act="stream-cancel">CANCEL</div>
+  <div class="sub-body">
+    <div class="tv-grid">
+      <div class="ch-card nav-item" id="ch1" data-act="ch:1"><div class="ch-num">01</div><div class="ch-info"><div class="ch-name">BBC World News</div><div class="ch-now">Global Headlines</div></div><div class="badge hd">HD</div></div>
+      <div class="ch-card nav-item" id="ch2" data-act="ch:2"><div class="ch-num">02</div><div class="ch-info"><div class="ch-name">CNN International</div><div class="ch-now">World Report</div></div><div class="badge live">LIVE</div></div>
+      <div class="ch-card nav-item" id="ch3" data-act="ch:3"><div class="ch-num">03</div><div class="ch-info"><div class="ch-name">NHK World Japan</div><div class="ch-now">Asia Tonight</div></div><div class="badge hd">HD</div></div>
+      <div class="ch-card nav-item" id="ch4" data-act="ch:4"><div class="ch-num">04</div><div class="ch-info"><div class="ch-name">CGTN English</div><div class="ch-now">Business Asia</div></div><div class="badge hd">HD</div></div>
+      <div class="ch-card nav-item" id="ch5" data-act="ch:5"><div class="ch-num">05</div><div class="ch-info"><div class="ch-name">Bloomberg TV</div><div class="ch-now">Markets Open</div></div><div class="badge live">LIVE</div></div>
+      <div class="ch-card nav-item" id="ch6" data-act="ch:6"><div class="ch-num">06</div><div class="ch-info"><div class="ch-name">National Geographic</div><div class="ch-now">Wild Thailand</div></div><div class="badge hd">HD</div></div>
+      <div class="ch-card nav-item" id="ch7" data-act="ch:7"><div class="ch-num">07</div><div class="ch-info"><div class="ch-name">Discovery Channel</div><div class="ch-now">MythBusters</div></div><div class="badge hd">HD</div></div>
+      <div class="ch-card nav-item" id="ch8" data-act="ch:8"><div class="ch-num">08</div><div class="ch-info"><div class="ch-name">Thai PBS</div><div class="ch-now">สุดสัปดาห์</div></div><div class="badge hd">HD</div></div>
+      <div class="ch-card nav-item" id="ch9" data-act="ch:9"><div class="ch-num">09</div><div class="ch-info"><div class="ch-name">Channel 3 Thailand</div><div class="ch-now">Evening Drama</div></div><div class="badge live">LIVE</div></div>
+      <div class="ch-card nav-item" id="ch10" data-act="ch:10"><div class="ch-num">10</div><div class="ch-info"><div class="ch-name">True Vision Sports</div><div class="ch-now">Premier League</div></div><div class="badge live">LIVE</div></div>
+      <div class="ch-card nav-item" id="ch11" data-act="ch:11"><div class="ch-num">11</div><div class="ch-info"><div class="ch-name">ESPN Asia</div><div class="ch-now">SportsCenter Asia</div></div><div class="badge hd">HD</div></div>
+      <div class="ch-card nav-item" id="ch12" data-act="ch:12"><div class="ch-num">12</div><div class="ch-info"><div class="ch-name">MTV Asia</div><div class="ch-now">Top 20 Countdown</div></div><div class="badge hd">HD</div></div>
     </div>
   </div>
 </div>
 
+<!-- ═══ MODAL ═══ -->
+<div id="streamModal" class="modal">
+  <div class="modal-box">
+    <div class="m-logo" id="mLogo"></div>
+    <div class="m-title" id="mTitle">LAUNCHING APP</div>
+    <div class="m-msg" id="mMsg"></div>
+    <div class="m-btns">
+      <div class="stream-btn primary nav-item" id="s-ok"  data-act="stream-confirm">OPEN APP</div>
+      <div class="stream-btn secondary nav-item" id="s-no" data-act="stream-cancel">CANCEL</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     NAVIGATION ENGINE — LG Procentric / webOS Widget
+═══════════════════════════════════════════════════ -->
 <script>
 (function(){
 'use strict';
-var page = 'home', focused = null, modal = false, streamSvc = null;
 
-// 1. DATA CHANNEL (URL & LOGO)
-const CHANNELS = [
-    { id: 1, name: "CCM", url: "http://157.66.14.66:7635/ccm/ccm.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/4/4c/Celestial_Classic_Movies_logo.png" },
-    { id: 2, name: "Celestial Movies", url: "http://157.66.14.66:7635/celestialmovies/celestialmovies.m3u8", logo: "https://upload.wikimedia.org/wikipedia/en/thumb/e/ef/Celestial_Movies_logo.png/250px-Celestial_Movies_logo.png" },
-    { id: 3, name: "KIX", url: "http://157.66.14.66:7635/kix/kix.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/KIX_Logo.svg/1200px-KIX_Logo.svg.png" },
-    { id: 4, name: "Citra Bioskop", url: "http://157.66.14.66:7635/citrabioskop/citrabioskop.m3u8", logo: "https://yt3.googleusercontent.com/ytc/AIdro_n8-G1_9N3-V-Y5_I9-X8_X_X-X=s900-c-k-c0x00ffffff-no-rj" },
-    { id: 5, name: "Thrill", url: "http://157.66.14.66:7635/thrill/thrill.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/4/4b/Thrill_logo.png" },
-    { id: 6, name: "Zee Bioskop", url: "http://157.66.14.66:7635/zeebioskop/zeebioskop.m3u8", logo: "https://zeebioskop.com/wp-content/uploads/2021/04/Zee-Bioskop-Logo.png" },
-    { id: 7, name: "Rock Action", url: "http://157.66.14.66:7635/rockaction/rockaction.m3u8", logo: "https://rockentertainment.com/wp-content/uploads/2022/11/RockAction_Logo.png" },
-    { id: 8, name: "Rock Entertainment", url: "http://157.66.14.66:7635/rockentertainment/rockentertainment.m3u8", logo: "https://rockentertainment.com/wp-content/uploads/2021/08/RE_Logo_White.png" },
-    { id: 9, name: "RT News", url: "http://157.66.14.66:7635/rtnews/rtnews.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/RT_logo.svg/1200px-RT_logo.svg.png" },
-    { id: 10, name: "BBC News", url: "http://157.66.14.66:7635/bbcnews/bbcnews.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/BBC_News_2022.svg/1200px-BBC_News_2022.svg.png" },
-    { id: 11, name: "CNA", url: "http://157.66.14.66:7635/cna/cna.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/CNA_logo.svg/1200px-CNA_logo.svg.png" },
-    { id: 12, name: "Al Jazeera", url: "http://157.66.14.66:7635/aljazeera/aljazeera.m3u8", logo: "https://upload.wikimedia.org/wikipedia/en/thumb/f/f2/Al_jazeera_logo.svg/1200px-Al_jazeera_logo.svg.png" },
-    { id: 13, name: "HGTV", url: "http://157.66.14.66:7635/hgtv/hgtv.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/HGTV_logo_2010.svg/2560px-HGTV_logo_2010.svg.png" },
-    { id: 14, name: "AFC", url: "http://157.66.14.66:7635/afn/afn.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/AFC_Logo.svg/1200px-AFC_Logo.svg.png" },
-    { id: 15, name: "BBC Lifestyle", url: "http://157.66.14.66:7635/bbclefestyle/bbclefestyle.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/BBC_Lifestyle.svg/1200px-BBC_Lifestyle.svg.png" },
-    { id: 16, name: "BBC Earth", url: "http://157.66.14.66:7635/bbcearth/bbcearth.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/BBC_Earth.svg/1200px-BBC_Earth.svg.png" },
-    { id: 17, name: "Discovery", url: "http://157.66.14.66:7635/discovery/discovery.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Discovery_Channel_logo_2019.svg/1200px-Discovery_Channel_logo_2019.svg.png" },
-    { id: 18, name: "Animal Planet", url: "http://157.66.14.66:7635/animalplanet/animalplanet.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Animal_Planet_logo_2018.svg/2560px-Animal_Planet_logo_2018.svg.png" },
-    { id: 19, name: "Nickelodeon", url: "http://157.66.14.66:7635/nickelodeon/nickelodeon.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Nickelodeon_2023.svg/1200px-Nickelodeon_2023.svg.png" },
-    { id: 20, name: "Nick Jr", url: "http://157.66.14.66:7635/nickjr/nickjr.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Nick_Jr._logo_2023.svg/1200px-Nick_Jr._logo_2023.svg.png" },
-    { id: 21, name: "DreamWorks", url: "http://157.66.14.66:7635/dreamworks/dreamworks.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/DreamWorks_Channel_Logo.svg/1200px-DreamWorks_Channel_Logo.svg.png" },
-    { id: 22, name: "Zoomoo", url: "http://157.66.14.66:7635/zoomoo/zoomoo.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/ZooMoo_Logo.svg/1200px-ZooMoo_Logo.svg.png" },
-    { id: 23, name: "TVN", url: "http://157.66.14.66:7635/tvn/tvn.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/TVN_Logo_2015.svg/1200px-TVN_Logo_2015.svg.png" },
-    { id: 24, name: "TVRI World", url: "http://157.66.14.66:7635/tvrinas/tvrinas.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/TVRI_World.svg/1200px-TVRI_World.svg.png" },
-    { id: 25, name: "NHK World", url: "http://157.66.14.66:7635/nhkworld/nhkworld.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/NHK_World_Japan_logo.svg/1200px-NHK_World_Japan_logo.svg.png" },
-    { id: 26, name: "Red Bull TV", url: "http://157.66.14.66:7635/redbull/redbull.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Red_Bull_TV_logo.svg/1200px-Red_Bull_TV_logo.svg.png" },
-    { id: 27, name: "SCTV", url: "http://157.66.14.66:7635/sctv/sctv.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/SCTV_logo.svg/1200px-SCTV_logo.svg.png" },
-    { id: 28, name: "Moji", url: "http://157.66.14.66:7635/moji/moji.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Moji_logo.svg/1200px-Moji_logo.svg.png" },
-    { id: 29, name: "Mentari TV", url: "http://157.66.14.66:7635/mentaritv/mentaritv.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Mentari_TV_logo.svg/1200px-Mentari_TV_logo.svg.png" },
-    { id: 30, name: "Trans TV", url: "http://157.66.14.66:7635/transtv/transtv.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Trans_TV_logo_2013.svg/1200px-Trans_TV_logo_2013.svg.png" },
-    { id: 31, name: "Trans 7", url: "http://157.66.14.66:7635/trans7/trans7.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Trans7_logo_2013.svg/1200px-Trans7_logo_2013.svg.png" },
-    { id: 32, name: "Madinah TV", url: "http://157.66.14.66:7635/madinahtv/madinahtv.m3u8", logo: "https://seeklogo.com/images/S/saudi-madinah-tv-logo-07A5E0C2D8-seeklogo.com.png" },
-    { id: 33, name: "Mekkah TV", url: "http://157.66.14.66:7635/mekkahtv2/mekkahtv2.m3u8", logo: "https://seeklogo.com/images/S/saudi-makkah-tv-logo-7C8B648C6B-seeklogo.com.png" },
-    { id: 34, name: "Rodja TV", url: "http://157.66.14.66:7635/rodjatv/rodjatv.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Rodja_TV_logo.png/800px-Rodja_TV_logo.png" },
-    { id: 35, name: "RCTI", url: "http://157.66.14.66:7635/rcti/rcti.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/RCTI_logo.svg/1200px-RCTI_logo.svg.png" },
-    { id: 36, name: "MNCTV", url: "http://157.66.14.66:7635/mnctv/mnctv.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/MNCTV_logo_2015.svg/1200px-MNCTV_logo_2015.svg.png" },
-    { id: 37, name: "Global TV", url: "http://157.66.14.66:7635/globaltv/globaltv.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/GTV_logo_2017.svg/1200px-GTV_logo_2017.svg.png" },
-    { id: 38, name: "iNews", url: "http://157.66.14.66:7635/inews/inews.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/INews_logo_2015.svg/1200px-INews_logo_2015.svg.png" },
-    { id: 39, name: "ANTV", url: "http://157.66.14.66:7635/antv/antv.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/ANTV_logo_2013.svg/1200px-ANTV_logo_2013.svg.png" },
-    { id: 40, name: "TV One", url: "http://157.66.14.66:7635/tvone/tvone.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/TVOne_logo.svg/1200px-TVOne_logo.svg.png" },
-    { id: 41, name: "Kompas TV", url: "http://157.66.14.66:7635/kompastv/kompastv.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Kompas_TV_logo.svg/1200px-Kompas_TV_logo.svg.png" },
-    { id: 42, name: "Metro TV", url: "http://157.66.14.66:7635/metrotv/metrotv.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Metro_TV_logo.svg/1200px-Metro_TV_logo.svg.png" },
-    { id: 43, name: "Phoenix China", url: "http://157.66.14.66:7635/phoenix/phoenix.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Phoenix_Television_Logo.svg/1200px-Phoenix_Television_Logo.svg.png" },
-    { id: 44, name: "DW TV", url: "http://157.66.14.66:7635/dwtv/dwtv.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/DW_logo_2012.svg/1200px-DW_logo_2012.svg.png" },
-    { id: 45, name: "Arirang TV", url: "http://157.66.14.66:7635/arirang/arirang.m3u8", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Arirang_TV_logo.svg/1200px-Arirang_TV_logo.svg.png" }
-];
+/* ─── STATE ──────────────────────────────────── */
+var page      = 'home';
+var focused   = null;
+var modal     = false;
+var streamSvc = null;
 
-// 2. GENERATE HTML CHANNELS
-const tvList = document.getElementById('tvList');
-CHANNELS.forEach(ch => {
-    const card = document.createElement('div');
-    card.className = "ch-card nav-item";
-    card.id = `ch${ch.id}`;
-    card.setAttribute('data-act', `stream-url:${ch.url}`);
-    card.innerHTML = `
-        <div class="ch-num">${String(ch.id).padStart(2, '0')}</div>
-        <div class="ch-logo-wrap"><img src="${ch.logo}" alt="${ch.name}"></div>
-        <div class="ch-name">${ch.name}</div>
-    `;
-    tvList.appendChild(card);
-});
-
-// 3. NAVIGATION ENGINE
-var page = 'home', focused = null, modal = false, currentStream = null;
+/* ─── PER-PAGE NAV POOLS ─────────────────────── */
+/* Order matters: first item gets focus by default after page load */
 var POOLS = {
-    home: ['c-info','c-dining','c-wellness','c-fac','c-yt','c-nf','c-tv'],
-    livetv: ['bk-tv', ...CHANNELS.map(ch => `ch${ch.id}`)],
-    modal: ['s-ok','s-no']
+  home:       ['c-info','c-dining','c-wellness','c-fac','c-yt','c-nf','c-tv'],
+  info:       ['bk-info','ic1','ic2','ic3','ic4'],
+  dining:     ['bk-dining','dc1','dc2','dc3'],
+  wellness:   ['bk-wellness','wc1','wc2','wc3','wc4','wc5','wc6'],
+  facilities: ['bk-fac','fc1','fc2','fc3','fc4','fc5','fc6','fc7','fc8'],
+  livetv:     ['bk-tv','ch1','ch2','ch3','ch4','ch5','ch6','ch7','ch8','ch9','ch10','ch11','ch12'],
+  modal:      ['s-ok','s-no']
 };
 
+/* ─── HELPERS ────────────────────────────────── */
 function $(id){ return document.getElementById(id); }
 
-function focus(el){
-    if(focused) focused.classList.remove('tv-focus');
-    focused = el;
-    if(el) {
-        el.classList.add('tv-focus');
-        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
+function center(el){
+  var r = el.getBoundingClientRect();
+  return { x: r.left + r.width/2, y: r.top + r.height/2 };
 }
 
 function pool(){
-    var ids = modal ? POOLS.modal : (POOLS[page] || []);
-    return ids.map($).filter(function(e){ return e && e.offsetParent !== null; });
+  var ids = modal ? POOLS.modal : (POOLS[page] || []);
+  return ids.map($).filter(function(e){ return e && e.offsetParent !== null; });
 }
 
+/* ─── FOCUS ──────────────────────────────────── */
+function focus(el){
+  if(focused) focused.classList.remove('tv-focus');
+  focused = el;
+  if(el) el.classList.add('tv-focus');
+}
+
+/* ─── SPATIAL NAV ────────────────────────────── */
 function navigate(dir){
+  var p = pool();
+  if(!p.length) return;
+  if(!focused || p.indexOf(focused) < 0){ focus(p[0]); return; }
+
+  var cc = center(focused);
+  var best = null, bestScore = 1e9;
+
+  p.forEach(function(cand){
+    if(cand === focused) return;
+    var c  = center(cand);
+    var dx = c.x - cc.x;
+    var dy = c.y - cc.y;
+    var ok = false;
+
+    // Must be generally in the pressed direction (threshold 8px)
+    if(dir==='left'  && dx < -8) ok=true;
+    if(dir==='right' && dx >  8) ok=true;
+    if(dir==='up'    && dy < -8) ok=true;
+    if(dir==='down'  && dy >  8) ok=true;
+    if(!ok) return;
+
+    // Score = primary axis distance + 2.5× secondary axis penalty
+    var pri = (dir==='left'||dir==='right') ? Math.abs(dx) : Math.abs(dy);
+    var sec = (dir==='left'||dir==='right') ? Math.abs(dy) : Math.abs(dx);
+    var score = pri + sec * 2.5;
+    if(score < bestScore){ bestScore = score; best = cand; }
+  });
+
+  if(best) focus(best);
+}
+
+/* ─── ACTION DISPATCH ────────────────────────── */
+function dispatch(el){
+  if(!el) return;
+  var a = el.getAttribute('data-act') || '';
+  if(!a || a==='noop') return;
+
+  if(a.indexOf('page:')===0){
+    goPage(a.slice(5));
+  } else if(a.indexOf('stream:')===0){
+    openModal(a.slice(7));
+  } else if(a.indexOf('ch:')===0){
+    switchCh(parseInt(a.slice(3)));
+  } else if(a==='stream-confirm'){
+    confirmStream();
+  } else if(a==='stream-cancel'){
+    closeModal();
+  }
+}
+
+/* ─── PAGE SWITCH ────────────────────────────── */
+function goPage(name){
+  document.querySelectorAll('.page').forEach(function(p){
+    p.classList.remove('active');
+  });
+  var pg = $('page-'+name);
+  if(!pg) return;
+  pg.classList.add('active');
+  page = name;
+  if(focused) focused.classList.remove('tv-focus');
+  focused = null;
+
+  setTimeout(function(){
     var p = pool();
     if(!p.length) return;
-    var idx = p.indexOf(focused);
-    if(idx === -1) { focus(p[0]); return; }
-
-    var cols = (page === 'home') ? 7 : 4;
-    var nextIdx = idx;
-    if(dir==='left') nextIdx = Math.max(0, idx - 1);
-    if(dir==='right') nextIdx = Math.min(p.length - 1, idx + 1);
-    if(dir==='up') nextIdx = Math.max(0, idx - cols);
-    if(dir==='down') nextIdx = Math.min(p.length - 1, idx + cols);
-    focus(p[nextIdx]);
+    // Sub-pages: start on first content card (index 1), skip back button
+    var idx = (name !== 'home') ? 1 : 0;
+    focus(p[Math.min(idx, p.length-1)]);
+  }, 90);
 }
 
-function dispatch(el){
-    var a = el.getAttribute('data-act');
-    if(!a) return;
-    
-    if(a.startsWith('page:')) goPage(a.split(':')[1]);
-    if(a.startsWith('stream:')) openModal(a.split(':')[1]);
-    if(a.startsWith('stream-url:')) launchPlayer(a.split(':')[1]); // DIRECT STREAM
-    if(a === 'stream-confirm') confirmAppLaunch();
-    if(a === 'stream-cancel') closeModal();
-}
-
-function goPage(name){
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    $('page-'+name).classList.add('active');
-    page = name;
-    modal = false;
-    setTimeout(() => focus(pool()[0]), 100);
-}
-
+/* ─── STREAM MODAL ───────────────────────────── */
 function openModal(svc){
-    currentStream = svc;
-    $('mTitle').textContent = svc.toUpperCase();
-    $('mLogo').textContent = (svc === 'youtube') ? '▶' : 'N';
-    $('mLogo').style.color = (svc === 'youtube') ? '#ff0000' : '#e50914';
-    $('streamModal').classList.add('active');
-    modal = true;
-    setTimeout(() => focus($('s-ok')), 100);
+  streamSvc = svc;
+  if(svc==='youtube'){
+    $('mLogo').textContent       = '▶';
+    $('mLogo').style.color       = '#ff0000';
+    $('mLogo').style.fontFamily  = 'sans-serif';
+    $('mTitle').textContent      = 'YOUTUBE';
+    $('mMsg').textContent        = 'YouTube will open on your TV.\nPress OPEN APP to launch.';
+  } else {
+    $('mLogo').textContent       = 'N';
+    $('mLogo').style.color       = '#e50914';
+    $('mLogo').style.fontFamily  = "'Cinzel',serif";
+    $('mLogo').style.fontWeight  = '900';
+    $('mTitle').textContent      = 'NETFLIX';
+    $('mMsg').textContent        = 'Netflix will open on your TV.\nPress OPEN APP to launch.';
+  }
+  $('streamModal').classList.add('active');
+  modal = true;
+  if(focused) focused.classList.remove('tv-focus');
+  focused = null;
+  setTimeout(function(){ focus($('s-ok')); }, 60);
 }
 
 function closeModal(){
-    $('streamModal').classList.remove('active');
-    modal = false;
-    focus(pool()[0]);
+  $('streamModal').classList.remove('active');
+  modal = false;
+  if(focused) focused.classList.remove('tv-focus');
+  focused = null;
+  setTimeout(function(){
+    var p = pool();
+    if(p.length) focus(p[0]);
+  }, 60);
 }
 
-// FUNGSI STREAMING LANGSUNG (M3U8)
-function launchPlayer(url){
-    console.log("Streaming URL: " + url);
-    // Di LG Procentric, cara paling umum memutar M3U8 adalah mengalihkan window ke URL stream
-    // Sistem TV akan otomatis mendeteksi format M3U8 dan membuka internal player
-    window.location.href = url;
+function confirmStream(){
+  var svc = streamSvc;
+  closeModal();
+  if(svc==='youtube')  launchApp('youtube.leanback.v4','sssp://youtube');
+  if(svc==='netflix')  launchApp('netflix','sssp://netflix');
 }
 
-// FUNGSI LAUNCH APP (YOUTUBE/NETFLIX)
-function confirmAppLaunch(){
-    var appId = (currentStream === 'youtube') ? 'com.webos.app.youtube' : 'netflix';
-    closeModal();
-    if(typeof webOS !== 'undefined' && webOS.service) {
-        webOS.service.request('luna://com.webos.applicationManager', {
-            method: 'launch',
-            parameters: { id: appId },
-            onFailure: function() { window.location.href = 'sssp://' + currentStream; }
-        });
-    } else { window.location.href = 'https://www.' + currentStream + '.com'; }
+function launchApp(webosId, fallback){
+  try{
+    if(typeof webOS !== 'undefined' && webOS.service){
+      webOS.service.request('luna://com.webos.service.applicationManager',{
+        method:'launch',
+        parameters:{ id: webosId },
+        onSuccess:function(){},
+        onFailure:function(){ window.location.href = fallback; }
+      });
+    } else { window.location.href = fallback; }
+  } catch(e){ window.location.href = fallback; }
 }
 
-function onKey(e){
-    var k = e.keyCode;
-    if(k===37) navigate('left');
-    if(k===39) navigate('right');
-    if(k===38) navigate('up');
-    if(k===40) navigate('down');
-    if(k===13) dispatch(focused);
-    if(k===461 || k===8) { 
-        if(modal) closeModal(); 
-        else if(page!=='home') goPage('home'); 
+/* ─── CHANNEL SWITCH ─────────────────────────── */
+function switchCh(num){
+  try{
+    if(typeof webOS !== 'undefined' && webOS.service){
+      webOS.service.request('luna://com.webos.service.tv.channel',{
+        method:'setChannel',
+        parameters:{ channelNumber: String(num) },
+        onSuccess:function(){},
+        onFailure:function(){}
+      });
     }
-    e.preventDefault();
+    // Procentric multicast fallback — adjust path to your system:
+    // var x=new XMLHttpRequest(); x.open('GET','/procentric/channel/'+num,true); x.send();
+  } catch(e){}
 }
+
+/* ══════════════════════════════════════════════
+   KEY HANDLER
+   Registered THREE ways for maximum widget compat
+   on LG Procentric / webOS HTML Widget renderer.
+
+   Key codes:
+     37=LEFT  38=UP  39=RIGHT  40=DOWN
+     13=OK/Enter  10=Enter(alt)  32=Space
+     461=LG Back  27=Escape  8=Backspace
+═══════════════════════════════════════════════ */
+function onKey(e){
+  var k = e.keyCode || e.which || 0;
+  var eaten = true;
+
+  switch(k){
+    case 37: navigate('left');  break;
+    case 39: navigate('right'); break;
+    case 38: navigate('up');    break;
+    case 40: navigate('down');  break;
+
+    case 13: case 10:            // OK / Enter
+      dispatch(focused); break;
+
+    case 461: case 8: case 27:   // Back / Backspace / Escape
+      if(modal){ closeModal(); }
+      else if(page !== 'home'){ goPage('home'); }
+      break;
+
+    default: eaten = false;
+  }
+
+  if(eaten){
+    if(e.preventDefault)  e.preventDefault();
+    if(e.stopPropagation) e.stopPropagation();
+    return false;
+  }
+}
+
+/*
+  Three registrations — critical for LG Procentric widget:
+  1. window.onkeydown      — fires even when no DOM element has focus
+  2. document (capture)    — catches before anything else
+  3. document.body (capture)
+*/
 window.onkeydown = onKey;
+document.addEventListener('keydown', onKey, true);
+if(document.body) document.body.addEventListener('keydown', onKey, true);
+
+/* ─── MOUSE / TOUCH (for PC testing) ────────── */
+document.addEventListener('click', function(e){
+  var t = e.target.closest ? e.target.closest('.nav-item') : null;
+  if(!t) return;
+  focus(t);
+  setTimeout(function(){ dispatch(t); }, 40);
+}, false);
+
+/* ─── KEEP DOCUMENT FOCUSABLE ────────────────── */
+// Forces the widget renderer to keep sending key events to us
+document.documentElement.setAttribute('tabindex','-1');
+if(document.body){
+  document.body.setAttribute('tabindex','-1');
+  document.body.style.outline = 'none';
+}
+
+// Periodically re-focus body so keys keep flowing in widget context
+setInterval(function(){
+  try{
+    var ae = document.activeElement;
+    if(!ae || ae===document.body || ae===document.documentElement){
+      document.body.focus();
+    }
+  } catch(e){}
+}, 2500);
+
+// Re-assert focus when page becomes visible
+document.addEventListener('visibilitychange', function(){
+  if(document.visibilityState === 'visible'){
+    try{ document.body.focus(); } catch(e){}
+  }
+});
+
+/* ─── CLOCK ──────────────────────────────────── */
+var DAYS   = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+var MONTHS = ['January','February','March','April','May','June',
+              'July','August','September','October','November','December'];
 
 function tick(){
-    var n = new Date();
-    var ts = n.getHours().toString().padStart(2,'0') + ":" + n.getMinutes().toString().padStart(2,'0');
-    $('T0').textContent = ts;
+  var n  = new Date();
+  var h  = String(n.getHours()).padStart('00'.length,'0');
+  var m  = String(n.getMinutes()).padStart('00'.length,'0');
+  var ts = h+':'+m;
+  var ds = DAYS[n.getDay()]+', '+n.getDate()+' '+MONTHS[n.getMonth()]+' '+n.getFullYear();
+  for(var i=0;i<6;i++){
+    var te=$('T'+i), de=$('D'+i);
+    if(te) te.textContent=ts;
+    if(de) de.textContent=ds;
+  }
 }
-setInterval(tick, 10000); tick();
+tick();
+setInterval(tick, 10000);
 
-window.onload = () => { setTimeout(() => { $('loading').classList.add('gone'); goPage('home'); }, 2200); };
+/* ─── INIT ───────────────────────────────────── */
+window.addEventListener('load', function(){
+  setTimeout(function(){
+    var ld = $('loading');
+    if(ld) ld.classList.add('gone');
+  }, 2200);
+  setTimeout(function(){
+    goPage('home');
+    try{ document.body.focus(); } catch(e){}
+  }, 2400);
+});
+
 })();
 </script>
 </body>
